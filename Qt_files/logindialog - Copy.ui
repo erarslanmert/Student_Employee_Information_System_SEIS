@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>307</width>
+    <height>525</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Giris Ekrani</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(0, 41, 61);
+selection-background-color: rgb(255, 255, 255);</string>
+  </property>
+  <property name="locale">
+   <locale language="Turkish" country="Turkey"/>
+  </property>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>44</x>
+     <y>390</y>
+     <width>111</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Giris Yap</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 230, 207);</string>
+   </property>
+   <property name="text">
+    <string>Giris Yap</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>390</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Iptal</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 230, 207);</string>
+   </property>
+   <property name="text">
+    <string>Iptal</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>42</x>
+     <y>170</y>
+     <width>221</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_2">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>280</y>
+     <width>221</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>122</y>
+     <width>221</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+     <stylestrategy>PreferDefault</stylestrategy>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string>Kullanici Numarasi</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:  rgb(255, 230, 207);
+</string>
+   </property>
+   <property name="text">
+    <string>Kullanici Ismi</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>240</y>
+     <width>221</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+     <stylestrategy>PreferDefault</stylestrategy>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string>Sifre</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:  rgb(255, 230, 207);</string>
+   </property>
+   <property name="text">
+    <string>Sifre</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>350</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:  rgb(255, 230, 207);</string>
+   </property>
+   <property name="text">
+    <string>Beni Hatirla</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>460</y>
+     <width>221</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+     <underline>true</underline>
+     <stylestrategy>PreferDefault</stylestrategy>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="toolTip">
+    <string>Kullanici Numarasi</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(254, 255, 231);
+</string>
+   </property>
+   <property name="text">
+    <string>Yeni Kullanici Kaydi</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>105</x>
+     <y>20</y>
+     <width>91</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>logo_hq.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
