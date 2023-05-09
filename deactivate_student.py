@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'addnew_first.ui'
+# Form implementation generated from reading ui file 'deactivate_student.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -8,26 +8,26 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-import data_objects
-import student_addition, employee_addition
-import connect_database
+import change_student_data
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(264, 262)
+        Dialog.resize(264, 283)
         Dialog.setStyleSheet("background-color: rgb(0, 49, 72);")
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
-        self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : close_doalig())
-        self.pushButton.setGeometry(QtCore.QRect(40, 180, 91, 31))
+        self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : dialog_close_ok())
+        self.pushButton.setGeometry(QtCore.QRect(40, 220, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
         self.pushButton.setFont(font)
         self.pushButton.setStyleSheet("background-color: rgb(255, 254, 238);")
         self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(Dialog, clicked = lambda : Dialog.close())
-        self.pushButton_2.setGeometry(QtCore.QRect(140, 180, 91, 31))
+        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_2.setGeometry(QtCore.QRect(140, 220, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -42,7 +42,7 @@ class Ui_Dialog(object):
         self.radioButton.setFont(font)
         self.radioButton.setStyleSheet("color: rgb(255, 255, 255);")
         self.radioButton.setObjectName("radioButton")
-        self.radioButton_2 = QtWidgets.QRadioButton(Dialog)
+        self.radioButton_2 = QtWidgets.QRadioButton(Dialog, clicked = lambda : Dialog.close)
         self.radioButton_2.setGeometry(QtCore.QRect(60, 130, 181, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -51,7 +51,7 @@ class Ui_Dialog(object):
         self.radioButton_2.setStyleSheet("color: rgb(255, 255, 255);")
         self.radioButton_2.setObjectName("radioButton_2")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(40, 40, 261, 31))
+        self.label.setGeometry(QtCore.QRect(30, 30, 201, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -59,38 +59,46 @@ class Ui_Dialog(object):
         font.setWeight(75)
         self.label.setFont(font)
         self.label.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setWordWrap(True)
         self.label.setObjectName("label")
+        self.radioButton_3 = QtWidgets.QRadioButton(Dialog)
+        self.radioButton_3.setGeometry(QtCore.QRect(60, 170, 181, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.radioButton_3.setFont(font)
+        self.radioButton_3.setStyleSheet("color: rgb(255, 255, 255);")
+        self.radioButton_3.setObjectName("radioButton_3")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        def close_doalig():
-                self.select_object_type()
-                Dialog.close()
+        def dialog_close_ok():
+            self.select_mode()
+            Dialog.close()
 
-        if data_objects.active_auth_level == 3:
-            self.radioButton_2.setDisabled(True)
-        else:
-            pass
-
-    def select_object_type(self):
+    def select_mode(self):
         if self.radioButton.isChecked() == True:
-            student_addition.open_student_addition()
+            change_student_data.deactivation_mode = 'Kurumdan Ayrildi'
         elif self.radioButton_2.isChecked() == True:
-            employee_addition.open_employee_addition()
+            change_student_data.deactivation_mode = 'Dersleri Tamamladi'
+        elif self.radioButton_3.isChecked() == True:
+            change_student_data.deactivation_mode = 'Dondurdu'
         else:
-            pass
+            change_student_data.deactivation_mode = ''
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.pushButton.setText(_translate("Dialog", "Tamam"))
         self.pushButton_2.setText(_translate("Dialog", "Iptal"))
-        self.radioButton.setText(_translate("Dialog", "Yeni Ogrenci Ekle"))
-        self.radioButton_2.setText(_translate("Dialog", "Yeni Calisan Ekle"))
-        self.label.setText(_translate("Dialog", "Eklemek istediginiz veriyi secin"))
+        self.radioButton.setText(_translate("Dialog", "Kurumdan Ayrildi"))
+        self.radioButton_2.setText(_translate("Dialog", "Dersleri Tamamladi"))
+        self.label.setText(_translate("Dialog", "Ogrencinin deaktivasyon sebebhini seciniz"))
+        self.radioButton_3.setText(_translate("Dialog", "Dondurdu"))
 
-def open_addition_selection():
+def open_deactivate_student():
     Dialog = QtWidgets.QDialog()
     Dialog.setStyle(QtWidgets.QStyleFactory.create("WindowsVista"))
     ui = Ui_Dialog()

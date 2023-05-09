@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import json
 import main
 
-authorization_level = 0
 one_student = {}
 one_employee = {}
 one_user = {}
@@ -16,5 +17,10 @@ users = []
 student_schedules = []
 teacher_schedules = []
 student_attendances = []
+
+active_user = False
+user_logged_in = {}
+active_auth_level = 0
+
 
 
