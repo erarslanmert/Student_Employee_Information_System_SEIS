@@ -13,9 +13,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QStyleFactory, QMessageBox
 
 import data_objects
+import deneme
 
 import main_page, new_user
 import connect_database
+
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -36,7 +39,7 @@ class Ui_MainWindow(object):
                              "selection-background-color: rgb(255, 255, 255);")
         MainWindow.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         MainWindow.setWindowIcon(QtGui.QIcon("logo_hq.png"))
-        self.pushButton = QtWidgets.QPushButton(MainWindow, clicked = lambda : self.user_loggedin())
+        self.pushButton = QtWidgets.QPushButton(MainWindow, clicked = lambda : deneme.deneme_open())
         self.pushButton.setGeometry(QtCore.QRect(44, 390, 111, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -142,9 +145,9 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        connect_database.download_files('user_list.txt')
+        '''connect_database.download_files('user_list.txt')
         connect_database.download_files('student_data.txt')
-        connect_database.download_files('employee_data.txt')
+        connect_database.download_files('employee_data.txt')'''
 
 
         with open('user_list.txt', 'r', encoding="utf-8") as f:
