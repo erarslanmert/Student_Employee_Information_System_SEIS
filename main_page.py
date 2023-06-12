@@ -22,10 +22,10 @@ import save_options
 import json
 import textwrap
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtCore import QDate, Qt, QTimer
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QAbstractItemView, QVBoxLayout, QGridLayout, QSpacerItem, \
-    QSizePolicy, QHBoxLayout, QWidget, QHeaderView
+    QSizePolicy, QHBoxLayout, QWidget, QHeaderView, QMenu, QAction, QStyle
 import data_objects
 from PyQt5.QtGui import QTextCharFormat
 import matplotlib.pyplot as plt
@@ -2133,19 +2133,15 @@ class Ui_Dialog(object):
             # Do something with the widget
             widget.setStyleSheet("font-family: Arial; font-size: 12px; font-weight: bold; color: white; text-align: center;")
 
-        self.layout_35 = QVBoxLayout(self.frame_7)
-        self.layout_36 = QHBoxLayout()
-        self.layout_37 = QVBoxLayout()
-        self.layout_35.addLayout(self.layout_36)
-        self.layout_35.addLayout(self.layout_37)
-        self.layout_37.addWidget(self.frame_12)
-
         self.find_week_number()
         self.load_txt()
         self.show_data()
         self.show_general_schedule()
 
         self.ready_to_close = False
+        self.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.tableWidget.customContextMenuRequested.connect(self.show_context_menu)
+        self.populate_table()
 
         def close_dialog():
             self.log_out()
@@ -3519,8 +3515,53 @@ class Ui_Dialog(object):
                 else:
                     pass
 
+    def populate_table(self):
+        for row in range(self.tableWidget.rowCount()):
+            for col in range(self.tableWidget.columnCount()):
+                item = QTableWidgetItem()
+                self.tableWidget.setItem(row, col, item)
 
 
+    def show_context_menu(self, pos):
+        cell = self.tableWidget.itemAt(pos)
+        if cell is not None:
+            menu = QMenu(self.tableWidget)
+            menu.setStyleSheet("QMenu { background-color: #F0F0F0; color: #000000; }"
+                               "QMenu::item { background-color: #F0F0F0; color: #000000; }"
+                               "QMenu::item:selected { background-color: #3366FF; color: #FFFFFF; }")
+
+            action1 = QAction("Akademik Ders Ekle", self.tableWidget)
+            action1.triggered.connect(lambda: self.handle_context_menu_action("Akademik Ders Ekle", cell))
+            menu.addAction(action1)
+
+            action2 = QAction("Attentioner Ders Ekle", self.tableWidget)
+            action2.triggered.connect(lambda: self.handle_context_menu_action("Attentioner Ders Ekle", cell))
+            menu.addAction(action2)
+
+            action3 = QAction("Grup Dersi Ekle", self.tableWidget)
+            action3.triggered.connect(lambda: self.handle_context_menu_action("Grup Dersi Ekle", cell))
+            menu.addAction(action3)
+
+            action4 = QAction("Dersi Duzenle", self.tableWidget)
+            action4.triggered.connect(lambda: self.handle_context_menu_action("Dersi Duzenle", cell))
+            menu.addAction(action4)
+
+            action5 = QAction("Dersi Iptal Et", self.tableWidget)
+            action5.triggered.connect(lambda: self.handle_context_menu_action("Dersi Iptal Et", cell))
+            menu.addAction(action5)
+
+            action6 = QAction("Dersi Sil", self.tableWidget)
+            action6.triggered.connect(lambda: self.handle_context_menu_action("Dersi Sil", cell))
+            menu.addAction(action6)
+
+            action7 = QAction("Yoklama Bilgisi Ekle", self.tableWidget)
+            action7.triggered.connect(lambda: self.handle_context_menu_action("Yoklama Bilgisi Ekle", cell))
+            menu.addAction(action7)
+
+            menu.exec_(self.tableWidget.viewport().mapToGlobal(pos))
+
+    def handle_context_menu_action(self, option, cell):
+        print(f"Selected '{option}' for cell {cell.row()}-{cell.column()}")
 
 
     def cellDoubleClicked(self, row, column):
@@ -4148,4 +4189,3 @@ def open_mainpage():
     ui.setupUi(Dialog)
     Dialog.show()
     Dialog.exec_()
-
