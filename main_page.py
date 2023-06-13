@@ -1805,6 +1805,10 @@ class Ui_Dialog(object):
         font.setPointSize(9)
         self.tableWidget.verticalHeader().setFont(font)
         self.tableWidget.horizontalHeader().setFont(font)
+        self.tableWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.pushButton_19 = QtWidgets.QPushButton(self.frame_13, clicked = lambda : self.step_back_weekly())
         self.pushButton_19.setGeometry(QtCore.QRect(270, 40, 31, 31))
         self.pushButton_19.setFixedSize(31,31)
@@ -2142,6 +2146,8 @@ class Ui_Dialog(object):
         self.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.tableWidget.customContextMenuRequested.connect(self.show_context_menu)
         self.populate_table()
+        self.step_fwd_weekly()
+        self.step_back_weekly()
 
         def close_dialog():
             self.log_out()
@@ -3561,7 +3567,59 @@ class Ui_Dialog(object):
             menu.exec_(self.tableWidget.viewport().mapToGlobal(pos))
 
     def handle_context_menu_action(self, option, cell):
+        global group_class_list
         print(f"Selected '{option}' for cell {cell.row()}-{cell.column()}")
+        group_class_list = []
+        class_options.open_class_options()
+        if cell.row() in range(0, 10):
+            item = self.tableWidget.item(0, 0).text()
+        elif cell.row() in range(10, 20):
+            item = self.tableWidget.item(10, 0).text()
+        elif cell.row() in range(20, 30):
+            item = self.tableWidget.item(20, 0).text()
+        elif cell.row() in range(30, 40):
+            item = self.tableWidget.item(30, 0).text()
+        elif cell.row() in range(40, 50):
+            item = self.tableWidget.item(40, 0).text()
+        elif cell.row() in range(50, 60):
+            item = self.tableWidget.item(50, 0).text()
+        elif cell.row() in range(60, 70):
+            item = self.tableWidget.item(60, 0).text()
+        else:
+            pass
+
+        if option == "Akademik Ders Ekle":
+            for student in data_objects.students:
+                if (student['name'] + ' ' + student['surname']) in group_class_list:
+                    student['student_schedule'].append(
+                        'Akademik Ders' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text() +
+                        ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
+            for employee in data_objects.employees:
+                if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
+                        cell.column()).text():
+                    employee['teacher_schedule'].append(('Akademik Ders' + ' ' + str(group_class_list) + ' ' +
+                                                         self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+
+        '''for student in data_objects.students:
+            for schedule in student['student_schedule']:
+                if (self.tableWidget.horizontalHeaderItem(cell.column()).text() + ' ' + self.tableWidget.verticalHeaderItem(
+                        cell.row()).text() + ' ' + item) in schedule:
+                    student['student_schedule'].remove(schedule)
+                else:
+                    pass'''
+        with open("student_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.students, default=str))
+        with open('student_data.txt', 'r', encoding="utf-8") as f:
+            data_objects.students = json.load(f)
+        with open("employee_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.employees, default=str))
+        with open('employee_data.txt', 'r', encoding="utf-8") as f:
+            data_objects.employees = json.load(f)
+
+        '''connect_database.upload_files('employee_data.txt')
+        connect_database.upload_files('student_data.txt')'''
+
+        self.load_general_schedule()
 
 
     def cellDoubleClicked(self, row, column):
@@ -4189,3 +4247,4 @@ def open_mainpage():
     ui.setupUi(Dialog)
     Dialog.show()
     Dialog.exec_()
+
