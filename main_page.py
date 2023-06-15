@@ -25,7 +25,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QDate, Qt, QTimer
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QAbstractItemView, QVBoxLayout, QGridLayout, QSpacerItem, \
-    QSizePolicy, QHBoxLayout, QWidget, QHeaderView, QMenu, QAction, QStyle
+    QSizePolicy, QHBoxLayout, QWidget, QHeaderView, QMenu, QAction, QStyle, QTableWidget
 import data_objects
 from PyQt5.QtGui import QTextCharFormat
 import matplotlib.pyplot as plt
@@ -1808,7 +1808,6 @@ class Ui_Dialog(object):
         self.tableWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.tableWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.pushButton_19 = QtWidgets.QPushButton(self.frame_13, clicked = lambda : self.step_back_weekly())
         self.pushButton_19.setGeometry(QtCore.QRect(270, 40, 31, 31))
         self.pushButton_19.setFixedSize(31,31)
@@ -1860,7 +1859,6 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.dateEdit.setFont(font)
         self.tabWidget.setCurrentIndex(0)
-        self.tableWidget.setSortingEnabled(False)
         self.tabWidget.addTab(self.tab_2, "")
         self.tableWidget_2 = QtWidgets.QTableWidget(self.frame_4)
         self.tableWidget_2.setGeometry(QtCore.QRect(10, 40, 761, 480))
@@ -1876,7 +1874,6 @@ class Ui_Dialog(object):
         self.tableWidget_2.verticalHeader().setFont(font)
         self.tableWidget_2.horizontalHeader().setFont(font)
         self.tableWidget_2.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tableWidget_2.setSortingEnabled(False)
         self.tableWidget_2.hide()
         self.tableWidget_2.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
         self.tableWidget_2.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -1990,7 +1987,6 @@ class Ui_Dialog(object):
         self.comboBox_2.currentIndexChanged.connect(lambda: self.show_student_info())
         self.comboBox.currentTextChanged.connect(lambda: self.update_data())
 
-        self.tableWidget.cellDoubleClicked.connect(self.cellDoubleClicked)
         self.spinBox.valueChanged.connect(self.weekly_table_student)
         self.spinBox_2.valueChanged.connect(self.weekly_table_student)
         self.spinBox_3.valueChanged.connect(self.weekly_table_employee)
@@ -2148,6 +2144,7 @@ class Ui_Dialog(object):
         self.populate_table()
         self.step_fwd_weekly()
         self.step_back_weekly()
+
 
         def close_dialog():
             self.log_out()
@@ -3382,6 +3379,15 @@ class Ui_Dialog(object):
         except IndexError:
             pass
 
+    def get_maximum_content_height(self, row):
+        max_height = 0
+        for col in range(self.tableWidget.columnCount()):
+            item = self.tableWidget.item(row, col)
+            if item is not None:
+                cell_height = self.tableWidget.rowHeight(row)
+                content_height = item.sizeHint().height()
+                max_height = max(max_height, content_height, cell_height)
+        return max_height
 
     def load_general_schedule(self):
         global group_class_list, date_list
@@ -3411,25 +3417,29 @@ class Ui_Dialog(object):
 
                     if 'Grup Dersi' in schedule:
                         column_no = header_list.index((employee['name']+' '+employee['surname']))
-                        comboBox_11 = QtWidgets.QComboBox()
-                        comboBox_11.addItem('                                        Grup Dersi')
-                        for student in group_class_list:
-                            comboBox_11.addItem('                                 ' + student)
-                        self.tableWidget.setCellWidget(row_no, column_no, comboBox_11)
-                        comboBox_11.setStyleSheet("background-color: #FFD9A8;")
+                        text = ", ".join(group_class_list)
+                        item = QTableWidgetItem(f"Grup Dersi \n {text}")
+                        item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+                        # Set the vertical header height to fit the maximum content height
+                        for row in range(self.tableWidget.rowCount()):
+                            content_height = self.get_maximum_content_height(row)
+                            self.tableWidget.verticalHeader().resizeSection(row, content_height)
 
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        label = QtWidgets.QLabel(group_class_list[0] + ' - Akademik Ders')
-                        label.setAlignment(Qt.AlignCenter)
-                        self.tableWidget.setCellWidget(row_no, column_no, label)
-                        label.setStyleSheet("background-color: #FFD9A8;")
+                        item = QTableWidgetItem(f"{group_class_list[0]} - Akademik Ders")
+                        item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+
                     elif 'Attentioner Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        label = QtWidgets.QLabel(group_class_list[0] + ' - Attentioner Ders')
-                        label.setAlignment(Qt.AlignCenter)
-                        self.tableWidget.setCellWidget(row_no, column_no, label)
-                        label.setStyleSheet("background-color: #FFD9A8;")
+                        item = QTableWidgetItem(f"{group_class_list[0]} - Attentioner Ders")
+                        item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
                     else:
                         pass
                 else:
@@ -3472,6 +3482,7 @@ class Ui_Dialog(object):
                         label.setText(group_class_list[0] + ' - Attentioner Ders')
                         label.setStyleSheet("background-color: #FF9292;")
                         self.tableWidget.setCellWidget(row_no, column_no, label)
+                        self.tableWidget.resizeRowToContents(row_no)
 
                     else:
                         pass
@@ -3598,6 +3609,27 @@ class Ui_Dialog(object):
                 if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
                         cell.column()).text():
                     employee['teacher_schedule'].append(('Akademik Ders' + ' ' + str(group_class_list) + ' ' +
+                                                         self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+        elif option == "Attentioner Ders Ekle":
+            for student in data_objects.students:
+                if (student['name'] + ' ' + student['surname']) in group_class_list:
+                    student['student_schedule'].append(
+                        'Attentioner Ders' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text() +
+                        ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
+            for employee in data_objects.employees:
+                if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
+                        cell.column()).text():
+                    employee['teacher_schedule'].append(('Attentioner Ders' + ' ' + str(group_class_list) + ' ' +
+                                                         self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+
+        elif option == "Grup Dersi Ekle":
+            for student in data_objects.students:
+                if (student['name'] + ' ' + student['surname']) in group_class_list:
+                    student['student_schedule'].append('Grup Dersi' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text()+
+                                                       ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
+            for employee in data_objects.employees:
+                if (employee['name']+' '+employee['surname']) == self.tableWidget.horizontalHeaderItem(cell.column()).text():
+                    employee['teacher_schedule'].append(('Grup Dersi' + ' ' + str(group_class_list) + ' ' +
                                                          self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
 
         '''for student in data_objects.students:
@@ -4235,7 +4267,6 @@ class Ui_Dialog(object):
         self.label_194.setText(_translate("Dialog", "    Personel Bilgileri"))
         self.label_118.setText(_translate("Dialog", "    Ogretmen Bilgileri"))
         self.label_10.setText(_translate("Dialog", "Yonetici Ekrani"))
-        self.tableWidget.setSortingEnabled(True)
         self.pushButton_19.setText(_translate("Dialog", "<"))
         self.pushButton_20.setText(_translate("Dialog", ">"))
         self.label_35.setText(_translate("Dialog", "2023 1. Hafta Genel Cizelge"))
