@@ -20,17 +20,17 @@ experience_list = []
 salary_paid = []
 salary_unpaid = []
 new_state = ''
-payment_date_options = []
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(738, 731)
+        Dialog.resize(738, 614)
         Dialog.setStyleSheet("background-color: rgb(0, 52, 77);")
         Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
         self.frame = QtWidgets.QFrame(Dialog)
-        self.frame.setGeometry(QtCore.QRect(20, 90, 701, 571))
+        self.frame.setGeometry(QtCore.QRect(20, 90, 701, 451))
         self.frame.setStyleSheet("color: rgb(255, 230, 207);")
         self.frame.setFrameShape(QtWidgets.QFrame.Box)
         self.frame.setFrameShadow(QtWidgets.QFrame.Plain)
@@ -145,40 +145,15 @@ class Ui_Dialog(object):
         self.label_7.setFont(font)
         self.label_7.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_7.setObjectName("label_7")
-        self.label_8 = QtWidgets.QLabel(self.frame)
-        self.label_8.setGeometry(QtCore.QRect(530, 280, 71, 71))
-        self.label_8.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.label_8.setFrameShape(QtWidgets.QFrame.Panel)
-        self.label_8.setText("")
-        self.label_8.setPixmap(QtGui.QPixmap("default-user-image.png"))
-        self.label_8.setScaledContents(True)
-        self.label_8.setObjectName("label_8")
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.label_8.setFont(font)
-        self.pushButton_5 = QtWidgets.QPushButton(self.frame)
-        self.pushButton_5.setGeometry(QtCore.QRect(580, 330, 21, 21))
-        self.pushButton_5.setAutoFillBackground(False)
-        self.pushButton_5.setStyleSheet("background-color: rgb(209, 209, 209);\n"
-"color: rgb(0, 0, 0);")
-        self.pushButton_5.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_5.setFlat(False)
-        self.pushButton_5.setObjectName("pushButton_5")
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.pushButton_5.setFont(font)
         self.label_27 = QtWidgets.QLabel(self.frame)
-        self.label_27.setGeometry(QtCore.QRect(370, 310, 91, 16))
+        self.label_27.setGeometry(QtCore.QRect(370, 295, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(9)
         self.label_27.setFont(font)
         self.label_27.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_27.setObjectName("label_27")
+        self.label_27.setWordWrap(True)
         self.lineEdit_23 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_23.setGeometry(QtCore.QRect(170, 260, 141, 20))
         self.lineEdit_23.setStyleSheet("background-color: rgb(255, 255, 255);\n"
@@ -334,8 +309,21 @@ class Ui_Dialog(object):
         font.setPointSize(9)
         font.setItalic(False)
         self.dateEdit_2.setFont(font)
+        self.dateEdit_3 = QtWidgets.QDateEdit(self.frame)
+        self.dateEdit_3.setGeometry(QtCore.QRect(480, 300, 161, 22))
+        self.dateEdit_3.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                      "color: rgb(0, 0, 0);")
+        self.dateEdit_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.dateEdit_3.setDateTime(QtCore.QDateTime(QtCore.QDate(2020, 1, 1), QtCore.QTime(0, 0, 0)))
+        self.dateEdit_3.setCalendarPopup(True)
+        self.dateEdit_3.setObjectName("dateEdit_3")
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(9)
+        font.setItalic(False)
+        self.dateEdit_3.setFont(font)
         self.listWidget = QtWidgets.QListWidget(self.frame)
-        self.listWidget.setGeometry(QtCore.QRect(150, 280, 161, 81))
+        self.listWidget.setGeometry(QtCore.QRect(150, 280, 161, 61))
         self.listWidget.setStyleSheet("background-color: rgb(209, 209, 209);\n"
 "color: rgb(0, 0, 0);")
         self.listWidget.setObjectName("listWidget")
@@ -377,49 +365,8 @@ class Ui_Dialog(object):
         font.setPointSize(9)
         font.setItalic(False)
         self.lineEdit_28.setFont(font)
-        self.label_35 = QtWidgets.QLabel(self.frame)
-        self.label_35.setGeometry(QtCore.QRect(40, 380, 101, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        self.label_35.setFont(font)
-        self.label_35.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_35.setObjectName("label_35")
-        self.comboBox_7 = QtWidgets.QComboBox(self.frame)
-        self.comboBox_7.setGeometry(QtCore.QRect(150, 380, 161, 21))
-        self.comboBox_7.setAutoFillBackground(False)
-        self.comboBox_7.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.comboBox_7.setObjectName("comboBox_7")
-        self.comboBox_7.setEditable(True)
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.comboBox_7.setFont(font)
-        self.label_36 = QtWidgets.QLabel(self.frame)
-        self.label_36.setGeometry(QtCore.QRect(370, 370, 91, 41))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        self.label_36.setFont(font)
-        self.label_36.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_36.setWordWrap(True)
-        self.label_36.setObjectName("label_36")
-        self.comboBox_8 = QtWidgets.QComboBox(self.frame)
-        self.comboBox_8.setGeometry(QtCore.QRect(480, 380, 161, 21))
-        self.comboBox_8.setAutoFillBackground(False)
-        self.comboBox_8.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.comboBox_8.setObjectName("comboBox_8")
-        self.comboBox_8.setEditable(True)
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.comboBox_8.setFont(font)
         self.label_16 = QtWidgets.QLabel(self.frame)
-        self.label_16.setGeometry(QtCore.QRect(250, 500, 211, 21))
+        self.label_16.setGeometry(QtCore.QRect(250, 350, 211, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(9)
@@ -429,7 +376,7 @@ class Ui_Dialog(object):
         self.label_16.setWordWrap(True)
         self.label_16.setObjectName("label_16")
         self.checkBox = QtWidgets.QCheckBox(self.frame)
-        self.checkBox.setGeometry(QtCore.QRect(80, 530, 70, 17))
+        self.checkBox.setGeometry(QtCore.QRect(80, 380, 100, 17))
         self.checkBox.setObjectName("checkBox")
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -437,7 +384,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.checkBox.setFont(font)
         self.checkBox_2 = QtWidgets.QCheckBox(self.frame)
-        self.checkBox_2.setGeometry(QtCore.QRect(170, 530, 41, 17))
+        self.checkBox_2.setGeometry(QtCore.QRect(170, 410, 100, 17))
         self.checkBox_2.setObjectName("checkBox_2")
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -445,7 +392,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.checkBox_2.setFont(font)
         self.checkBox_3 = QtWidgets.QCheckBox(self.frame)
-        self.checkBox_3.setGeometry(QtCore.QRect(220, 530, 70, 17))
+        self.checkBox_3.setGeometry(QtCore.QRect(220, 380, 100, 17))
         self.checkBox_3.setObjectName("checkBox_3")
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -453,7 +400,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.checkBox_3.setFont(font)
         self.checkBox_4 = QtWidgets.QCheckBox(self.frame)
-        self.checkBox_4.setGeometry(QtCore.QRect(310, 530, 70, 17))
+        self.checkBox_4.setGeometry(QtCore.QRect(310, 410, 100, 17))
         self.checkBox_4.setObjectName("checkBox_4")
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -461,7 +408,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.checkBox_4.setFont(font)
         self.checkBox_5 = QtWidgets.QCheckBox(self.frame)
-        self.checkBox_5.setGeometry(QtCore.QRect(400, 530, 51, 17))
+        self.checkBox_5.setGeometry(QtCore.QRect(400, 380, 100, 17))
         self.checkBox_5.setObjectName("checkBox_5")
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -469,7 +416,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.checkBox_5.setFont(font)
         self.checkBox_6 = QtWidgets.QCheckBox(self.frame)
-        self.checkBox_6.setGeometry(QtCore.QRect(560, 530, 70, 17))
+        self.checkBox_6.setGeometry(QtCore.QRect(560, 410, 100, 17))
         self.checkBox_6.setObjectName("checkBox_6")
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -477,62 +424,15 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.checkBox_6.setFont(font)
         self.checkBox_7 = QtWidgets.QCheckBox(self.frame)
-        self.checkBox_7.setGeometry(QtCore.QRect(470, 530, 70, 17))
+        self.checkBox_7.setGeometry(QtCore.QRect(470, 380, 100, 17))
         self.checkBox_7.setObjectName("checkBox_7")
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(9)
         font.setItalic(False)
         self.checkBox_7.setFont(font)
-        self.pushButton_9 = QtWidgets.QPushButton(self.frame, clicked = lambda : self.paid_to_unpaid())
-        self.pushButton_9.setGeometry(QtCore.QRect(150, 420, 161, 21))
-        self.pushButton_9.setAutoFillBackground(False)
-        self.pushButton_9.setStyleSheet("background-color: rgb(209, 209, 209);\n"
-"color: rgb(0, 0, 0);")
-        self.pushButton_9.setIconSize(QtCore.QSize(35, 35))
-        self.pushButton_9.setFlat(False)
-        self.pushButton_9.setObjectName("pushButton_9")
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.pushButton_9.setFont(font)
-        self.pushButton_10 = QtWidgets.QPushButton(self.frame, clicked = lambda : self.unpaid_to_paid())
-        self.pushButton_10.setGeometry(QtCore.QRect(480, 420, 161, 21))
-        self.pushButton_10.setAutoFillBackground(False)
-        self.pushButton_10.setStyleSheet("background-color: rgb(209, 209, 209);\n"
-"color: rgb(0, 0, 0);")
-        self.pushButton_10.setIconSize(QtCore.QSize(35, 35))
-        self.pushButton_10.setFlat(False)
-        self.pushButton_10.setObjectName("pushButton_10")
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.pushButton_10.setFont(font)
-        self.label_37 = QtWidgets.QLabel(self.frame)
-        self.label_37.setGeometry(QtCore.QRect(370, 450, 101, 41))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        self.label_37.setFont(font)
-        self.label_37.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_37.setWordWrap(True)
-        self.label_37.setObjectName("label_37")
-        self.comboBox_9 = QtWidgets.QComboBox(self.frame)
-        self.comboBox_9.setGeometry(QtCore.QRect(480, 460, 161, 21))
-        self.comboBox_9.setAutoFillBackground(False)
-        self.comboBox_9.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.comboBox_9.setObjectName("comboBox_9")
-        self.comboBox_9.setEditable(True)
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.comboBox_9.setFont(font)
-        self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : self.data_save())
-        self.pushButton.setGeometry(QtCore.QRect(310, 680, 75, 31))
+        self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : close_dialog())
+        self.pushButton.setGeometry(QtCore.QRect(310, 560, 75, 31))
         self.pushButton.setStyleSheet("background-color: rgb(255, 230, 207);")
         self.pushButton.setObjectName("pushButton")
         font = QtGui.QFont()
@@ -540,8 +440,8 @@ class Ui_Dialog(object):
         font.setPointSize(9)
         font.setItalic(False)
         self.pushButton.setFont(font)
-        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(390, 680, 75, 31))
+        self.pushButton_2 = QtWidgets.QPushButton(Dialog, clicked = lambda : Dialog.close())
+        self.pushButton_2.setGeometry(QtCore.QRect(390, 560, 75, 31))
         self.pushButton_2.setStyleSheet("background-color: rgb(255, 230, 207);")
         self.pushButton_2.setObjectName("pushButton_2")
         font = QtGui.QFont()
@@ -590,19 +490,19 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        def close_dialog():
+            self.data_save()
+            Dialog.close()
+
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
 
 
         self.comboBox_6.addItems(['Full-time', 'Part-time'])
-        payment_date_options = []
-        for i in range(1,29):
-            payment_date_options.append(str(i))
-        self.comboBox_9.addItems(payment_date_options)
 
         for employee in data_objects.employees:
             self.comboBox.addItem(employee['name'] + ' ' + employee['surname'])
-            new_state = employee['status']
+            self.comboBox.model().sort(0)
 
 
 
@@ -627,20 +527,8 @@ class Ui_Dialog(object):
             self.pushButton_3.hide()
             self.pushButton_7.setDisabled(True)
             self.pushButton_7.hide()
-            self.comboBox_9.setDisabled(True)
-            self.comboBox_9.hide()
-            self.comboBox_8.setDisabled(True)
-            self.comboBox_8.hide()
-            self.comboBox_7.setDisabled(True)
-            self.comboBox_7.hide()
-            self.pushButton_9.setDisabled(True)
-            self.pushButton_9.hide()
-            self.pushButton_10.setDisabled(True)
-            self.pushButton_10.hide()
             self.label_14.hide()
-            self.label_35.hide()
-            self.label_36.hide()
-            self.label_37.hide()
+
 
     def combo_changed(self):
         self.listWidget.clear()
@@ -651,9 +539,6 @@ class Ui_Dialog(object):
                 else:
                     self.pushButton_7.setText('Aktive Et')
                 try:
-                    self.comboBox_7.clear()
-                    self.comboBox_8.clear()
-                    #self.label_8.setPixmap(employee['photo'])
                     self.comboBox_5.setCurrentText(employee['title'])
                     self.lineEdit.setText(employee['name'])
                     self.lineEdit_2.setText(employee['surname'])
@@ -661,13 +546,13 @@ class Ui_Dialog(object):
                     self.lineEdit_4.setText(employee['identity_no'])
                     self.lineEdit_19.setText(employee['graduation_school'])
                     self.dateEdit_2.setDate(datetime.strptime(employee['graduation_date'], '%Y-%m-%d').date())
+                    self.dateEdit_3.setDate(datetime.strptime(employee['registration_date'], '%d-%m-%Y').date())
                     self.listWidget.addItems(employee['experience'])
                     str_paid = employee['paid_salary'][1:-1]
                     if len(str_paid) > 0:
                         paid_list = str_paid.split(',')
                     else:
                         paid_list = []
-                    self.comboBox_7.addItems(paid_list)
                     self.lineEdit_25.setText(employee['phone'])
                     self.lineEdit_26.setText(employee['email'])
                     self.lineEdit_16.setText(employee['address'])
@@ -678,8 +563,6 @@ class Ui_Dialog(object):
                         unpaid_list = str_unpaid.split(',')
                     else:
                         unpaid_list = []
-                    self.comboBox_8.addItems(unpaid_list)
-                    self.comboBox_9.setCurrentText(employee['monthly_payment_date'])
                     for day in employee['working_days']:
                         if day == 'Pazartesi':
                             self.checkBox.setChecked(True)
@@ -764,18 +647,6 @@ class Ui_Dialog(object):
         else:
             pass
 
-
-    def paid_to_unpaid(self):
-        item = self.comboBox_7.currentText()
-        self.comboBox_7.removeItem(self.comboBox_7.currentIndex())
-        self.comboBox_8.addItem(item)
-        salary_unpaid.append(item)
-    def unpaid_to_paid(self):
-        item = self.comboBox_8.currentText()
-        self.comboBox_8.removeItem(self.comboBox_8.currentIndex())
-        self.comboBox_7.addItem(item)
-        salary_paid.append(item)
-
     def data_save(self):
         msgBox = QMessageBox()
         msgBox.setWindowTitle("Calisan Verisi Duzenle")
@@ -825,7 +696,7 @@ class Ui_Dialog(object):
                         "agreed_salary": self.lineEdit_27.text().title(),
                         "photo": '-',
                         "status": new_state,
-                        "registration_date": employee['registration_date'],
+                        "registration_date": self.dateEdit_3.date().toPyDate(),
                         "working_days": day_of_work,
                         "salary_change": salary_changed,
                         "teacher_schedule": employee['teacher_schedule'],
@@ -833,7 +704,6 @@ class Ui_Dialog(object):
                         "teacher_skipped": employee['teacher_skipped'],
                         "schedule_changed": employee['schedule_changed'],
                         "schedule_cancelled": employee['schedule_cancelled'],
-                        "monthly_payment_date": self.comboBox_9.currentText(),
                         "paid_salary": salary_paid,
                         "unpaid_salary": salary_unpaid
                     }
@@ -843,9 +713,9 @@ class Ui_Dialog(object):
                     with open('employee_data.txt', 'r', encoding="utf-8") as f:
                         data_objects.employees = json.load(f)
 
-                    connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
+                    '''connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
                     connect_database.upload_files('employee_data.txt')
-                    connect_database.upload_files('employee_data.csv')
+                    connect_database.upload_files('employee_data.csv')'''
                 else:
                     pass
 
@@ -876,9 +746,7 @@ class Ui_Dialog(object):
         self.label_22.setText(_translate("Dialog", "Adres"))
         self.label_5.setText(_translate("Dialog", "Mezun Oldugu Kurum"))
         self.label_7.setText(_translate("Dialog", "Telefon No"))
-        self.pushButton_5.setToolTip(_translate("Dialog", "Fotograf Yukle"))
-        self.pushButton_5.setText(_translate("Dialog", "+"))
-        self.label_27.setText(_translate("Dialog", "Fotograf Ekle"))
+        self.label_27.setText(_translate("Dialog", "Ise Baslangic Tarihi"))
         self.label_9.setText(_translate("Dialog", "Gecmis Kurum /Kurumlar"))
         self.label_10.setText(_translate("Dialog", "Mezuniyet Tarihi"))
         self.pushButton_6.setToolTip(_translate("Dialog", "Fotograf Yukle"))
@@ -890,8 +758,6 @@ class Ui_Dialog(object):
         self.pushButton_8.setToolTip(_translate("Dialog", "Fotograf Yukle"))
         self.pushButton_8.setText(_translate("Dialog", "-"))
         self.label_15.setText(_translate("Dialog", "Yeni Ucret Ekle"))
-        self.label_35.setText(_translate("Dialog", "Yapilan Odemeler"))
-        self.label_36.setText(_translate("Dialog", "Yapilmayan Odemeler"))
         self.label_16.setText(_translate("Dialog", "Calisma Gunleri:"))
         self.checkBox.setText(_translate("Dialog", "Pazartesi"))
         self.checkBox_2.setText(_translate("Dialog", "Sali"))
@@ -900,11 +766,6 @@ class Ui_Dialog(object):
         self.checkBox_5.setText(_translate("Dialog", "Cuma"))
         self.checkBox_6.setText(_translate("Dialog", "Pazar"))
         self.checkBox_7.setText(_translate("Dialog", "Cumartesi"))
-        self.pushButton_9.setToolTip(_translate("Dialog", "Fotograf Yukle"))
-        self.pushButton_9.setText(_translate("Dialog", "Secili Odeme Yapilmadi"))
-        self.pushButton_10.setToolTip(_translate("Dialog", "Fotograf Yukle"))
-        self.pushButton_10.setText(_translate("Dialog", "Secili Odeme Yapildi"))
-        self.label_37.setText(_translate("Dialog", "Aylik Odeme Gunu"))
         self.pushButton.setText(_translate("Dialog", "Kaydet"))
         self.pushButton_2.setText(_translate("Dialog", "Vazgec"))
         self.label_13.setText(_translate("Dialog", "   Calisan Bilgileri"))

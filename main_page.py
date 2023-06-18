@@ -25,7 +25,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QDate, Qt, QTimer
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QAbstractItemView, QVBoxLayout, QGridLayout, QSpacerItem, \
-    QSizePolicy, QHBoxLayout, QWidget, QHeaderView, QMenu, QAction, QStyle, QTableWidget
+    QSizePolicy, QHBoxLayout, QWidget, QHeaderView, QMenu, QAction, QStyle, QTableWidget, QComboBox
 import data_objects
 from PyQt5.QtGui import QTextCharFormat
 import matplotlib.pyplot as plt
@@ -1710,7 +1710,6 @@ class Ui_Dialog(object):
         font.setFamily("Arial")
         font.setPointSize(9)
         font.setBold(True)
-        font.setWeight(75)
         self.label_194.setFont(font)
         self.label_194.setStyleSheet("color:  rgb(255, 230, 207);\n"
                                      "background-color: rgb(37, 67, 98);")
@@ -1722,11 +1721,13 @@ class Ui_Dialog(object):
                                       "color: rgb(0, 0, 0);")
 
         self.comboBox_2.setObjectName("comboBox_2")
+        self.comboBox_2.setMinimumContentsLength(1)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(9)
         font.setItalic(False)
         self.comboBox_2.setFont(font)
+
         self.comboBox_3 = QtWidgets.QComboBox(self.frame_2)
         self.comboBox_3.setGeometry(QtCore.QRect(260, 50, 271, 31))
         self.comboBox_3.setStyleSheet("background-color: rgb(249, 243, 255);\n"
@@ -1744,9 +1745,6 @@ class Ui_Dialog(object):
         self.frame_7.hide()
         self.frame_4.hide()
         self.frame_9.hide()
-
-
-
 
 
         self.frame_13 = QtWidgets.QFrame(Dialog)
@@ -1808,6 +1806,8 @@ class Ui_Dialog(object):
         self.tableWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget.resizeRowsToContents()
+        self.tableWidget.setWordWrap(True)
         self.pushButton_19 = QtWidgets.QPushButton(self.frame_13, clicked = lambda : self.step_back_weekly())
         self.pushButton_19.setGeometry(QtCore.QRect(270, 40, 31, 31))
         self.pushButton_19.setFixedSize(31,31)
@@ -2030,7 +2030,6 @@ class Ui_Dialog(object):
         self.layout_3.addWidget(self.tableWidget)
         self.layout_4.setContentsMargins(10, 10, 10, 10)
         self.layout_1.setContentsMargins(0,0,30,10)
-
         self.layout_5 = QVBoxLayout(self.frame_2)
         self.layout_6 = QHBoxLayout()
         self.layout_7 = QVBoxLayout()
@@ -2389,7 +2388,6 @@ class Ui_Dialog(object):
 
             self.comboBox.setCurrentIndex(1)
             self.comboBox.setCurrentIndex(0)
-
 
     def tab_change_student(self, index):
         if index == 0:
@@ -3188,6 +3186,7 @@ class Ui_Dialog(object):
 
             for student in data_objects.students:
                 self.comboBox_2.addItem((student['name']) + ' ' + (student['surname']))
+                self.comboBox_2.setItemData(0,(student['name']) + ' ' + (student['surname']).replace("\n", "\\n"), role=Qt.DisplayRole)
                 student_list.append((student['name']) + ' ' + (student['surname']))
             self.comboBox_3.addItems(restricted_student_list)
         except json.decoder.JSONDecodeError:
@@ -3242,15 +3241,24 @@ class Ui_Dialog(object):
         self.label_30.setText("  Ogrenci Bilgileri Genel Ozet")
         self.tabWidget.setCurrentIndex(0)
         data_count_student = 2
+        selected = ''
         try:
             with open('employee_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.employees = json.load(f)
             with open('student_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.students = json.load(f)
             if data_objects.active_auth_level == 4:
-                i = self.comboBox_3.currentIndex()
+                selected = self.comboBox_3.currentText()
             else:
-                i = self.comboBox_2.currentIndex()
+                selected = self.comboBox_2.currentText()
+            selected_list = selected.split(' ')
+            i = 0
+            for student in data_objects.students:
+                if selected_list[0] in student['name'] and selected_list[-1] in student['surname']:
+                    i = data_objects.students.index(student)
+                    break
+                else:
+                    i = 0
             self.label_25.setPixmap(QtGui.QPixmap("default-user-image.png"))
             self.label_52.setText(data_objects.students[i]['name'])
             self.label_53.setText(data_objects.students[i]['surname'])
@@ -3285,6 +3293,7 @@ class Ui_Dialog(object):
                 self.label_41.setText("Durum: {}".format(stat))
                 self.label_38.setPixmap(QtGui.QPixmap("delete.png"))
                 self.label_38.raise_()
+
 
 
         except IndexError:
@@ -3417,15 +3426,10 @@ class Ui_Dialog(object):
 
                     if 'Grup Dersi' in schedule:
                         column_no = header_list.index((employee['name']+' '+employee['surname']))
-                        text = ", ".join(group_class_list)
-                        item = QTableWidgetItem(f"Grup Dersi \n {text}")
+                        item = QTableWidgetItem('Grup Dersi: \n {}'.format(group_class_list))
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
-                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        item.setTextAlignment(Qt.AlignCenter)
                         self.tableWidget.setItem(row_no, column_no, item)
-                        # Set the vertical header height to fit the maximum content height
-                        for row in range(self.tableWidget.rowCount()):
-                            content_height = self.get_maximum_content_height(row)
-                            self.tableWidget.verticalHeader().resizeSection(row, content_height)
 
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
@@ -3579,7 +3583,6 @@ class Ui_Dialog(object):
 
     def handle_context_menu_action(self, option, cell):
         global group_class_list
-        print(f"Selected '{option}' for cell {cell.row()}-{cell.column()}")
         group_class_list = []
         class_options.open_class_options()
         if cell.row() in range(0, 10):
@@ -4150,6 +4153,7 @@ class Ui_Dialog(object):
         self.dateEdit.setDate(QDate.currentDate())
         self.comboBox.setCurrentIndex(1)
         self.comboBox.setCurrentIndex(0)
+        self.comboBox_2.model().sort(0)
         self.load_general_schedule()
         self.pushButton_3.setDisabled(True)
         self.pushButton_4.setDisabled(True)

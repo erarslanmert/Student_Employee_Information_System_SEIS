@@ -17,6 +17,7 @@ import deneme
 
 import main_page, new_user
 import connect_database
+import trial
 
 
 def resource_path(relative_path):
@@ -39,7 +40,7 @@ class Ui_MainWindow(object):
                              "selection-background-color: rgb(255, 255, 255);")
         MainWindow.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         MainWindow.setWindowIcon(QtGui.QIcon("logo_hq.png"))
-        self.pushButton = QtWidgets.QPushButton(MainWindow, clicked = lambda : deneme.deneme_open())
+        self.pushButton = QtWidgets.QPushButton(MainWindow, clicked = lambda : self.user_loggedin())
         self.pushButton.setGeometry(QtCore.QRect(44, 390, 111, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -149,6 +150,51 @@ class Ui_MainWindow(object):
         connect_database.download_files('student_data.txt')
         connect_database.download_files('employee_data.txt')'''
 
+        def process_student_data_file():
+            with open('student_data.txt', 'r', encoding="utf-8") as f:
+                data_objects.students = json.load(f)
+
+            # Process the data
+            for item in data_objects.students:
+                name = item.get('name')
+                if name and ' ' in name:
+                    item['name'] = name.replace(' ', '-')
+                if name.endswith('-'):
+                    item['name'] = name.replace('-', '')   # Remove the trailing '-' if it is not followed by a word character
+
+                for key, value in item.items():
+                    if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
+                        item[key] = value.replace('\n','')
+
+
+            # Save the updated data back to the file
+            with open("student_data.txt", "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(data_objects.students, default=str))
+
+        process_student_data_file()
+        
+        def process_employee_data_file():
+            with open('employee_data.txt', 'r', encoding="utf-8") as f:
+                data_objects.employees = json.load(f)
+
+            # Process the data
+            for item in data_objects.employees:
+                name = item.get('name')
+                if name and ' ' in name:
+                    item['name'] = name.replace(' ', '-')
+                if name.endswith('-'):
+                    item['name'] = name.replace('-', '')   # Remove the trailing '-' if it is not followed by a word character
+
+                for key, value in item.items():
+                    if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
+                        item[key] = value.replace('\n','')
+
+
+            # Save the updated data back to the file
+            with open("employee_data.txt", "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(data_objects.employees, default=str))
+
+        process_employee_data_file()
 
         with open('user_list.txt', 'r', encoding="utf-8") as f:
             data_objects.users = json.load(f)
@@ -158,6 +204,7 @@ class Ui_MainWindow(object):
             data_objects.employees = json.load(f)
         with open('remember_me.txt', 'r', encoding="utf-8") as f:
             self.remember_user = json.load(f)
+
 
         if len(self.remember_user) == 1:
             self.checkBox.setChecked(True)

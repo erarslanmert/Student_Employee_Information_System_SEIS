@@ -642,7 +642,7 @@ class Ui_Dialog(object):
         self.label_26.setFont(font)
         self.label_26.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_26.setObjectName("label_26")
-        self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : self.data_save())
+        self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : close_dialog())
         self.pushButton.setGeometry(QtCore.QRect(290, 850, 75, 31))
         self.pushButton.setStyleSheet("background-color: rgb(255, 230, 207);")
         self.pushButton.setObjectName("pushButton")
@@ -713,6 +713,10 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        def close_dialog():
+            self.data_save()
+            Dialog.close()
+
         with open('student_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.students = json.load(f)
 
@@ -736,7 +740,7 @@ class Ui_Dialog(object):
 
         for student in data_objects.students:
                 self.comboBox_5.addItem(student['name'] + ' ' + student['surname'])
-                new_state = student['status']
+                self.comboBox_5.model().sort(0)
         if len(data_objects.students) > 1:
                 self.comboBox_5.setCurrentIndex(1)
                 self.comboBox_5.setCurrentIndex(0)
@@ -935,9 +939,9 @@ class Ui_Dialog(object):
                                     with open('student_data.txt', 'r', encoding="utf-8") as f:
                                             data_objects.students = json.load(f)
 
-                                    connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
+                                    '''connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
                                     connect_database.upload_files('student_data.txt')
-                                    connect_database.upload_files('student_data.csv')
+                                    connect_database.upload_files('student_data.csv')'''
 
                             else:
                                     pass

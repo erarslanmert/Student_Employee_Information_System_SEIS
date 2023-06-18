@@ -351,9 +351,9 @@ class Ui_Dialog(object):
                                         info_box.setStandardButtons(QMessageBox.Ok)
                                         info_box.exec_()
                                         self.ready_to_close = True
-                                        connect_database.upload_files('user_list.txt')
+                                        '''connect_database.upload_files('user_list.txt')
                                         connect_database.txt_to_csv('user_list.txt','user_list.csv')
-                                        connect_database.upload_files('user_list.csv')
+                                        connect_database.upload_files('user_list.csv')'''
                                 else:
                                         pass
 
