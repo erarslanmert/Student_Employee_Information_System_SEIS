@@ -608,44 +608,40 @@ class Ui_Dialog(object):
                     current_date = datetime.date.today()
                     formatted_date = current_date.strftime("%d/%m/%Y")
                     new_state = 'Pasif' + '           ' + formatted_date
+                    self.pushButton_7.setText('Aktive Et')
                 elif response == QMessageBox.Yes and 'Pasif' in employee['status']:
                     current_date = datetime.date.today()
                     formatted_date = current_date.strftime("%d/%m/%Y")
                     new_state = 'Aktif' + '           ' + formatted_date
+                    self.pushButton_7.setText('Deaktive Et')
                 else:
                     pass
 
     def delete_employee(self):
-        msgBox = QMessageBox()
-        msgBox.setWindowTitle("Calisani Sil")
-        msgBox.setIcon(QMessageBox.Question)
-        msgBox.setText(
-            "Calisan sistemden tamamen silinecektir. Kabul ediyor musunuz?")
-        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        yesButton = msgBox.button(QMessageBox.Yes)
-        yesButton.setText("Evet")
-        noButton = msgBox.button(QMessageBox.No)
-        noButton.setText("Hayir")
-        response = msgBox.exec_()
-        # Perform an action based on the user's response
-        if response == QMessageBox.Yes:
-            for employee in data_objects.employees:
-                if employee['name'] + ' ' + employee['surname'] == self.comboBox.currentText():
-                    data_objects.employees.remove(employee)
-                    with open("employee_data.txt", "w", encoding="utf-8") as f:
-                        f.writelines(json.dumps(data_objects.employees, default=str))
-                    data_objects.one_employee = {}
-
-                    with open('employee_data.txt', 'r', encoding="utf-8") as f:
-                        data_objects.employees = json.load(f)
-                    self.comboBox.removeItem(data_objects.employees.index(employee))
-                    self.comboBox.setCurrentIndex(1)
-                    self.comboBox.setCurrentIndex(0)
-
+        try:
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Calisani Sil")
+                msgBox.setIcon(QMessageBox.Question)
+                msgBox.setText(
+                    "Calisan sistemden tamamen silinecektir. Kabul ediyor musunuz?")
+                msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                yesButton = msgBox.button(QMessageBox.Yes)
+                yesButton.setText("Evet")
+                noButton = msgBox.button(QMessageBox.No)
+                noButton.setText("Hayir")
+                response = msgBox.exec_()
+                # Perform an action based on the user's response
+                if response == QMessageBox.Yes:
+                    for employee in data_objects.employees:
+                        if employee['name'] + ' ' + employee['surname'] == self.comboBox.currentText():
+                            data_objects.employees.remove(employee)
+                            data_objects.one_employee = {}
+                        else:
+                            pass
                 else:
                     pass
-        else:
-            pass
+        except ValueError:
+                pass
 
     def data_save(self):
         msgBox = QMessageBox()

@@ -331,7 +331,8 @@ class Ui_Dialog(object):
         self.label_40.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_40.setObjectName("label_40")
         self.label_41 = QtWidgets.QLabel(self.frame_302)
-        self.label_41.setGeometry(QtCore.QRect(10, 8, 331, 31))
+        self.label_41.setGeometry(QtCore.QRect(10, 8, 400, 31))
+        self.label_41.setFixedSize(450,31)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -3188,6 +3189,7 @@ class Ui_Dialog(object):
                 self.comboBox_2.addItem((student['name']) + ' ' + (student['surname']))
                 self.comboBox_2.setItemData(0,(student['name']) + ' ' + (student['surname']).replace("\n", "\\n"), role=Qt.DisplayRole)
                 student_list.append((student['name']) + ' ' + (student['surname']))
+                self.comboBox_2.model().sort(0)
             self.comboBox_3.addItems(restricted_student_list)
         except json.decoder.JSONDecodeError:
             pass
@@ -3230,6 +3232,7 @@ class Ui_Dialog(object):
                         pass
                     else:
                         self.comboBox_2.addItem((employee['name']) + ' ' + (employee['surname']))
+            self.comboBox_2.model().sort(0)
         except json.decoder.JSONDecodeError:
             pass
 
@@ -4158,6 +4161,52 @@ class Ui_Dialog(object):
         self.pushButton_3.setDisabled(True)
         self.pushButton_4.setDisabled(True)
         self.pushButton_7.setDisabled(True)
+
+        def process_student_data_file():
+            with open('student_data.txt', 'r', encoding="utf-8") as f:
+                data_objects.students = json.load(f)
+
+            # Process the data
+            for item in data_objects.students:
+                name = item.get('name')
+                if name and ' ' in name:
+                    item['name'] = name.replace(' ', '-')
+                if name.endswith('-'):
+                    item['name'] = name.replace('-',
+                                                '')  # Remove the trailing '-' if it is not followed by a word character
+
+                for key, value in item.items():
+                    if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
+                        item[key] = value.replace('\n', '')
+
+            # Save the updated data back to the file
+            with open("student_data.txt", "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(data_objects.students, default=str))
+
+        process_student_data_file()
+
+        def process_employee_data_file():
+            with open('employee_data.txt', 'r', encoding="utf-8") as f:
+                data_objects.employees = json.load(f)
+
+            # Process the data
+            for item in data_objects.employees:
+                name = item.get('name')
+                if name and ' ' in name:
+                    item['name'] = name.replace(' ', '-')
+                if name.endswith('-'):
+                    item['name'] = name.replace('-',
+                                                '')  # Remove the trailing '-' if it is not followed by a word character
+
+                for key, value in item.items():
+                    if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
+                        item[key] = value.replace('\n', '')
+
+            # Save the updated data back to the file
+            with open("employee_data.txt", "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(data_objects.employees, default=str))
+
+        process_employee_data_file()
 
 
     def show_general_schedule(self):

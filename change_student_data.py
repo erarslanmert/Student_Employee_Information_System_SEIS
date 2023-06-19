@@ -817,15 +817,17 @@ class Ui_Dialog(object):
                                     current_date = datetime.date.today()
                                     formatted_date = current_date.strftime("%d/%m/%Y")
                                     new_state = 'Pasif' + '           ' + formatted_date
+                                    self.pushButton_7.setText('Aktive Et')
                             elif response == QMessageBox.Yes and 'Pasif' in student['status']:
                                     current_date = datetime.date.today()
                                     formatted_date = current_date.strftime("%d/%m/%Y")
                                     new_state = 'Aktif' + '           ' + formatted_date
+                                    self.pushButton_7.setText('Deaktive Et')
                             else:
                                     pass
 
     def delete_student(self):
-            self.listWidget.clear()
+        try:
             msgBox = QMessageBox()
             msgBox.setWindowTitle("Ogrenciyi Sil")
             msgBox.setIcon(QMessageBox.Question)
@@ -842,14 +844,13 @@ class Ui_Dialog(object):
                     for student in data_objects.students:
                             if student['name'] + ' ' + student['surname'] == self.comboBox_5.currentText():
                                     data_objects.students.remove(student)
-                                    self.comboBox_5.removeItem(data_objects.students.index(student))
-                                    self.comboBox_5.setCurrentIndex(1)
-                                    self.comboBox_5.setCurrentIndex(0)
-
+                                    data_objects.one_student = {}
                             else:
-                                    pass
+                                pass
             else:
-                    pass
+                pass
+        except ValueError:
+                pass
 
     def paid_to_unpaid(self):
             item = self.comboBox_6.currentText()
