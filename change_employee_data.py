@@ -602,20 +602,25 @@ class Ui_Dialog(object):
         noButton.setText("Hayir")
         response = msgBox.exec_()
         for employee in data_objects.employees:
-            if self.comboBox.currentText() == employee['name'] + ' ' + employee['surname']:
+            if employee['name'] + ' ' + employee['surname'] == self.comboBox.currentText():
         # Perform an action based on the user's response
                 if response == QMessageBox.Yes and 'Aktif' in employee['status']:
                     current_date = datetime.date.today()
                     formatted_date = current_date.strftime("%d/%m/%Y")
                     new_state = 'Pasif' + '           ' + formatted_date
+                    employee['status'] = new_state
                     self.pushButton_7.setText('Aktive Et')
+                    self.pushButton_7.setDisabled(True)
                 elif response == QMessageBox.Yes and 'Pasif' in employee['status']:
                     current_date = datetime.date.today()
                     formatted_date = current_date.strftime("%d/%m/%Y")
                     new_state = 'Aktif' + '           ' + formatted_date
+                    employee['status'] = new_state
                     self.pushButton_7.setText('Deaktive Et')
+                    self.pushButton_7.setDisabled(True)
                 else:
                     pass
+
 
     def delete_employee(self):
         try:
@@ -661,7 +666,6 @@ class Ui_Dialog(object):
             import datetime
             current_date = datetime.date.today()
             formatted_date = current_date.strftime("%d/%m/%Y")
-            formatted_date_2 = current_date.strftime("%Y-%m-%d")
             salary_changed = []
             day_of_work = []
             days = [self.checkBox,self.checkBox_2,self.checkBox_3,self.checkBox_4, self.checkBox_5,self.checkBox_6,self.checkBox_7]

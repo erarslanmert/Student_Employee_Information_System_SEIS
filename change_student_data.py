@@ -817,14 +817,19 @@ class Ui_Dialog(object):
                                     current_date = datetime.date.today()
                                     formatted_date = current_date.strftime("%d/%m/%Y")
                                     new_state = 'Pasif' + '           ' + formatted_date
+                                    student['status'] = new_state
                                     self.pushButton_7.setText('Aktive Et')
+                                    self.pushButton_7.setDisabled(True)
                             elif response == QMessageBox.Yes and 'Pasif' in student['status']:
                                     current_date = datetime.date.today()
                                     formatted_date = current_date.strftime("%d/%m/%Y")
                                     new_state = 'Aktif' + '           ' + formatted_date
+                                    student['status'] = new_state
                                     self.pushButton_7.setText('Deaktive Et')
+                                    self.pushButton_7.setDisabled(True)
                             else:
                                     pass
+
 
     def delete_student(self):
         try:
@@ -843,10 +848,11 @@ class Ui_Dialog(object):
             if response == QMessageBox.Yes:
                     for student in data_objects.students:
                             if student['name'] + ' ' + student['surname'] == self.comboBox_5.currentText():
-                                    data_objects.students.remove(student)
+                                    del data_objects.students[data_objects.students.index(student)]
                                     data_objects.one_student = {}
                             else:
                                 pass
+                    self.pushButton_3.setDisabled(True)
             else:
                 pass
         except ValueError:
@@ -883,7 +889,6 @@ class Ui_Dialog(object):
                     import datetime
                     current_date = datetime.date.today()
                     formatted_date = current_date.strftime("%d/%m/%Y")
-                    formatted_date_2 = current_date.strftime("%Y-%m-%d")
                     salary_changed = []
                     for student in data_objects.students:
                             if self.comboBox.currentText() == student['name'] + ' ' + student['surname']:

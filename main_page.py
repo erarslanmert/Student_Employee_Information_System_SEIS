@@ -18,6 +18,7 @@ import datetime
 import check_attandence
 import connect_database
 import change_data_options
+import general_statistics_dashboard
 import save_options
 import json
 import textwrap
@@ -96,7 +97,7 @@ class Ui_Dialog(object):
         self.pushButton_7.setDefault(False)
         self.pushButton_7.setFlat(False)
         self.pushButton_7.setObjectName("pushButton_7")
-        self.pushButton_3 = QtWidgets.QPushButton(self.frame_400, clicked = lambda : self.check_student_attandence())
+        self.pushButton_3 = QtWidgets.QPushButton(self.frame_400, clicked = lambda : general_statistics_dashboard.barchart_general())
         self.pushButton_3.setGeometry(QtCore.QRect(50, 320, 231, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -106,7 +107,7 @@ class Ui_Dialog(object):
         self.pushButton_3.setStyleSheet("background-color: rgb(255, 230, 207);")
         self.pushButton_3.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("attendence.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("statistics.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_3.setIcon(icon1)
         self.pushButton_3.setIconSize(QtCore.QSize(30, 30))
         self.pushButton_3.setDefault(False)
@@ -299,8 +300,8 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.pushButton_10.setFont(font)
         self.frame_302 = QtWidgets.QFrame(self.frame_3)
-        self.frame_302.setGeometry(QtCore.QRect(30, 613, 271, 40))
-        self.frame_302.setFixedSize(271,40)
+        self.frame_302.setGeometry(QtCore.QRect(30, 613, 350, 40))
+        self.frame_302.setFixedSize(350,40)
         self.frame_302.setStyleSheet("background-color: rgb(105, 100, 163);\n"
                                    "background-color: rgb(37, 67, 98);")
         self.frame_302.setObjectName("frame_101")
@@ -1798,7 +1799,7 @@ class Ui_Dialog(object):
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(300)
-        self.tableWidget.horizontalHeader().setMinimumSectionSize(50)
+        self.tableWidget.horizontalHeader().setMinimumSectionSize(200)
         self.tableWidget.verticalHeader().setMinimumSectionSize(50)
         font = QtGui.QFont()
         font.setPointSize(9)
@@ -2278,6 +2279,7 @@ class Ui_Dialog(object):
         if data_objects.active_auth_level == 1:
             import datetime
             self.label_8.setText('Ust Yonetici Ekrani')
+            self.pushButton_3.setEnabled(True)
             fixed_day = []
             student_with_debt = []
             for student in data_objects.students:
@@ -2317,6 +2319,7 @@ class Ui_Dialog(object):
             self.comboBox_9.hide()
             self.label_100.hide()
             self.label_177.hide()
+            self.pushButton_3.setEnabled(True)
             fixed_day = []
             student_with_debt = []
             for student in data_objects.students:
@@ -2352,6 +2355,7 @@ class Ui_Dialog(object):
             self.label_8.setText('Sekreter Ekrani')
             self.comboBox.setCurrentText('Ogrenci Verileri')
             self.comboBox.setDisabled(True)
+            self.pushButton_3.setDisabled(True)
             self.frame_11.hide()
             self.frame_7.hide()
         elif data_objects.active_auth_level == 4:
@@ -2360,6 +2364,7 @@ class Ui_Dialog(object):
             self.pushButton_4.setDisabled(True)
             self.pushButton_7.setDisabled(True)
             self.pushButton_9.setDisabled(True)
+            self.pushButton_3.setDisabled(True)
             self.frame_13.hide()
             self.frame_2.show()
             self.comboBox_2.setDisabled(True)
@@ -3538,6 +3543,7 @@ class Ui_Dialog(object):
                         pass
                 else:
                     pass
+        self.tableWidget.customContextMenuRequested.connect(self.show_context_menu)
 
     def populate_table(self):
         for row in range(self.tableWidget.rowCount()):
@@ -3566,7 +3572,7 @@ class Ui_Dialog(object):
             action3.triggered.connect(lambda: self.handle_context_menu_action("Grup Dersi Ekle", cell))
             menu.addAction(action3)
 
-            action4 = QAction("Dersi Duzenle", self.tableWidget)
+            action4 = QAction("Aktar (1 Hafta)", self.tableWidget)
             action4.triggered.connect(lambda: self.handle_context_menu_action("Dersi Duzenle", cell))
             menu.addAction(action4)
 
@@ -3833,7 +3839,7 @@ class Ui_Dialog(object):
 
     def step_fwd_weekly(self):
         global week_1, year_1, firstdayofweek, date_list
-        self.tableWidget.clear()
+        self.populate_table()
         date_list = []
         if week_1 == 52:
             week_1 = 1
@@ -3888,7 +3894,7 @@ class Ui_Dialog(object):
 
     def step_back_weekly(self):
         global week_1, year_1, firstdayofweek, date_list
-        self.tableWidget.clear()
+        self.populate_table()
         date_list = []
         if week_1 == 1:
             week_1 = 52
@@ -4210,6 +4216,8 @@ class Ui_Dialog(object):
 
 
     def show_general_schedule(self):
+        self.step_fwd_weekly()
+        self.step_back_weekly()
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
 
@@ -4245,7 +4253,7 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Ana Sayfa"))
         self.pushButton_7.setText(_translate("Dialog", " Verileri Yonet"))
-        self.pushButton_3.setText(_translate("Dialog", " Yoklama"))
+        self.pushButton_3.setText(_translate("Dialog", " Kurum Istatistikleri"))
         self.pushButton_14.setText(_translate("Dialog", " Aktar (1 Hafta)"))
         self.pushButton_8.setText(_translate("Dialog", " Cikis Yap"))
         self.pushButton_2.setText(_translate("Dialog", " Genel Program"))
