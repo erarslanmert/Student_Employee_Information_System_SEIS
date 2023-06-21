@@ -11,10 +11,8 @@ import os
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QStyleFactory, QMessageBox
-
 import data_objects
-import deneme
-
+import date_consistency
 import main_page, new_user
 import connect_database
 import trial
@@ -149,6 +147,20 @@ class Ui_MainWindow(object):
         '''connect_database.download_files('user_list.txt')
         connect_database.download_files('student_data.txt')
         connect_database.download_files('employee_data.txt')'''
+
+        with open('student_data.txt', 'r', encoding="utf-8") as f:
+            data_objects.students = json.load(f)
+        with open('employee_data.txt', 'r', encoding="utf-8") as f:
+            data_objects.employees = json.load(f)
+
+        date_consistency.convert_dates_in_list(data_objects.students)
+        date_consistency.convert_dates_in_list(data_objects.employees)
+
+        with open("student_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.students, default=str))
+        with open("employee_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.employees, default=str))
+
 
         def process_student_data_file():
             with open('student_data.txt', 'r', encoding="utf-8") as f:

@@ -9,6 +9,8 @@
 import os
 import shutil
 from collections import defaultdict
+
+import date_consistency
 import delete_lesson
 import numpy as np
 import pandas as pd
@@ -64,7 +66,7 @@ lastly_selected_student = ''
 lastly_selected_employee = ''
 
 deleted_class = []
-
+row_height = []
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -2183,12 +2185,12 @@ class Ui_Dialog(object):
                     check_date_2 = check_date.split(' ')
                     given_date = check_date_2[-1]
                     # Parse the given date into a datetime object
-                    parsed_date = datetime.strptime(given_date, "%Y-%m-%d")
+                    parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
                     # Get the current month and year as integers
                     current_month = datetime.now().month
                     current_year = datetime.now().year
                     reg_date = student['registration date']
-                    parsed_date_2 = datetime.strptime(reg_date, "%Y-%m-%d")
+                    parsed_date_2 = datetime.strptime(reg_date, "%d-%m-%Y")
                     if len(student['unpaid_debt']) > 0:
                         for check_added in student['unpaid_debt']:
                             if (str(parsed_date.year) + '-' + f"{parsed_date.month:02d}") in check_added:
@@ -2207,7 +2209,7 @@ class Ui_Dialog(object):
                         check_date_2 = check_date.split('TL/')
                         given_date = check_date_2[-1]
                         # Parse the given date into a datetime object
-                        parsed_date = datetime.strptime(given_date, "%Y-%m-%d")
+                        parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
                         price_change_years.append(parsed_date.year)
                         price_change_months.append(parsed_date.month)
                         monthly_amount_debt.append(int(check_date_2[0]))
@@ -2237,7 +2239,7 @@ class Ui_Dialog(object):
                     date_dict = defaultdict(int)
                     for price in prices:
                         price, date_str = price.split('TL/')
-                        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                        date = datetime.strptime(date_str, '%d-%m-%Y').date()
                         date_dict[date] += int(price)
                     return [f'{price}TL/{date}' for date, price in sorted(date_dict.items())]
                 try:
@@ -3407,7 +3409,7 @@ class Ui_Dialog(object):
         return max_height
 
     def load_general_schedule(self):
-        global group_class_list, date_list
+        global group_class_list, date_list, row_height
         days = ['PAZARTESI 20', 'SALI 20', 'CARSAMBA 20', 'PERSEMBE 20', 'CUMA 20', 'CUMARTESI 20', 'PAZAR 20']
         v_header = [' ', '9:30-10:10', '10:30-11:10', '11:30-12:10', '12:30-13:10', '13:10-14:00', '14:00-14:40',
                     '15:00-15:40', '16:00-16:40', '17:00-17:40']
@@ -3425,6 +3427,7 @@ class Ui_Dialog(object):
                     my_list_string = my_string[list_start:list_end]
                     my_list = eval(my_list_string)
                     group_class_list = my_list
+                    row_height.append(len(group_class_list))
                     for day in days:
                         if day in schedule:
                             session = days.index(day)
@@ -3434,21 +3437,22 @@ class Ui_Dialog(object):
 
                     if 'Grup Dersi' in schedule:
                         column_no = header_list.index((employee['name']+' '+employee['surname']))
-                        item = QTableWidgetItem('Grup Dersi: \n {}'.format(group_class_list))
+                        item = QTableWidgetItem('GRUP DERSI: \n {}'.format('\n'.join(group_class_list)))
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)
                         self.tableWidget.setItem(row_no, column_no, item)
+                        self.tableWidget.verticalHeader().setMinimumSectionSize(30 + max(row_height) * 17)
 
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        item = QTableWidgetItem(f"{group_class_list[0]} - Akademik Ders")
+                        item = QTableWidgetItem(f"{group_class_list[0]} - AKADEMIK DERS")
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
                         self.tableWidget.setItem(row_no, column_no, item)
 
                     elif 'Attentioner Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        item = QTableWidgetItem(f"{group_class_list[0]} - Attentioner Ders")
+                        item = QTableWidgetItem(f"{group_class_list[0]} - ATTENTIONER DERS")
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
                         self.tableWidget.setItem(row_no, column_no, item)
@@ -4104,12 +4108,22 @@ class Ui_Dialog(object):
 
     def show_data(self):
         global date_list
+
+        date_consistency.convert_dates_in_list(data_objects.students)
+        date_consistency.convert_dates_in_list(data_objects.employees)
+
+        with open("student_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.students, default=str))
+        with open("employee_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.employees, default=str))
+
         self.tableWidget.clear()
         self.comboBox.clear()
         self.dateEdit.setDate(QDate.currentDate())
         date_list = []
         self.load_txt()
         self.find_week_number()
+
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
 

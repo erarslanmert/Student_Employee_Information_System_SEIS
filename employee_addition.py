@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QMessageBox
 import connect_database
 from PyQt5.QtCore import QDate
 import data_objects
+import date_consistency
 import main_page
 
 experience_list = []
@@ -432,8 +433,7 @@ class Ui_Dialog(object):
         if response == QMessageBox.Yes:
             self.get_items()
             current_date = datetime.date.today()
-            formatted_date = current_date.strftime("%d/%m/%Y")
-            formatted_date_2 = current_date.strftime("%d-%m-%Y")
+            formatted_date = current_date.strftime("%d-%m-%Y")
             data_objects.one_employee = {
                         "title": self.comboBox_5.currentText(),
                         "name": self.lineEdit.text().title(),
@@ -450,7 +450,7 @@ class Ui_Dialog(object):
                         "agreed_salary": self.lineEdit_27.text().title(),
                         "photo": '-',
                         "status": 'Aktif' + '           ' + formatted_date,
-                        "registration_date": formatted_date_2,
+                        "registration_date": formatted_date,
                         "working_days": [],
                         "salary_change": [],
                         "teacher_schedule": [],
@@ -464,6 +464,8 @@ class Ui_Dialog(object):
                 }
             data_objects.employees.append(data_objects.one_employee)
             # write data to file
+            date_consistency.convert_dates_in_list(data_objects.employees)
+
             with open("employee_data.txt", "w", encoding="utf-8") as f:
                     f.writelines(json.dumps(data_objects.employees,default=str))
             data_objects.one_employee = {}

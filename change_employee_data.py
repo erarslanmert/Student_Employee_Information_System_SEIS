@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 import connect_database
 import data_objects
+import date_consistency
 
 experience_list = []
 salary_paid = []
@@ -490,6 +491,12 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        date_consistency.convert_dates_in_list(data_objects.employees)
+
+        # write data to file
+        with open("employee_data.txt", "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(data_objects.employees, default=str))
+
         def close_dialog():
             self.data_save()
             Dialog.close()
@@ -542,10 +549,10 @@ class Ui_Dialog(object):
                     self.comboBox_5.setCurrentText(employee['title'])
                     self.lineEdit.setText(employee['name'])
                     self.lineEdit_2.setText(employee['surname'])
-                    self.dateEdit.setDate(datetime.strptime(employee['date_of_birth'], '%Y-%m-%d').date())
+                    self.dateEdit.setDate(datetime.strptime(employee['date_of_birth'], '%d-%m-%Y').date())
                     self.lineEdit_4.setText(employee['identity_no'])
                     self.lineEdit_19.setText(employee['graduation_school'])
-                    self.dateEdit_2.setDate(datetime.strptime(employee['graduation_date'], '%Y-%m-%d').date())
+                    self.dateEdit_2.setDate(datetime.strptime(employee['graduation_date'], '%d-%m-%Y').date())
                     self.dateEdit_3.setDate(datetime.strptime(employee['registration_date'], '%d-%m-%Y').date())
                     self.listWidget.addItems(employee['experience'])
                     str_paid = employee['paid_salary'][1:-1]
@@ -606,14 +613,14 @@ class Ui_Dialog(object):
         # Perform an action based on the user's response
                 if response == QMessageBox.Yes and 'Aktif' in employee['status']:
                     current_date = datetime.date.today()
-                    formatted_date = current_date.strftime("%d/%m/%Y")
+                    formatted_date = current_date.strftime("%d-%m-%Y")
                     new_state = 'Pasif' + '           ' + formatted_date
                     employee['status'] = new_state
                     self.pushButton_7.setText('Aktive Et')
                     self.pushButton_7.setDisabled(True)
                 elif response == QMessageBox.Yes and 'Pasif' in employee['status']:
                     current_date = datetime.date.today()
-                    formatted_date = current_date.strftime("%d/%m/%Y")
+                    formatted_date = current_date.strftime("%d-%m-%Y")
                     new_state = 'Aktif' + '           ' + formatted_date
                     employee['status'] = new_state
                     self.pushButton_7.setText('Deaktive Et')
@@ -639,6 +646,7 @@ class Ui_Dialog(object):
                 if response == QMessageBox.Yes:
                     for employee in data_objects.employees:
                         if employee['name'] + ' ' + employee['surname'] == self.comboBox.currentText():
+                            print(employee)
                             data_objects.employees.remove(employee)
                             data_objects.one_employee = {}
                         else:
@@ -665,7 +673,7 @@ class Ui_Dialog(object):
             self.get_items()
             import datetime
             current_date = datetime.date.today()
-            formatted_date = current_date.strftime("%d/%m/%Y")
+            formatted_date = current_date.strftime("%d-%m-%Y")
             salary_changed = []
             day_of_work = []
             days = [self.checkBox,self.checkBox_2,self.checkBox_3,self.checkBox_4, self.checkBox_5,self.checkBox_6,self.checkBox_7]
@@ -707,6 +715,9 @@ class Ui_Dialog(object):
                         "paid_salary": salary_paid,
                         "unpaid_salary": salary_unpaid
                     }
+
+                    date_consistency.convert_dates_in_list(data_objects.employees)
+
                     # write data to file
                     with open("employee_data.txt", "w", encoding="utf-8") as f:
                         f.writelines(json.dumps(data_objects.employees, default=str))

@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QMessageBox
 import connect_database
 from PyQt5.QtCore import QDate
 import data_objects
+import date_consistency
 import main_page
 import deactivate_student
 
@@ -713,6 +714,11 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        date_consistency.convert_dates_in_list(data_objects.students)
+        # write data to file
+        with open("student_data.txt", "w", encoding="utf-8") as f:
+                f.writelines(json.dumps(data_objects.students, default=str))
+
         def close_dialog():
             self.data_save()
             Dialog.close()
@@ -762,12 +768,12 @@ class Ui_Dialog(object):
                                     self.lineEdit.setText(student['name'])
                                     self.lineEdit_2.setText(student['surname'])
                                     self.dateEdit.setDate(
-                                            datetime.strptime(student['date_of_birth'], '%Y-%m-%d').date())
+                                            datetime.strptime(student['date_of_birth'], '%d-%m-%Y').date())
                                     self.lineEdit_4.setText(student['identity_no'])
                                     self.lineEdit_19.setText(student['school'])
                                     self.comboBox.setCurrentText(student['class'])
                                     self.dateEdit_2.setDate(
-                                            datetime.strptime(student['registration date'], '%Y-%m-%d').date())
+                                            datetime.strptime(student['registration date'], '%d-%m-%Y').date())
                                     self.listWidget.addItems(student['former_support'])
                                     self.comboBox_6.addItems(student['paid_debt'])
                                     self.lineEdit_16.setText(student['address'])
@@ -815,14 +821,14 @@ class Ui_Dialog(object):
                             # Perform an action based on the user's response
                             if response == QMessageBox.Yes and 'Aktif' in student['status']:
                                     current_date = datetime.date.today()
-                                    formatted_date = current_date.strftime("%d/%m/%Y")
+                                    formatted_date = current_date.strftime("%d-%m-%Y")
                                     new_state = 'Pasif' + '           ' + formatted_date
                                     student['status'] = new_state
                                     self.pushButton_7.setText('Aktive Et')
                                     self.pushButton_7.setDisabled(True)
                             elif response == QMessageBox.Yes and 'Pasif' in student['status']:
                                     current_date = datetime.date.today()
-                                    formatted_date = current_date.strftime("%d/%m/%Y")
+                                    formatted_date = current_date.strftime("%d-%m-%Y")
                                     new_state = 'Aktif' + '           ' + formatted_date
                                     student['status'] = new_state
                                     self.pushButton_7.setText('Deaktive Et')
@@ -888,7 +894,7 @@ class Ui_Dialog(object):
                     self.get_items()
                     import datetime
                     current_date = datetime.date.today()
-                    formatted_date = current_date.strftime("%d/%m/%Y")
+                    formatted_date = current_date.strftime("%d-%m-%Y")
                     salary_changed = []
                     for student in data_objects.students:
                             if self.comboBox.currentText() == student['name'] + ' ' + student['surname']:
@@ -939,6 +945,8 @@ class Ui_Dialog(object):
                                                 "unpaid_debt": salary_unpaid,
                                                 "student_left": deactivation_mode
                                         }
+
+                                    date_consistency.convert_dates_in_list(data_objects.students)
                                     # write data to file
                                     with open("student_data.txt", "w", encoding="utf-8") as f:
                                             f.writelines(json.dumps(data_objects.students, default=str))

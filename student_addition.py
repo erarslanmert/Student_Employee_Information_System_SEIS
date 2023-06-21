@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import QMessageBox
 import connect_database
 import data_objects
 import json
+
+import date_consistency
 import main_page
 
 experience_list =[]
@@ -598,7 +600,7 @@ class Ui_Dialog(object):
         if response == QMessageBox.Yes:
             self.get_items()
             current_date = datetime.date.today()
-            formatted_date = current_date.strftime("%d/%m/%Y")
+            formatted_date = current_date.strftime("%d-%m-%Y")
             # sample data to write to file
             data_objects.one_student = {
                         "name": self.lineEdit.text().title(),
@@ -637,6 +639,9 @@ class Ui_Dialog(object):
                         "student_left": '-'
                 }
             data_objects.students.append(data_objects.one_student)
+
+            date_consistency.convert_dates_in_list(data_objects.students)
+
             # write data to file
             with open("student_data.txt", "w", encoding="utf-8") as f:
                     f.writelines(json.dumps(data_objects.students,default=str))
