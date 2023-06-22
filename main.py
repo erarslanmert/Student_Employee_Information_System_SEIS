@@ -144,6 +144,9 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.lineEdit.setText('erarslan.mert')
+        self.lineEdit_2.setText('mert1993')
+
         '''connect_database.download_files('user_list.txt')
         connect_database.download_files('student_data.txt')
         connect_database.download_files('employee_data.txt')'''

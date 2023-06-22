@@ -9,7 +9,7 @@
 import os
 import shutil
 from collections import defaultdict
-
+import cancel_class
 import date_consistency
 import delete_lesson
 import numpy as np
@@ -3441,7 +3441,7 @@ class Ui_Dialog(object):
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)
                         self.tableWidget.setItem(row_no, column_no, item)
-                        self.tableWidget.verticalHeader().setMinimumSectionSize(30 + max(row_height) * 17)
+                        self.tableWidget.verticalHeader().setMinimumSectionSize(30 + max(row_height) * 15)
 
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
@@ -3576,20 +3576,20 @@ class Ui_Dialog(object):
             action3.triggered.connect(lambda: self.handle_context_menu_action("Grup Dersi Ekle", cell))
             menu.addAction(action3)
 
-            action4 = QAction("Aktar (1 Hafta)", self.tableWidget)
-            action4.triggered.connect(lambda: self.handle_context_menu_action("Dersi Duzenle", cell))
+            action4 = QAction("Dersi Iptal Et", self.tableWidget)
+            action4.triggered.connect(lambda: self.handle_context_menu_action("Dersi Iptal Et", cell))
             menu.addAction(action4)
 
-            action5 = QAction("Dersi Iptal Et", self.tableWidget)
-            action5.triggered.connect(lambda: self.handle_context_menu_action("Dersi Iptal Et", cell))
+            action5 = QAction("Yoklama Bilgisi Ekle", self.tableWidget)
+            action5.triggered.connect(lambda: self.handle_context_menu_action("Yoklama Bilgisi Ekle", cell))
             menu.addAction(action5)
 
-            action6 = QAction("Dersi Sil", self.tableWidget)
-            action6.triggered.connect(lambda: self.handle_context_menu_action("Dersi Sil", cell))
+            action6 = QAction("Aktar (1 Hafta)", self.tableWidget)
+            action6.triggered.connect(lambda: self.handle_context_menu_action("Aktar (1 Hafta)", cell))
             menu.addAction(action6)
 
-            action7 = QAction("Yoklama Bilgisi Ekle", self.tableWidget)
-            action7.triggered.connect(lambda: self.handle_context_menu_action("Yoklama Bilgisi Ekle", cell))
+            action7 = QAction("Dersi Sil", self.tableWidget)
+            action7.triggered.connect(lambda: self.handle_context_menu_action("Dersi Sil", cell))
             menu.addAction(action7)
 
             menu.exec_(self.tableWidget.viewport().mapToGlobal(pos))
@@ -3597,7 +3597,6 @@ class Ui_Dialog(object):
     def handle_context_menu_action(self, option, cell):
         global group_class_list
         group_class_list = []
-        class_options.open_class_options()
         if cell.row() in range(0, 10):
             item = self.tableWidget.item(0, 0).text()
         elif cell.row() in range(10, 20):
@@ -3616,6 +3615,7 @@ class Ui_Dialog(object):
             pass
 
         if option == "Akademik Ders Ekle":
+            class_options.open_class_options()
             for student in data_objects.students:
                 if (student['name'] + ' ' + student['surname']) in group_class_list:
                     student['student_schedule'].append(
@@ -3627,6 +3627,7 @@ class Ui_Dialog(object):
                     employee['teacher_schedule'].append(('Akademik Ders' + ' ' + str(group_class_list) + ' ' +
                                                          self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
         elif option == "Attentioner Ders Ekle":
+            class_options.open_class_options()
             for student in data_objects.students:
                 if (student['name'] + ' ' + student['surname']) in group_class_list:
                     student['student_schedule'].append(
@@ -3639,6 +3640,7 @@ class Ui_Dialog(object):
                                                          self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
 
         elif option == "Grup Dersi Ekle":
+            class_options.open_class_options()
             for student in data_objects.students:
                 if (student['name'] + ' ' + student['surname']) in group_class_list:
                     student['student_schedule'].append('Grup Dersi' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text()+
@@ -3647,6 +3649,15 @@ class Ui_Dialog(object):
                 if (employee['name']+' '+employee['surname']) == self.tableWidget.horizontalHeaderItem(cell.column()).text():
                     employee['teacher_schedule'].append(('Grup Dersi' + ' ' + str(group_class_list) + ' ' +
                                                          self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+
+        elif option == "Dersi Iptal Et":
+            for lesson in attandence_list:
+                if item in lesson and  self.tableWidget.verticalHeaderItem(cell.row()).text() in lesson and self.tableWidget.horizontalHeaderItem(cell.column()).text() in lesson:
+                    cancel_class.lesson_selected = lesson
+                else:
+                    pass
+            cancel_class.class_cancel()
+
 
         '''for student in data_objects.students:
             for schedule in student['student_schedule']:
@@ -3766,18 +3777,13 @@ class Ui_Dialog(object):
             for schedule in employee['teacher_schedule']:
                 schedule_2 = schedule.split(']')
                 attandence_list.append(employee['name'] + ' ' + employee['surname'] + schedule_2[-1])
-        check_attandence.check_attandence_open()
-
-        self.show_data()
-        self.load_general_schedule()
-        self.show_general_schedule()
 
 
     def copy_schedule_next(self):
         global group_class_list, date_list, week_1, year_1, date_list
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Warning)
-        msg_box.setText('Ders programinin tam kopyasi bir sonraki haftaya aktarilaacaktir. '
+        msg_box.setText('Planlanan (Tamamlanan/Iptal Olan Dersler Dahil Degildir) derslerin tam kopyasi bir sonraki haftaya aktarilaacaktir. '
                         'Bir sonraki haftada bulunan tum programlariniz tamamen silinecek ve '
                         'yerine kopyalanan haftanin verileri kaydedilecektir. Onayliyor musunuz?')
         msg_box.setWindowTitle('Uyarı')
@@ -3786,7 +3792,6 @@ class Ui_Dialog(object):
         response = msg_box.exec()
         if response == QMessageBox.Ok:
             # display the QMessageBox and wait for user input
-            response = msg_box.exec()
             date_list_1 = date_list
             self.step_fwd_weekly()
             date_list_2 = date_list

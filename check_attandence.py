@@ -353,7 +353,7 @@ class Ui_Dialog(object):
         self.radioButton_2.setText(_translate("Dialog", "Ders Iptal Edildi (OgretmenTarafindan)"))
         self.radioButton_3.setText(_translate("Dialog", "Ders Iptal Edildi (Kurum Tarafindan)"))
 
-def check_attandence_open():
+def can():
     Dialog = QtWidgets.QDialog()
     Dialog.setStyle(QtWidgets.QStyleFactory.create("WindowsVista"))
     ui = Ui_Dialog()
