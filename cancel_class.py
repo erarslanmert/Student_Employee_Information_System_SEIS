@@ -87,6 +87,7 @@ class Ui_Dialog(object):
     def press_okay(self):
         global attended_class_list, lesson_selected
         lesson_teacher = ''
+        print(lesson_selected)
         if self.radioButton.isChecked() == True:
             for student in data_objects.students:
                 for schedule in student['student_schedule']:

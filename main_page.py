@@ -67,6 +67,8 @@ lastly_selected_employee = ''
 
 deleted_class = []
 row_height = []
+row_extender = 0
+section_size = 0
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -1792,6 +1794,22 @@ class Ui_Dialog(object):
         self.pushButton_14.setDefault(False)
         self.pushButton_14.setFlat(False)
         self.pushButton_14.setObjectName("pushButton_14")
+        self.pushButton_100 = QtWidgets.QPushButton(self.frame_13, clicked=lambda: self.expand_general_schedule())
+        self.pushButton_100.setFixedSize(40, 20)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(11)
+        font.setItalic(False)
+        self.pushButton_100.setFont(font)
+        self.pushButton_100.setStyleSheet("background-color: rgb(255, 230, 207);")
+        self.pushButton_100.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("monitor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_100.setIcon(icon5)
+        self.pushButton_100.setIconSize(QtCore.QSize(30, 30))
+        self.pushButton_100.setDefault(False)
+        self.pushButton_100.setFlat(False)
+        self.pushButton_100.setObjectName("pushButton_100")
         self.tableWidget = QtWidgets.QTableWidget(self.frame_13)
         self.tableWidget.setGeometry(QtCore.QRect(10, 90, 791, 661))
         self.tableWidget.setStyleSheet("color: rgb(0, 0, 0);\n"
@@ -1803,6 +1821,7 @@ class Ui_Dialog(object):
         self.tableWidget.horizontalHeader().setDefaultSectionSize(300)
         self.tableWidget.horizontalHeader().setMinimumSectionSize(200)
         self.tableWidget.verticalHeader().setMinimumSectionSize(50)
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         font = QtGui.QFont()
         font.setPointSize(9)
         self.tableWidget.verticalHeader().setFont(font)
@@ -2031,6 +2050,7 @@ class Ui_Dialog(object):
         self.layout_4.addWidget(self.label_35)
         self.layout_4.addWidget(self.pushButton_20)
         self.layout_4.addWidget(self.dateEdit)
+        self.layout_4.addWidget(self.pushButton_100)
         self.layout_3.addWidget(self.tableWidget)
         self.layout_4.setContentsMargins(10, 10, 10, 10)
         self.layout_1.setContentsMargins(0,0,30,10)
@@ -2169,50 +2189,53 @@ class Ui_Dialog(object):
                 personel_full_list.append(data_objects.employees.index(employee))
 
         def check_debt(student):
-            if len(student['student_attended']) > 0:
-                from datetime import datetime
-                debt_dates_month = []
-                debt_dates_year = []
-                calculated_debt = []
-                monthly_amount_debt = []
-                price_change_months = []
-                price_change_years = []
-                total_debt = []
-                last_debt = []
-                agreed_price = int(student['agreed_price'])
-                printer = ''
-                for check_date in student['student_attended']:
-                    check_date_2 = check_date.split(' ')
-                    given_date = check_date_2[-1]
-                    # Parse the given date into a datetime object
-                    parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
-                    # Get the current month and year as integers
-                    current_month = datetime.now().month
-                    current_year = datetime.now().year
-                    reg_date = student['registration date']
-                    parsed_date_2 = datetime.strptime(reg_date, "%d-%m-%Y")
-                    if len(student['unpaid_debt']) > 0:
-                        for check_added in student['unpaid_debt']:
-                            if (str(parsed_date.year) + '-' + f"{parsed_date.month:02d}") in check_added:
-                                continue
-                            else:
-                                if parsed_date.year < current_year or (parsed_date.year == current_year and parsed_date.month < current_month):
-                                    if parsed_date_2.year < parsed_date.year or (parsed_date_2.year == parsed_date.year and parsed_date_2.month < parsed_date.month):
-                                        debt_dates_year.append(parsed_date.year)
-                                        debt_dates_month.append(parsed_date.month)
-
-                    else:
-                        debt_dates_year.append(parsed_date.year)
-                        debt_dates_month.append(parsed_date.month)
-                if len(student['price_change']) > 0:
-                    for check_date in student['price_change']:
-                        check_date_2 = check_date.split('TL/')
+            try:
+                if len(student['student_attended']) > 0:
+                    from datetime import datetime
+                    debt_dates_month = []
+                    debt_dates_year = []
+                    calculated_debt = []
+                    monthly_amount_debt = []
+                    price_change_months = []
+                    price_change_years = []
+                    total_debt = []
+                    last_debt = []
+                    agreed_price = int(student['agreed_price'])
+                    printer = ''
+                    for check_date in student['student_attended']:
+                        check_date_2 = check_date.split(' ')
                         given_date = check_date_2[-1]
                         # Parse the given date into a datetime object
                         parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
-                        price_change_years.append(parsed_date.year)
-                        price_change_months.append(parsed_date.month)
-                        monthly_amount_debt.append(int(check_date_2[0]))
+                        # Get the current month and year as integers
+                        current_month = datetime.now().month
+                        current_year = datetime.now().year
+                        reg_date = student['registration date']
+                        parsed_date_2 = datetime.strptime(reg_date, "%d-%m-%Y")
+                        if len(student['unpaid_debt']) > 0:
+                            for check_added in student['unpaid_debt']:
+                                if (str(parsed_date.year) + '-' + f"{parsed_date.month:02d}") in check_added:
+                                    continue
+                                else:
+                                    if parsed_date.year < current_year or (parsed_date.year == current_year and parsed_date.month < current_month):
+                                        if parsed_date_2.year < parsed_date.year or (parsed_date_2.year == parsed_date.year and parsed_date_2.month < parsed_date.month):
+                                            debt_dates_year.append(parsed_date.year)
+                                            debt_dates_month.append(parsed_date.month)
+
+                        else:
+                            debt_dates_year.append(parsed_date.year)
+                            debt_dates_month.append(parsed_date.month)
+                    if len(student['price_change']) > 0:
+                        for check_date in student['price_change']:
+                            check_date_2 = check_date.split('TL/')
+                            given_date = check_date_2[-1]
+                            # Parse the given date into a datetime object
+                            parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
+                            price_change_years.append(parsed_date.year)
+                            price_change_months.append(parsed_date.month)
+                            monthly_amount_debt.append(int(check_date_2[0]))
+            except ValueError:
+                pass
 
 
 
@@ -2266,8 +2289,8 @@ class Ui_Dialog(object):
                 for debt in last_debt:
                     if last_debt.index(debt) not in debt_index:
                         student['unpaid_debt'].append(debt)
-        for stdnt in data_objects.students:
-            check_debt(stdnt)
+        '''for stdnt in data_objects.students:
+            check_debt(stdnt)'''
         with open("student_data.txt", "w", encoding="utf-8") as f:
             f.writelines(json.dumps(data_objects.students, default=str))
         with open('student_data.txt', 'r', encoding="utf-8") as f:
@@ -2430,7 +2453,7 @@ class Ui_Dialog(object):
                             row = hours.index(day_1[4])
                             column = days.index(day_1[5])
                             item = QTableWidgetItem()
-                            item.setText(day_1[0] + ' ' + day_1[1] + ' ' + day_1[2] + ' ' + day_1[3])
+                            item.setText(day_1[0] + ' ' + day_1[1] + ' - ' + day_1[2] + ' ' + day_1[3])
                             item.setBackground(QColor('#FFD9A8'))
                             self.tableWidget_2.setItem(row, column, item)
                     except ValueError:
@@ -2445,7 +2468,7 @@ class Ui_Dialog(object):
                             row = hours.index(day_1[4])
                             column = days.index(day_1[5])
                             item = QTableWidgetItem()
-                            item.setText(day_1[0] + ' ' + day_1[1] + ' ' + day_1[2] + ' ' + day_1[3])
+                            item.setText(day_1[0] + ' ' + day_1[1] + ' - ' + day_1[2] + ' ' + day_1[3])
                             item.setBackground(QColor('#C5FFC5'))
                             self.tableWidget_2.setItem(row, column, item)
                     except ValueError:
@@ -2460,7 +2483,7 @@ class Ui_Dialog(object):
                             row = hours.index(day_1[4])
                             column = days.index(day_1[5])
                             item = QTableWidgetItem()
-                            item.setText(day_1[0] + ' ' + day_1[1] + ' ' + day_1[2] + ' ' + day_1[3])
+                            item.setText(day_1[0] + ' ' + day_1[1] + ' - ' + day_1[2] + ' ' + day_1[3])
                             item.setBackground(QColor('#FF9292'))
                             self.tableWidget_2.setItem(row, column, item)
                     except ValueError:
@@ -2476,7 +2499,7 @@ class Ui_Dialog(object):
                             column = days.index(day_1[8])
                             item = QTableWidgetItem()
                             item.setText(
-                                day_1[0] + ' ' + day_1[1] + ' ' + day_1[2] + ' ' + day_1[3] + ' ' + day_1[4] + ' ' +
+                                day_1[0] + ' ' + day_1[1] + ' ' + day_1[2] + ' - ' + day_1[3] + ' ' + day_1[4] + ' - ' +
                                 day_1[5] + ' ' + day_1[6])
                             item.setBackground(QColor('#DFB2FE'))
                             self.tableWidget_2.setItem(row, column, item)
@@ -3398,6 +3421,13 @@ class Ui_Dialog(object):
         except IndexError:
             pass
 
+    def expand_general_schedule(self):
+        global row_height, row_extender, section_size
+        section_size = int(max(row_height))
+        row_extender = 1
+        self.tableWidget.verticalHeader().setMinimumSectionSize(35 + section_size * 15)
+
+
     def get_maximum_content_height(self, row):
         max_height = 0
         for col in range(self.tableWidget.columnCount()):
@@ -3410,6 +3440,7 @@ class Ui_Dialog(object):
 
     def load_general_schedule(self):
         global group_class_list, date_list, row_height
+        self.tableWidget.verticalHeader().setMinimumSectionSize(50)
         days = ['PAZARTESI 20', 'SALI 20', 'CARSAMBA 20', 'PERSEMBE 20', 'CUMA 20', 'CUMARTESI 20', 'PAZAR 20']
         v_header = [' ', '9:30-10:10', '10:30-11:10', '11:30-12:10', '12:30-13:10', '13:10-14:00', '14:00-14:40',
                     '15:00-15:40', '16:00-16:40', '17:00-17:40']
@@ -3441,7 +3472,6 @@ class Ui_Dialog(object):
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)
                         self.tableWidget.setItem(row_no, column_no, item)
-                        self.tableWidget.verticalHeader().setMinimumSectionSize(30 + max(row_height) * 15)
 
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
@@ -3478,27 +3508,22 @@ class Ui_Dialog(object):
 
                     if 'Grup Dersi' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        comboBox_11 = QtWidgets.QComboBox()
-                        comboBox_11.addItem('                                     Grup Dersi')
-                        comboBox_11.setStyleSheet("background-color: #FF9292;")
-                        for student in group_class_list:
-                            comboBox_11.addItem('                                 ' + student)
-                        self.tableWidget.setCellWidget(row_no, column_no, comboBox_11)
+                        item = QTableWidgetItem('GRUP DERSI: \n {}'.format('\n'.join(group_class_list)))
+                        item.setData(Qt.BackgroundRole, QColor("#FF9292"))
+                        item.setTextAlignment(Qt.AlignCenter)
+                        self.tableWidget.setItem(row_no, column_no, item)
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        label = QtWidgets.QLabel()
-                        label.setAlignment(Qt.AlignCenter)
-                        label.setText(group_class_list[0] + ' - Akademik Ders')
-                        label.setStyleSheet("background-color: #FF9292;")
-                        self.tableWidget.setCellWidget(row_no, column_no, label)
+                        item = QTableWidgetItem(f"{group_class_list[0]} - AKADEMIK DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#FF9292"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
                     elif 'Attentioner Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        label = QtWidgets.QLabel()
-                        label.setAlignment(Qt.AlignCenter)
-                        label.setText(group_class_list[0] + ' - Attentioner Ders')
-                        label.setStyleSheet("background-color: #FF9292;")
-                        self.tableWidget.setCellWidget(row_no, column_no, label)
-                        self.tableWidget.resizeRowToContents(row_no)
+                        item = QTableWidgetItem(f"{group_class_list[0]} - ATTENTIONER DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#FF9292"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
 
                     else:
                         pass
@@ -3522,26 +3547,22 @@ class Ui_Dialog(object):
 
                     if 'Grup Dersi' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        comboBox_11 = QtWidgets.QComboBox()
-                        comboBox_11.addItem('                                     Grup Dersi')
-                        comboBox_11.setStyleSheet("background-color: #C5FFC5;")
-                        for student in group_class_list:
-                            comboBox_11.addItem('                                 ' + student)
-                        self.tableWidget.setCellWidget(row_no, column_no, comboBox_11)
+                        item = QTableWidgetItem('GRUP DERSI: \n {}'.format('\n'.join(group_class_list)))
+                        item.setData(Qt.BackgroundRole, QColor("#C5FFC5"))
+                        item.setTextAlignment(Qt.AlignCenter)
+                        self.tableWidget.setItem(row_no, column_no, item)
                     elif 'Akademik Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        label = QtWidgets.QLabel()
-                        label.setAlignment(Qt.AlignCenter)
-                        label.setText(group_class_list[0] + ' - Akademik Ders')
-                        label.setStyleSheet("background-color: #C5FFC5;")
-                        self.tableWidget.setCellWidget(row_no, column_no, label)
+                        item = QTableWidgetItem(f"{group_class_list[0]} - AKADEMIK DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#C5FFC5"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
                     elif 'Attentioner Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
-                        label = QtWidgets.QLabel()
-                        label.setAlignment(Qt.AlignCenter)
-                        label.setText(group_class_list[0] + ' - Attentioner Ders')
-                        label.setStyleSheet("background-color: #C5FFC5;")
-                        self.tableWidget.setCellWidget(row_no, column_no, label)
+                        item = QTableWidgetItem(f"{group_class_list[0]} - ATTENTIONER DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#C5FFC5"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
 
                     else:
                         pass
@@ -3651,6 +3672,7 @@ class Ui_Dialog(object):
                                                          self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
 
         elif option == "Dersi Iptal Et":
+            self.check_student_attandence()
             for lesson in attandence_list:
                 if item in lesson and  self.tableWidget.verticalHeaderItem(cell.row()).text() in lesson and self.tableWidget.horizontalHeaderItem(cell.column()).text() in lesson:
                     cancel_class.lesson_selected = lesson
@@ -3658,6 +3680,15 @@ class Ui_Dialog(object):
                     pass
             cancel_class.class_cancel()
 
+        elif option == "Yoklama Bilgisi Ekle":
+            self.check_student_attandence()
+            for lesson in attandence_list:
+                if item in lesson and  self.tableWidget.verticalHeaderItem(cell.row()).text() in lesson and self.tableWidget.horizontalHeaderItem(cell.column()).text() in lesson:
+                    check_attandence.attandence_class = lesson
+                    check_attandence.check_group = cell.text()
+                    check_attandence.open_attandence()
+                else:
+                    pass
 
         '''for student in data_objects.students:
             for schedule in student['student_schedule']:
@@ -3955,8 +3986,6 @@ class Ui_Dialog(object):
         self.tableWidget.setHorizontalHeaderLabels(column_names)
         self.dateEdit.setDate(QDate(int(week_2[0]), int(week_2[1]), int(week_2[2])))
         self.load_general_schedule()
-
-
 
 
     def combobox_top(self):

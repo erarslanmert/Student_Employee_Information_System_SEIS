@@ -15,16 +15,18 @@ import main_page, data_objects
 
 
 attended_class_list = []
+attandence_class = ' '
+check_group = ' '
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(353, 670)
+        Dialog.resize(353, 495)
         Dialog.setStyleSheet("background-color: rgb(0, 94, 138);")
         Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
         Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
         self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : close_dialog_ok())
-        self.pushButton.setGeometry(QtCore.QRect(80, 608, 91, 31))
+        self.pushButton.setGeometry(QtCore.QRect(80, 428, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -32,7 +34,7 @@ class Ui_Dialog(object):
         self.pushButton.setStyleSheet("background-color: rgb(255, 254, 238);")
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(Dialog,clicked = lambda : close_dialog_cancel())
-        self.pushButton_2.setGeometry(QtCore.QRect(180, 608, 91, 31))
+        self.pushButton_2.setGeometry(QtCore.QRect(180, 428, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -40,7 +42,7 @@ class Ui_Dialog(object):
         self.pushButton_2.setStyleSheet("background-color: rgb(255, 254, 238);")
         self.pushButton_2.setObjectName("pushButton_2")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(60, 248, 231, 31))
+        self.label.setGeometry(QtCore.QRect(60, 70, 231, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -52,7 +54,7 @@ class Ui_Dialog(object):
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
         self.listWidget = QtWidgets.QListWidget(Dialog)
-        self.listWidget.setGeometry(QtCore.QRect(50, 338, 251, 241))
+        self.listWidget.setGeometry(QtCore.QRect(50, 158, 251, 241))
         self.listWidget.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.listWidget.setObjectName("listWidget")
         font = QtGui.QFont()
@@ -61,7 +63,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.listWidget.setFont(font)
         self.pushButton_3 = QtWidgets.QPushButton(Dialog, clicked = lambda : self.add_item())
-        self.pushButton_3.setGeometry(QtCore.QRect(270, 298, 31, 31))
+        self.pushButton_3.setGeometry(QtCore.QRect(270, 118, 31, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -70,7 +72,7 @@ class Ui_Dialog(object):
                                         "background-color: rgb(226, 226, 226);")
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_4 = QtWidgets.QPushButton(Dialog, clicked = lambda : self.subtract_item())
-        self.pushButton_4.setGeometry(QtCore.QRect(50, 298, 31, 31))
+        self.pushButton_4.setGeometry(QtCore.QRect(50, 118, 31, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -79,7 +81,7 @@ class Ui_Dialog(object):
                                         "background-color: rgb(226, 226, 226);")
         self.pushButton_4.setObjectName("pushButton_4")
         self.comboBox = QtWidgets.QComboBox(Dialog)
-        self.comboBox.setGeometry(QtCore.QRect(90, 300, 171, 25))
+        self.comboBox.setGeometry(QtCore.QRect(90, 120, 171, 25))
         self.comboBox.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox.setObjectName("comboBox")
         font = QtGui.QFont()
@@ -88,7 +90,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.comboBox.setFont(font)
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(40, 18, 251, 31))
+        self.label_2.setGeometry(QtCore.QRect(10, 18, 331, 51))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -99,65 +101,16 @@ class Ui_Dialog(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
-        self.comboBox_2 = QtWidgets.QComboBox(Dialog)
-        self.comboBox_2.setGeometry(QtCore.QRect(50, 70, 251, 25))
-        self.comboBox_2.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.comboBox_2.setObjectName("comboBox_2")
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        font.setItalic(False)
-        self.comboBox_2.setFont(font)
-        self.radioButton = QtWidgets.QRadioButton(Dialog)
-        self.radioButton.setGeometry(QtCore.QRect(50, 120, 271, 20))
+
         font = QtGui.QFont()
         font.setPointSize(11)
-        self.radioButton.setFont(font)
-        self.radioButton.setStyleSheet("color: rgb(255, 255, 255);")
-        self.radioButton.setObjectName("radioButton")
-        self.radioButton_2 = QtWidgets.QRadioButton(Dialog)
-        self.radioButton_2.setGeometry(QtCore.QRect(50, 160, 271, 20))
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        self.radioButton_2.setFont(font)
-        self.radioButton_2.setStyleSheet("color: rgb(255, 255, 255);")
-        self.radioButton_2.setObjectName("radioButton_2")
-        self.radioButton_3 = QtWidgets.QRadioButton(Dialog)
-        self.radioButton_3.setGeometry(QtCore.QRect(50, 200, 271, 20))
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        self.radioButton_3.setFont(font)
-        self.radioButton_3.setStyleSheet("color: rgb(255, 255, 255);")
-        self.radioButton_3.setObjectName("radioButton_3")
-        self.radioButton_4 = QtWidgets.QRadioButton(Dialog)
-        self.radioButton_4.setGeometry(QtCore.QRect(50, 200, 271, 20))
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        self.radioButton_4.setFont(font)
-        self.radioButton_4.setStyleSheet("color: rgb(255, 255, 255);")
-        self.radioButton_4.setObjectName("radioButton_4")
-        self.radioButton_4.hide()
         self.pushButton.setDisabled(True)
-        self.radioButton_4.setChecked(True)
+
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        if data_objects.active_auth_level == 4:
-            self.comboBox_2.clear()
-            for attandence in main_page.attandence_list:
-                if (data_objects.user_logged_in['name'] + ' ' + data_objects.user_logged_in['surname']) in attandence:
-                    self.comboBox_2.addItem(attandence)
-        else:
-            self.comboBox_2.addItems(main_page.attandence_list)
-        self.comboBox_2.currentTextChanged.connect(self.add_students)
-        self.radioButton.toggled.connect(self.lock_widgets)
-        self.radioButton_2.toggled.connect(self.lock_widgets)
-        self.radioButton_3.toggled.connect(self.lock_widgets)
-        self.comboBox_2.setCurrentIndex(1)
-        self.comboBox_2.setCurrentIndex(0)
-
-
+        self.add_students()
 
         def close_dialog_cancel():
             self.press_cancel()
@@ -176,122 +129,71 @@ class Ui_Dialog(object):
     def add_students(self):
         self.comboBox.clear()
         self.pushButton.setEnabled(True)
-        self.radioButton_4.setChecked(True)
-        self.pushButton_4.setEnabled(True)
-        self.pushButton_3.setEnabled(True)
         self.comboBox.setEnabled(True)
-        lesson_selected = self.comboBox_2.currentText()
         student_list = []
         for student in data_objects.students:
             for schedule in student['student_schedule']:
-                if lesson_selected in schedule:
+                if attandence_class in schedule:
                     student_list.append(student['name'] + ' ' + student['surname'])
         self.comboBox.addItems(student_list)
+        self.comboBox.model().sort(0)
 
     def press_cancel(self):
         self.listWidget.clear()
         self.comboBox.clear()
-        self.comboBox_2.clear()
-        self.radioButton_4.setChecked(True)
 
     def press_okay(self):
-        global attended_class_list
+        global attended_class_list, check_group
         self.get_items()
-        lesson_selected = self.comboBox_2.currentText()
         lesson_teacher = ''
         student_list = attended_class_list
         teacher = ''
-        if self.radioButton.isChecked() == True:
-            for student in data_objects.students:
-                for schedule in student['student_schedule']:
-                    if lesson_selected in schedule:
-                        student['student_schedule'].remove(schedule)
-                        student['schedule_cancelled'].append('Ogrenci Iptal Etti' + ' ' + schedule)
-                        teacher_list = lesson_selected.split()
-                        teacher = teacher_list[0] + ' ' + teacher_list[1]
-                        lesson_teacher = lesson_selected.replace(teacher, '')
-            for employee in data_objects.employees:
-                for schedule in employee['teacher_schedule']:
-                    if lesson_teacher in schedule:
-                        employee['teacher_schedule'].remove(schedule)
-                        employee['schedule_cancelled'].append('Ogrenci Iptal Etti' + ' ' + schedule)
-        if self.radioButton_2.isChecked() == True:
-            for student in data_objects.students:
-                for schedule in student['student_schedule']:
-                    if lesson_selected in schedule:
-                        student['student_schedule'].remove(schedule)
-                        student['schedule_cancelled'].append('Ogretmen Iptal Etti' + ' ' + schedule)
-                        teacher_list = lesson_selected.split()
-                        teacher = teacher_list[0] + ' ' + teacher_list[1]
-                        lesson_teacher = lesson_selected.replace(teacher, '')
-            for employee in data_objects.employees:
-                for schedule in employee['teacher_schedule']:
-                    if lesson_teacher in schedule:
-                        employee['teacher_schedule'].remove(schedule)
-                        employee['schedule_cancelled'].append('Ogretmen Iptal Etti' + ' ' + schedule)
-        if self.radioButton_3.isChecked() == True:
-            for student in data_objects.students:
-                for schedule in student['student_schedule']:
-                    if lesson_selected in schedule:
-                        student['student_schedule'].remove(schedule)
-                        student['schedule_cancelled'].append('Kurum Iptal Etti' + ' ' + schedule)
-                        teacher_list = lesson_selected.split()
-                        teacher = teacher_list[0] + ' ' + teacher_list[1]
-                        lesson_teacher = lesson_selected.replace(teacher, '')
-            for employee in data_objects.employees:
-                for schedule in employee['teacher_schedule']:
-                    if lesson_teacher in schedule:
-                        employee['teacher_schedule'].remove(schedule)
-                        employee['schedule_cancelled'].append('Kurum Iptal Etti' + ' ' + schedule)
-        if self.radioButton_4.isChecked() == True:
-            if len(attended_class_list) < len(student_list):
-                msgBox = QMessageBox()
-                msgBox.setWindowTitle("Yoklama Sayfasi")
-                msgBox.setIcon(QMessageBox.Question)
-                msgBox.setText(
-                    "Yoklama listesine herhangi bir ogrenci eklemediniz. Listeye eklenmeyen ogrenciler yoklamada devamsizlik yapmis sayilacaktir. Onayliyor musunuz?")
-                msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                yesButton = msgBox.button(QMessageBox.Yes)
-                yesButton.setText("Evet")
-                noButton = msgBox.button(QMessageBox.No)
-                noButton.setText("Hayir")
-                response = msgBox.exec_()
-                # Perform an action based on the user's response
-                if response == QMessageBox.Yes:
-                    for student in data_objects.students:
-                        for schedule in student['student_schedule']:
-                            if lesson_selected in schedule:
-                                if (student['name'] + ' ' + student['surname']) in student_list:
-                                    student['student_schedule'].remove(schedule)
-                                    student['student_attended'].append(schedule)
-                                    teacher_list = lesson_selected.split()
-                                    teacher = teacher_list[0] + ' ' + teacher_list[1]
-                                    lesson_teacher = lesson_selected.replace(teacher,'')
-                                else:
-                                    teacher_list = lesson_selected.split()
-                                    teacher = teacher_list[0] + ' ' + teacher_list[1]
-                                    lesson_teacher = lesson_selected.replace(teacher, '')
-                                    student['student_schedule'].remove(schedule)
-                                    student['student_skipped'].append(schedule)
-
-                    for employee in data_objects.employees:
-                        for schedule in employee['teacher_schedule']:
-                            if lesson_teacher in schedule:
-                                employee['teacher_schedule'].remove(schedule)
-                                employee['teacher_attended'].append(schedule)
-
-                else:
-                    pass
-            else:
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("Yoklama Sayfasi")
+        msgBox.setIcon(QMessageBox.Question)
+        msgBox.setText(
+            "Yoklama listesine herhangi bir ogrenci eklemediniz. Listeye eklenmeyen ogrenciler yoklamada devamsizlik yapmis sayilacaktir. Onayliyor musunuz?")
+        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        yesButton = msgBox.button(QMessageBox.Yes)
+        yesButton.setText("Evet")
+        noButton = msgBox.button(QMessageBox.No)
+        noButton.setText("Hayir")
+        response = msgBox.exec_()
+        # Perform an action based on the user's response
+        if response == QMessageBox.Yes:
+            if "Grup" in check_group and len(student_list)>1:
                 for student in data_objects.students:
                     for schedule in student['student_schedule']:
-                        if lesson_selected in schedule:
+                        if attandence_class in schedule:
                             if (student['name'] + ' ' + student['surname']) in student_list:
                                 student['student_schedule'].remove(schedule)
                                 student['student_attended'].append(schedule)
-                                teacher_list = lesson_selected.split()
+                                teacher_list = attandence_class.split()
                                 teacher = teacher_list[0] + ' ' + teacher_list[1]
-                                lesson_teacher = lesson_selected.replace(teacher, '')
+                                lesson_teacher = attandence_class.replace(teacher,'')
+                            else:
+                                teacher_list = attandence_class.split()
+                                teacher = teacher_list[0] + ' ' + teacher_list[1]
+                                lesson_teacher = attandence_class.replace(teacher, '')
+                                student['student_schedule'].remove(schedule)
+                                student['student_skipped'].append(schedule)
+
+                for employee in data_objects.employees:
+                    for schedule in employee['teacher_schedule']:
+                        if lesson_teacher in schedule:
+                            employee['teacher_schedule'].remove(schedule)
+                            employee['teacher_attended'].append(schedule)
+
+            else:
+                for student in data_objects.students:
+                    for schedule in student['student_schedule']:
+                        if attandence_class in schedule:
+                            if (student['name'] + ' ' + student['surname']) in student_list:
+                                student['student_schedule'].remove(schedule)
+                                student['student_attended'].append(schedule)
+                                teacher_list = attandence_class.split()
+                                teacher = teacher_list[0] + ' ' + teacher_list[1]
+                                lesson_teacher = attandence_class.replace(teacher, '')
                             else:
                                 student['student_schedule'].remove(schedule)
                                 student['student_skipped'].append(schedule)
@@ -300,6 +202,8 @@ class Ui_Dialog(object):
                         if lesson_teacher in schedule:
                             employee['teacher_schedule'].remove(schedule)
                             employee['teacher_attended'].append(schedule)
+        else:
+            pass
 
 
         with open("student_data.txt", "w", encoding="utf-8") as f:
@@ -337,10 +241,8 @@ class Ui_Dialog(object):
             items.append(self.listWidget.item(index).text())
         attended_class_list = items
 
-
-
-
     def retranslateUi(self, Dialog):
+        global attandence_class
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Ders Bilgisi Ekleme Sayfasi"))
         self.pushButton.setText(_translate("Dialog", "Tamam"))
@@ -348,12 +250,10 @@ class Ui_Dialog(object):
         self.label.setText(_translate("Dialog", "Lutfen Derse Gelen Ogrencileri Listeye Ekleyin"))
         self.pushButton_3.setText(_translate("Dialog", "+"))
         self.pushButton_4.setText(_translate("Dialog", "-"))
-        self.label_2.setText(_translate("Dialog", "Lutfen Yoklama Alinacak Dersi Secin"))
-        self.radioButton.setText(_translate("Dialog", "Ders Iptal Edildi (Ogrenci Tarafindan)"))
-        self.radioButton_2.setText(_translate("Dialog", "Ders Iptal Edildi (OgretmenTarafindan)"))
-        self.radioButton_3.setText(_translate("Dialog", "Ders Iptal Edildi (Kurum Tarafindan)"))
+        self.label_2.setText(_translate("Dialog", "{}".format(str(attandence_class))))
 
-def can():
+
+def open_attandence():
     Dialog = QtWidgets.QDialog()
     Dialog.setStyle(QtWidgets.QStyleFactory.create("WindowsVista"))
     ui = Ui_Dialog()
