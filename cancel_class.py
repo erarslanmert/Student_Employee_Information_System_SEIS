@@ -13,6 +13,7 @@ import main_page, data_objects
 
 attended_class_list = []
 lesson_selected = " "
+lesson_selected_2 = " "
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -85,49 +86,39 @@ class Ui_Dialog(object):
         self.radioButton_4.setChecked(True)
 
     def press_okay(self):
-        global attended_class_list, lesson_selected
+        global attended_class_list, lesson_selected, lesson_selected_2
         lesson_teacher = ''
-        print(lesson_selected)
         if self.radioButton.isChecked() == True:
             for student in data_objects.students:
                 for schedule in student['student_schedule']:
-                    if lesson_selected in schedule:
+                    if lesson_selected_2 == schedule:
                         student['student_schedule'].remove(schedule)
                         student['schedule_cancelled'].append('Ogrenci Iptal Etti' + ' ' + schedule)
-                        teacher_list = lesson_selected.split()
-                        teacher = teacher_list[0] + ' ' + teacher_list[1]
-                        lesson_teacher = lesson_selected.replace(teacher, '')
             for employee in data_objects.employees:
                 for schedule in employee['teacher_schedule']:
-                    if lesson_teacher in schedule:
+                    if lesson_selected == schedule:
                         employee['teacher_schedule'].remove(schedule)
                         employee['schedule_cancelled'].append('Ogrenci Iptal Etti' + ' ' + schedule)
         if self.radioButton_2.isChecked() == True:
             for student in data_objects.students:
                 for schedule in student['student_schedule']:
-                    if lesson_selected in schedule:
+                    if lesson_selected_2 == schedule:
                         student['student_schedule'].remove(schedule)
                         student['schedule_cancelled'].append('Ogretmen Iptal Etti' + ' ' + schedule)
-                        teacher_list = lesson_selected.split()
-                        teacher = teacher_list[0] + ' ' + teacher_list[1]
-                        lesson_teacher = lesson_selected.replace(teacher, '')
             for employee in data_objects.employees:
                 for schedule in employee['teacher_schedule']:
-                    if lesson_teacher in schedule:
+                    if lesson_selected == schedule:
                         employee['teacher_schedule'].remove(schedule)
                         employee['schedule_cancelled'].append('Ogretmen Iptal Etti' + ' ' + schedule)
         if self.radioButton_3.isChecked() == True:
             for student in data_objects.students:
                 for schedule in student['student_schedule']:
-                    if lesson_selected in schedule:
+                    if lesson_selected_2 == schedule:
                         student['student_schedule'].remove(schedule)
                         student['schedule_cancelled'].append('Kurum Iptal Etti' + ' ' + schedule)
-                        teacher_list = lesson_selected.split()
-                        teacher = teacher_list[0] + ' ' + teacher_list[1]
-                        lesson_teacher = lesson_selected.replace(teacher, '')
             for employee in data_objects.employees:
                 for schedule in employee['teacher_schedule']:
-                    if lesson_teacher in schedule:
+                    if lesson_selected == schedule:
                         employee['teacher_schedule'].remove(schedule)
                         employee['schedule_cancelled'].append('Kurum Iptal Etti' + ' ' + schedule)
         if self.radioButton_4.isChecked() == True:

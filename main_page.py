@@ -19,6 +19,7 @@ import class_options
 import datetime
 import check_attandence
 import connect_database
+from datetime import timedelta
 import change_data_options
 import general_statistics_dashboard
 import save_options
@@ -33,6 +34,8 @@ import data_objects
 from PyQt5.QtGui import QTextCharFormat
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from dateutil.parser import parse
+from dateutil.relativedelta import relativedelta
 
 data_count_student = 0
 data_count_teacher = 0
@@ -1794,7 +1797,7 @@ class Ui_Dialog(object):
         self.pushButton_14.setDefault(False)
         self.pushButton_14.setFlat(False)
         self.pushButton_14.setObjectName("pushButton_14")
-        self.pushButton_100 = QtWidgets.QPushButton(self.frame_13, clicked=lambda: self.expand_general_schedule())
+        self.pushButton_100 = QtWidgets.QPushButton(self.frame_13, clicked=lambda: check_maximized())
         self.pushButton_100.setFixedSize(40, 20)
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -1804,9 +1807,9 @@ class Ui_Dialog(object):
         self.pushButton_100.setStyleSheet("background-color: rgb(255, 230, 207);")
         self.pushButton_100.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("monitor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap("expand.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_100.setIcon(icon5)
-        self.pushButton_100.setIconSize(QtCore.QSize(30, 30))
+        self.pushButton_100.setIconSize(QtCore.QSize(15, 15))
         self.pushButton_100.setDefault(False)
         self.pushButton_100.setFlat(False)
         self.pushButton_100.setObjectName("pushButton_100")
@@ -1830,7 +1833,6 @@ class Ui_Dialog(object):
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableWidget.resizeRowsToContents()
-        self.tableWidget.setWordWrap(True)
         self.pushButton_19 = QtWidgets.QPushButton(self.frame_13, clicked = lambda : self.step_back_weekly())
         self.pushButton_19.setGeometry(QtCore.QRect(270, 40, 31, 31))
         self.pushButton_19.setFixedSize(31,31)
@@ -2168,6 +2170,13 @@ class Ui_Dialog(object):
         self.step_fwd_weekly()
         self.step_back_weekly()
 
+        def check_maximized():
+            self.expand_general_schedule()
+            if Dialog.isMaximized():
+                Dialog.showNormal()
+            else:
+                Dialog.showMaximized()
+
 
         def close_dialog():
             self.log_out()
@@ -2289,8 +2298,11 @@ class Ui_Dialog(object):
                 for debt in last_debt:
                     if last_debt.index(debt) not in debt_index:
                         student['unpaid_debt'].append(debt)
-        '''for stdnt in data_objects.students:
-            check_debt(stdnt)'''
+        for stdnt in data_objects.students:
+            if stdnt['agreed_price'] != "":
+                check_debt(stdnt)
+            else:
+                pass
         with open("student_data.txt", "w", encoding="utf-8") as f:
             f.writelines(json.dumps(data_objects.students, default=str))
         with open('student_data.txt', 'r', encoding="utf-8") as f:
@@ -3424,8 +3436,12 @@ class Ui_Dialog(object):
     def expand_general_schedule(self):
         global row_height, row_extender, section_size
         section_size = int(max(row_height))
-        row_extender = 1
-        self.tableWidget.verticalHeader().setMinimumSectionSize(35 + section_size * 15)
+        if row_extender == 0:
+            self.tableWidget.verticalHeader().setMinimumSectionSize(35 + section_size * 15)
+            row_extender = 1
+        else:
+            self.tableWidget.verticalHeader().setMinimumSectionSize(50)
+            row_extender = 0
 
 
     def get_maximum_content_height(self, row):
@@ -3445,6 +3461,7 @@ class Ui_Dialog(object):
         v_header = [' ', '9:30-10:10', '10:30-11:10', '11:30-12:10', '12:30-13:10', '13:10-14:00', '14:00-14:40',
                     '15:00-15:40', '16:00-16:40', '17:00-17:40']
         header_list = []
+
         for i in range(self.tableWidget.columnCount()):
             header_item = self.tableWidget.horizontalHeaderItem(i)  # retrieve header item for column i
             if header_item is not None:
@@ -3468,7 +3485,7 @@ class Ui_Dialog(object):
 
                     if 'Grup Dersi' in schedule:
                         column_no = header_list.index((employee['name']+' '+employee['surname']))
-                        item = QTableWidgetItem('GRUP DERSI: \n {}'.format('\n'.join(group_class_list)))
+                        item = QTableWidgetItem('GRUP DERSI:\n{}'.format('\n'.join(group_class_list)))
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)
                         self.tableWidget.setItem(row_no, column_no, item)
@@ -3585,6 +3602,7 @@ class Ui_Dialog(object):
                                "QMenu::item { background-color: #F0F0F0; color: #000000; }"
                                "QMenu::item:selected { background-color: #3366FF; color: #FFFFFF; }")
 
+
             action1 = QAction("Akademik Ders Ekle", self.tableWidget)
             action1.triggered.connect(lambda: self.handle_context_menu_action("Akademik Ders Ekle", cell))
             menu.addAction(action1)
@@ -3613,10 +3631,40 @@ class Ui_Dialog(object):
             action7.triggered.connect(lambda: self.handle_context_menu_action("Dersi Sil", cell))
             menu.addAction(action7)
 
+            cell_color = cell.background().color().name()
+
+            if cell_color == "#ffd9a8":
+                action1.setDisabled(True)
+                action2.setDisabled(True)
+                action3.setDisabled(True)
+            elif cell_color == "#c5ffc5":
+                action1.setDisabled(True)
+                action2.setDisabled(True)
+                action3.setDisabled(True)
+                action4.setDisabled(True)
+                action5.setDisabled(True)
+            elif cell_color == "#ff9292":
+                action1.setDisabled(True)
+                action2.setDisabled(True)
+                action3.setDisabled(True)
+                action4.setDisabled(True)
+                action5.setDisabled(True)
+                action6.setDisabled(True)
+            else:
+                action1.setEnabled(True)
+                action2.setEnabled(True)
+                action3.setEnabled(True)
+                action4.setDisabled(True)
+                action5.setDisabled(True)
+                action6.setDisabled(True)
+                action7.setDisabled(True)
+            
+
+
             menu.exec_(self.tableWidget.viewport().mapToGlobal(pos))
 
     def handle_context_menu_action(self, option, cell):
-        global group_class_list
+        global group_class_list, date_list
         group_class_list = []
         if cell.row() in range(0, 10):
             item = self.tableWidget.item(0, 0).text()
@@ -3636,48 +3684,69 @@ class Ui_Dialog(object):
             pass
 
         if option == "Akademik Ders Ekle":
+            class_options.class_type = 1
             class_options.open_class_options()
-            for student in data_objects.students:
-                if (student['name'] + ' ' + student['surname']) in group_class_list:
-                    student['student_schedule'].append(
-                        'Akademik Ders' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text() +
-                        ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
-            for employee in data_objects.employees:
-                if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
-                        cell.column()).text():
-                    employee['teacher_schedule'].append(('Akademik Ders' + ' ' + str(group_class_list) + ' ' +
-                                                         self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+            if class_options.if_cancelled == 0:
+                for student in data_objects.students:
+                    if (student['name'] + ' ' + student['surname']) in group_class_list:
+                        student['student_schedule'].append(
+                            'Akademik Ders' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text() +
+                            ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
+                for employee in data_objects.employees:
+                    if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
+                            cell.column()).text():
+                        employee['teacher_schedule'].append(('Akademik Ders' + ' ' + str(group_class_list) + ' ' +
+                                                             self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+            else:
+                pass
         elif option == "Attentioner Ders Ekle":
+            class_options.class_type = 2
             class_options.open_class_options()
-            for student in data_objects.students:
-                if (student['name'] + ' ' + student['surname']) in group_class_list:
-                    student['student_schedule'].append(
-                        'Attentioner Ders' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text() +
-                        ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
-            for employee in data_objects.employees:
-                if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
-                        cell.column()).text():
-                    employee['teacher_schedule'].append(('Attentioner Ders' + ' ' + str(group_class_list) + ' ' +
-                                                         self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+            if class_options.if_cancelled == 0:
+                for student in data_objects.students:
+                    if (student['name'] + ' ' + student['surname']) in group_class_list:
+                        student['student_schedule'].append(
+                            'Attentioner Ders' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text() +
+                            ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
+                for employee in data_objects.employees:
+                    if (employee['name'] + ' ' + employee['surname']) == self.tableWidget.horizontalHeaderItem(
+                            cell.column()).text():
+                        employee['teacher_schedule'].append(('Attentioner Ders' + ' ' + str(group_class_list) + ' ' +
+                                                             self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+            else:
+                pass
 
         elif option == "Grup Dersi Ekle":
+            class_options.class_type = 3
             class_options.open_class_options()
-            for student in data_objects.students:
-                if (student['name'] + ' ' + student['surname']) in group_class_list:
-                    student['student_schedule'].append('Grup Dersi' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text()+
-                                                       ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
-            for employee in data_objects.employees:
-                if (employee['name']+' '+employee['surname']) == self.tableWidget.horizontalHeaderItem(cell.column()).text():
-                    employee['teacher_schedule'].append(('Grup Dersi' + ' ' + str(group_class_list) + ' ' +
-                                                         self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+            if class_options.if_cancelled == 0:
+                for student in data_objects.students:
+                    if (student['name'] + ' ' + student['surname']) in group_class_list:
+                        student['student_schedule'].append('Grup Dersi' + ' ' + self.tableWidget.horizontalHeaderItem(cell.column()).text()+
+                                                           ' ' + self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item)
+                for employee in data_objects.employees:
+                    if (employee['name']+' '+employee['surname']) == self.tableWidget.horizontalHeaderItem(cell.column()).text():
+                        employee['teacher_schedule'].append(('Grup Dersi' + ' ' + str(group_class_list) + ' ' +
+                                                             self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
+            else:
+                pass
 
         elif option == "Dersi Iptal Et":
             self.check_student_attandence()
-            for lesson in attandence_list:
-                if item in lesson and  self.tableWidget.verticalHeaderItem(cell.row()).text() in lesson and self.tableWidget.horizontalHeaderItem(cell.column()).text() in lesson:
-                    cancel_class.lesson_selected = lesson
-                else:
-                    pass
+            text = self.tableWidget.item(cell.row(), cell.column()).text()
+            date_temp = item.split(' ')
+            date = date_temp[-1]
+            time = self.tableWidget.verticalHeaderItem(cell.row()).text()
+            teacher = self.tableWidget.horizontalHeaderItem(cell.column()).text()
+            for student in data_objects.students:
+                for schedule in student['student_schedule']:
+                    if teacher in schedule and date in schedule and time in schedule:
+                        cancel_class.lesson_selected_2 = schedule
+            for employee in data_objects.employees:
+                if teacher == employee['name'] + ' ' + employee['surname']:
+                    for schedule in employee['teacher_schedule']:
+                        if date in schedule and time in schedule:
+                            cancel_class.lesson_selected = schedule
             cancel_class.class_cancel()
 
         elif option == "Yoklama Bilgisi Ekle":
@@ -3689,6 +3758,106 @@ class Ui_Dialog(object):
                     check_attandence.open_attandence()
                 else:
                     pass
+
+        elif option == "Aktar (1 Hafta)":
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setText(
+                'Ders Bir sonraki hafta ayni gun ve saate aktarilacaktir. Onayliyor musunuz?')
+            msg_box.setWindowTitle('Uyarı')
+            msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            msg_box.setDefaultButton(QMessageBox.Cancel)
+            response = msg_box.exec()
+            if response == QMessageBox.Ok:
+                text = self.tableWidget.item(cell.row(), cell.column()).text()
+                date_temp = item.split(' ')
+                date = date_temp[-1]
+                time = self.tableWidget.verticalHeaderItem(cell.row()).text()
+                teacher = self.tableWidget.horizontalHeaderItem(cell.column()).text()
+                new_date_str = " "
+                for employee in data_objects.employees:
+                    if teacher == employee['name'] + ' ' + employee['surname']:
+                        for schedule in employee['teacher_schedule']:
+                            if date in schedule and time in schedule:
+                                date_2 = parse(date)
+                                new_date = date_2 + relativedelta(weeks=1)
+                                new_date_str = new_date.strftime("%Y-%m-%d")
+                                new_schedule = schedule.replace(date, new_date_str)
+                                employee['teacher_schedule'].append(new_schedule)
+                        for schedule in employee['teacher_attended']:
+                            if date in schedule and time in schedule:
+                                date_2 = parse(date)
+                                new_date = date_2 + relativedelta(weeks=1)
+                                new_date_str = new_date.strftime("%Y-%m-%d")
+                                new_schedule = schedule.replace(date, new_date_str)
+                                employee['teacher_schedule'].append(new_schedule)
+                        for schedule in employee['teacher_skipped']:
+                            if date in schedule and time in schedule:
+                                date_2 = parse(date)
+                                new_date = date_2 + relativedelta(weeks=1)
+                                new_date_str = new_date.strftime("%Y-%m-%d")
+                                new_schedule = schedule.replace(date, new_date_str)
+                                employee['teacher_schedule'].append(new_schedule)
+                for student in data_objects.students:
+                    for schedule in student['student_schedule']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            new_schedule = schedule.replace(date, new_date_str)
+                            student['student_schedule'].append(new_schedule)
+                    for schedule in student['student_attended']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            new_schedule = schedule.replace(date, new_date_str)
+                            student['student_schedule'].append(new_schedule)
+                    for schedule in student['student_skipped']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            new_schedule = schedule.replace(date, new_date_str)
+                            student['student_schedule'].append(new_schedule)
+            else:
+                pass
+
+        elif option == "Dersi Sil":
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setText(
+                'Ders yoklama/iptal durumu dahil tamamen sistemden silinecektir. Onayliyor musunuz?')
+            msg_box.setWindowTitle('Uyarı')
+            msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            msg_box.setDefaultButton(QMessageBox.Cancel)
+            response = msg_box.exec()
+            if response == QMessageBox.Ok:
+                text = self.tableWidget.item(cell.row(), cell.column()).text()
+                date = item
+                time = self.tableWidget.verticalHeaderItem(cell.row()).text()
+                teacher = self.tableWidget.horizontalHeaderItem(cell.column()).text()
+                for employee in data_objects.employees:
+                    if teacher == employee['name'] + ' ' + employee['surname']:
+                        for schedule in employee['teacher_schedule']:
+                            if date in schedule and time in schedule:
+                                employee['teacher_schedule'].remove(schedule)
+                        for schedule in employee['teacher_attended']:
+                            if date in schedule and time in schedule:
+                                employee['teacher_attended'].remove(schedule)
+                        for schedule in employee['teacher_skipped']:
+                            if date in schedule and time in schedule:
+                                employee['teacher_skipped'].remove(schedule)
+                        for schedule in employee['schedule_cancelled']:
+                            if date in schedule and time in schedule:
+                                employee['schedule_cancelled'].remove(schedule)
+                for student in data_objects.students:
+                    for schedule in student['student_schedule']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            student['student_schedule'].remove(schedule)
+                    for schedule in student['student_attended']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            student['student_attended'].remove(schedule)
+                    for schedule in student['student_skipped']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            student['student_skipped'].remove(schedule)
+                    for schedule in student['schedule_cancelled']:
+                        if teacher in schedule and date in schedule and time in schedule:
+                            student['schedule_cancelled'].remove(schedule)
+            else:
+                pass
+
 
         '''for student in data_objects.students:
             for schedule in student['student_schedule']:
@@ -3811,7 +3980,7 @@ class Ui_Dialog(object):
 
 
     def copy_schedule_next(self):
-        global group_class_list, date_list, week_1, year_1, date_list
+        global group_class_list, date_list, week_1, year_1
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Warning)
         msg_box.setText('Planlanan (Tamamlanan/Iptal Olan Dersler Dahil Degildir) derslerin tam kopyasi bir sonraki haftaya aktarilaacaktir. '
