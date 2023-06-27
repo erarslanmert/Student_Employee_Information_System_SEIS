@@ -644,13 +644,13 @@ class Ui_Dialog(object):
                 response = msgBox.exec_()
                 # Perform an action based on the user's response
                 if response == QMessageBox.Yes:
-                    for employee in data_objects.employees:
-                        if employee['name'] + ' ' + employee['surname'] == self.comboBox.currentText():
-                            print(employee)
-                            data_objects.employees.remove(employee)
-                            data_objects.one_employee = {}
-                        else:
-                            pass
+                        for employee in data_objects.employees:
+                                if employee['name'] + ' ' + employee['surname'] == self.comboBox.currentText():
+                                        del data_objects.employees[data_objects.employees.index(employee)]
+                                        data_objects.one_employee = {}
+                                else:
+                                        pass
+                        self.pushButton_3.setDisabled(True)
                 else:
                     pass
         except ValueError:

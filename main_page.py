@@ -3550,6 +3550,7 @@ class Ui_Dialog(object):
         self.label_31.setText(" Ogretmen Bilgileri Genel Ozet")
         self.tabWidget_3.setCurrentIndex(0)
         data_count_teacher = 2
+        selected_teacher = ''
         try:
             with open('employee_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.employees = json.load(f)
@@ -3557,10 +3558,13 @@ class Ui_Dialog(object):
             with open('student_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.students = json.load(f)
             if data_objects.active_auth_level == 4:
-                j = self.comboBox_3.currentIndex()
+                selected_teacher = self.comboBox_3.currentText()
             else:
-                j = self.comboBox_2.currentIndex()
-            i = employee_full_list[j]
+                selected_teacher = self.comboBox_2.currentText()
+            i = 0
+            for employee in data_objects.employees:
+                if employee['name'] in selected_teacher and employee['surname'] in selected_teacher:
+                    i = data_objects.employees.index(employee)
             self.label_26.setPixmap(QtGui.QPixmap("default-user-image.png"))
             self.label_105.setText(data_objects.employees[i]['name'])
             self.label_106.setText(data_objects.employees[i]['surname'])
@@ -3601,8 +3605,14 @@ class Ui_Dialog(object):
                 data_objects.employees = json.load(f)
             with open('student_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.students = json.load(f)
-            j = self.comboBox_2.currentIndex()
-            i = personel_full_list[j]
+            if data_objects.active_auth_level == 4:
+                selected_teacher = self.comboBox_3.currentText()
+            else:
+                selected_teacher = self.comboBox_2.currentText()
+            i = 0
+            for employee in data_objects.employees:
+                if employee['name'] in selected_teacher and employee['surname'] in selected_teacher:
+                    i = data_objects.employees.index(employee)
             self.label_29.setPixmap(QtGui.QPixmap("default-user-image.png"))
             self.label_179.setText(data_objects.employees[i]['name'])
             self.label_180.setText(data_objects.employees[i]['surname'])
@@ -3632,13 +3642,16 @@ class Ui_Dialog(object):
 
     def expand_general_schedule(self):
         global row_height, row_extender, section_size
-        section_size = int(max(row_height))
-        if row_extender == 0:
-            self.tableWidget.verticalHeader().setMinimumSectionSize(35 + section_size * 15)
-            row_extender = 1
-        else:
-            self.tableWidget.verticalHeader().setMinimumSectionSize(50)
-            row_extender = 0
+        try:
+            section_size = int(max(row_height))
+            if row_extender == 0:
+                self.tableWidget.verticalHeader().setMinimumSectionSize(35 + section_size * 15)
+                row_extender = 1
+            else:
+                self.tableWidget.verticalHeader().setMinimumSectionSize(50)
+                row_extender = 0
+        except ValueError:
+            pass
 
     def get_maximum_content_height(self, row):
         max_height = 0
@@ -4052,16 +4065,7 @@ class Ui_Dialog(object):
                             student['schedule_cancelled'].remove(schedule)
             else:
                 pass
-            self.load_general_schedule()
 
-
-        '''for student in data_objects.students:
-            for schedule in student['student_schedule']:
-                if (self.tableWidget.horizontalHeaderItem(cell.column()).text() + ' ' + self.tableWidget.verticalHeaderItem(
-                        cell.row()).text() + ' ' + item) in schedule:
-                    student['student_schedule'].remove(schedule)
-                else:
-                    pass'''
         with open("student_data.txt", "w", encoding="utf-8") as f:
             f.writelines(json.dumps(data_objects.students, default=str))
         with open('student_data.txt', 'r', encoding="utf-8") as f:
