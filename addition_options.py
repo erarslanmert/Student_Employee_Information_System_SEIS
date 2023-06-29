@@ -11,15 +11,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import data_objects
 import student_addition, employee_addition
 import connect_database
+import temporary_student
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(264, 262)
+        Dialog.resize(264, 302)
         Dialog.setStyleSheet("background-color: rgb(0, 49, 72);")
         Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
         self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : close_doalig())
-        self.pushButton.setGeometry(QtCore.QRect(40, 180, 91, 31))
+        self.pushButton.setGeometry(QtCore.QRect(40, 220, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -27,7 +29,7 @@ class Ui_Dialog(object):
         self.pushButton.setStyleSheet("background-color: rgb(255, 254, 238);")
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(Dialog, clicked = lambda : Dialog.close())
-        self.pushButton_2.setGeometry(QtCore.QRect(140, 180, 91, 31))
+        self.pushButton_2.setGeometry(QtCore.QRect(140, 220, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -50,6 +52,14 @@ class Ui_Dialog(object):
         self.radioButton_2.setFont(font)
         self.radioButton_2.setStyleSheet("color: rgb(255, 255, 255);")
         self.radioButton_2.setObjectName("radioButton_2")
+        self.radioButton_3 = QtWidgets.QRadioButton(Dialog)
+        self.radioButton_3.setGeometry(QtCore.QRect(60, 170, 181, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.radioButton_3.setFont(font)
+        self.radioButton_3.setStyleSheet("color: rgb(255, 255, 255);")
+        self.radioButton_3.setObjectName("radioButton_3")
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(40, 40, 261, 31))
         font = QtGui.QFont()
@@ -78,6 +88,8 @@ class Ui_Dialog(object):
             student_addition.open_student_addition()
         elif self.radioButton_2.isChecked() == True:
             employee_addition.open_employee_addition()
+        elif self.radioButton_3.isChecked() == True:
+            temporary_student.open_temporary_student()
         else:
             pass
 
@@ -88,6 +100,7 @@ class Ui_Dialog(object):
         self.pushButton_2.setText(_translate("Dialog", "Iptal"))
         self.radioButton.setText(_translate("Dialog", "Yeni Ogrenci Ekle"))
         self.radioButton_2.setText(_translate("Dialog", "Yeni Calisan Ekle"))
+        self.radioButton_3.setText(_translate("Dialog", "Deneme Dersi Ekle"))
         self.label.setText(_translate("Dialog", "Eklemek istediginiz veriyi secin"))
 
 def open_addition_selection():
