@@ -146,12 +146,18 @@ class Ui_MainWindow(object):
 
         '''connect_database.download_files('user_list.txt')
         connect_database.download_files('student_data.txt')
-        connect_database.download_files('employee_data.txt')'''
+        connect_database.download_files('employee_data.txt')
+        connect_database.download_files('temporary_student.txt')'''
+
+        self.lineEdit.setText('erarslan.mert')
+        self.lineEdit_2.setText('mert1993')
 
         with open('student_data.txt', 'r', encoding="utf-8") as f:
             data_objects.students = json.load(f)
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
+        with open('temporary_student.txt', 'r', encoding="utf-8") as f:
+            data_objects.temporary_students = json.load(f)
 
         date_consistency.convert_dates_in_list(data_objects.students)
         date_consistency.convert_dates_in_list(data_objects.employees)

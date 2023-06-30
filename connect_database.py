@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import csv
-from google.cloud import storage
+#from google.cloud import storage
 import os
 
 
-def upload_files(file_name):
+'''def upload_files(file_name):
     key_path = 'keyfile.json'
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = key_path
     # Create a storage client
@@ -55,7 +55,7 @@ def txt_to_csv(file_txt, file_csv):
 def convert_txt_csv_all():
     txt_to_csv('student_data.txt','student_data.csv')
     txt_to_csv('employee_data.txt','employee_data.csv')
-    txt_to_csv('user_list.txt','user_list.csv')
+    txt_to_csv('user_list.txt','user_list.csv')'''
 
 #download_files('employee_data.txt')
 

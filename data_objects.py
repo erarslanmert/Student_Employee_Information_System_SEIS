@@ -9,10 +9,12 @@ one_user = {}
 one_student_schedule = {}
 one_teacher_schedule = {}
 one_student_attendance = {}
+temporary_one_student = {}
 
 students = []
 teachers = []
 employees = []
+temporary_students = []
 users = []
 student_schedules = []
 teacher_schedules = []

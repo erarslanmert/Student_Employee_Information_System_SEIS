@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+from datetime import datetime
 
 # Form implementation generated from reading ui file 'temporary_student.ui'
 #
@@ -9,7 +11,12 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+import connect_database
+import data_objects
 
+message = ' '
+is_empty = 0
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -17,6 +24,7 @@ class Ui_Dialog(object):
         Dialog.resize(379, 375)
         Dialog.setStyleSheet("background-color: rgb(0, 52, 77);")
         Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
+        Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
         self.frame = QtWidgets.QFrame(Dialog)
         self.frame.setGeometry(QtCore.QRect(20, 70, 341, 231))
         self.frame.setStyleSheet("color: rgb(255, 230, 207);")
@@ -86,11 +94,12 @@ class Ui_Dialog(object):
         self.dateEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.dateEdit.setCalendarPopup(True)
         self.dateEdit.setObjectName("dateEdit")
-        self.lineEdit_3 = QtWidgets.QLineEdit(self.frame)
-        self.lineEdit_3.setGeometry(QtCore.QRect(150, 160, 161, 20))
-        self.lineEdit_3.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_3.setObjectName("lineEdit_3")
+        self.comboBox_3 = QtWidgets.QComboBox(self.frame)
+        self.comboBox_3.setGeometry(QtCore.QRect(150, 160, 161, 21))
+        self.comboBox_3.setAutoFillBackground(False)
+        self.comboBox_3.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                      "color: rgb(0, 0, 0);")
+        self.comboBox_3.setObjectName("comboBox_3")
         self.lineEdit_4 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_4.setGeometry(QtCore.QRect(150, 190, 161, 20))
         self.lineEdit_4.setStyleSheet("background-color: rgb(255, 255, 255);\n"
@@ -114,11 +123,11 @@ class Ui_Dialog(object):
         self.label_14.setFont(font)
         self.label_14.setStyleSheet("color:  rgb(255, 230, 207);")
         self.label_14.setObjectName("label_14")
-        self.pushButton_3 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_3 = QtWidgets.QPushButton(Dialog, clicked = lambda : Dialog.close())
         self.pushButton_3.setGeometry(QtCore.QRect(190, 320, 111, 31))
         self.pushButton_3.setStyleSheet("background-color: rgb(255, 246, 194);")
         self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_7 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_7 = QtWidgets.QPushButton(Dialog, clicked = lambda : close_doalig())
         self.pushButton_7.setGeometry(QtCore.QRect(70, 320, 111, 31))
         self.pushButton_7.setStyleSheet("background-color: rgb(255, 246, 194);")
         self.pushButton_7.setObjectName("pushButton_7")
@@ -132,6 +141,124 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        self.comboBox_5.currentTextChanged.connect(lambda : self.combo_changed())
+
+        def close_doalig():
+                self.save_data()
+                Dialog.close()
+
+        with open('temporary_student.txt', 'r', encoding="utf-8") as f:
+            data_objects.temporary_students = json.load(f)
+
+        hours = ['9:30-10:10', '10:30-11:10', '11:30-12:10', '12:30-13:10', '13:10-14:00', '14:00-14:40',
+                 '15:00-15:40', '16:00-16:40', '17:00-17:40']
+        for item in hours:
+            self.comboBox_2.addItem(item)
+        for employee in data_objects.employees:
+            if employee['title'] == 'Ogretmen' or employee['title'] == 'Dil Konusmaci' or employee['title'] == 'Psikolog':
+                self.comboBox_3.addItem(employee['name'] + ' ' + employee['surname'])
+            else:
+                pass
+        self.comboBox_5.addItem('-')
+        if len(data_objects.temporary_students) > 0:
+            for student in data_objects.temporary_students:
+                self.comboBox_5.addItem(student['name'] + ' ' + student['surname'])
+        else:
+            pass
+
+    def combo_changed(self):
+        global message, is_empty
+        if self.comboBox_5.currentText() == '-':
+            self.pushButton_7.setText('Kaydet')
+            self.lineEdit.setEnabled(True)
+            self.lineEdit_2.setEnabled(True)
+            self.lineEdit_4.setEnabled(True)
+            self.dateEdit.setEnabled(True)
+            self.comboBox_3.setEnabled(True)
+            self.comboBox_2.setEnabled(True)
+            self.lineEdit.clear()
+            self.lineEdit_2.clear()
+            self.lineEdit_4.clear()
+            self.dateEdit.clear()
+            message = 'Deneme dersi sisteme kaydoalcaktir ve istatistiklere katilacaktir. Onayliyor musunuz?'
+            is_empty = 0
+        else:
+            for student in data_objects.temporary_students:
+                if student['name'] + ' ' + student['surname'] == self.comboBox_5.currentText():
+                    self.pushButton_7.setText('Sil')
+                    self.lineEdit.setDisabled(True)
+                    self.lineEdit_2.setDisabled(True)
+                    self.lineEdit_4.setDisabled(True)
+                    self.dateEdit.setDisabled(True)
+                    self.comboBox_3.setDisabled(True)
+                    self.comboBox_2.setDisabled(True)
+                    self.lineEdit.setText(student['name'])
+                    self.lineEdit_2.setText(student['surname'])
+                    self.comboBox_2.setCurrentText(student['lesson_time'])
+                    self.comboBox_3.setCurrentText(student['teacher'])
+                    self.lineEdit_4.setText(student['contact'])
+                    self.dateEdit.setDate(datetime.strptime(student['lesson_date'], '%d-%m-%Y').date())
+                    message = 'Deneme dersi ve ogrenci bilgisi sistemden silinecektir. Onayliyor musunuz?'
+                    is_empty = 1
+                else:
+                    pass
+
+    def save_data(self):
+        global message, is_empty
+        # Process the data
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("Deneme Dersi Ekle")
+        msgBox.setIcon(QMessageBox.Question)
+        msgBox.setText(message)
+        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        yesButton = msgBox.button(QMessageBox.Yes)
+        yesButton.setText("Evet")
+        noButton = msgBox.button(QMessageBox.No)
+        noButton.setText("Hayir")
+        response = msgBox.exec_()
+        # Perform an action based on the user's response
+        if response == QMessageBox.Yes:
+            if is_empty == 0:
+                date = self.dateEdit.date().toPyDate()
+                formatted_date = date.strftime("%d-%m-%Y")
+                data_objects.temporary_one_student = {
+                    'name': self.lineEdit.text(),
+                    'surname': self.lineEdit_2.text(),
+                    'lesson_date': formatted_date,
+                    'lesson_time': self.comboBox_2.currentText(),
+                    'teacher': self.comboBox_3.currentText(),
+                    'contact': self.lineEdit_4.text()
+                }
+                data_objects.temporary_students.append(data_objects.temporary_one_student)
+                for item in data_objects.temporary_students:
+                    name = item.get('name')
+                    if name and ' ' in name:
+                        item['name'] = name.replace(' ', '-')
+                    if name.endswith('-'):
+                        item['name'] = name.replace('-',
+                                                    '')  # Remove the trailing '-' if it is not followed by a word character
+
+                    for key, value in item.items():
+                        if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
+                            item[key] = value.replace('\n', '')
+            else:
+                for student in data_objects.temporary_students:
+                    if student['name'] + ' ' + student['surname'] == self.comboBox_5.currentText():
+                        del data_objects.temporary_students[data_objects.temporary_students.index(student)]
+                    else:
+                        pass
+        else:
+            pass
+
+        # Save the updated data back to the file
+        with open("temporary_student.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.temporary_students, default=str))
+
+        '''connect_database.upload_files('student_data.txt')'''
+        data_objects.temporary_one_student = {}
+
+
+
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
@@ -139,8 +266,8 @@ class Ui_Dialog(object):
         self.label.setText(_translate("Dialog", "Isim"))
         self.label_2.setText(_translate("Dialog", "Soyisim"))
         self.label_28.setText(_translate("Dialog", "Ders Saati"))
-        self.label_29.setText(_translate("Dialog", "Iletisim - 1"))
-        self.label_30.setText(_translate("Dialog", "Iletisim - 2"))
+        self.label_29.setText(_translate("Dialog", "Ogretmen"))
+        self.label_30.setText(_translate("Dialog", "Iletisim"))
         self.label_14.setText(_translate("Dialog", "  Ogrenci Bilgileri"))
         self.pushButton_3.setText(_translate("Dialog", "Vazgec"))
         self.pushButton_7.setText(_translate("Dialog", "Kaydet"))

@@ -19,6 +19,7 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(264, 302)
         Dialog.setStyleSheet("background-color: rgb(0, 49, 72);")
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Turkish, QtCore.QLocale.Turkey))
         Dialog.setWindowIcon(QtGui.QIcon("logo_hq.png"))
         self.pushButton = QtWidgets.QPushButton(Dialog, clicked = lambda : close_doalig())
         self.pushButton.setGeometry(QtCore.QRect(40, 220, 91, 31))

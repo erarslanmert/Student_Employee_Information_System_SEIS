@@ -2392,19 +2392,44 @@ class Ui_Dialog(object):
                 personel_full_list.append(data_objects.employees.index(employee))
 
         def check_debt(student):
+            debt_dates_month = []
+            debt_dates_year = []
+            calculated_debt = []
+            monthly_amount_debt = []
+            price_change_months = []
+            price_change_years = []
+            total_debt = []
+            last_debt = []
+            agreed_price = int(student['agreed_price'])
+            printer = ''
+            def calculate_debt(price_change_months, price_change_years, new_prices, debt_months, debt_years,agreed_price):
+                prices = {}
+                for i in range(len(price_change_months)):
+                    prices[datetime(year=price_change_years[i], month=price_change_months[i], day=1)] = new_prices[i]
+                sorted_debts = sorted(zip(debt_years, debt_months))
+                output = []
+                for debt in sorted_debts:
+                    for date in sorted(prices.keys(), reverse=True):
+                        if date <= datetime(year=debt[0], month=debt[1], day=1):
+                            output.append(
+                                f"{prices[date]}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
+                            break
+                    else:
+                        output.append(
+                            f"{agreed_price}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
+                return output
+
+            def accumulate_prices(prices):
+                date_dict = defaultdict(int)
+                for price in prices:
+                    price, date_str = price.split('TL/')
+                    date = datetime.strptime(date_str, '%d-%m-%Y').date()
+                    date_dict[date] += int(price)
+                return [f'{price}TL/{date}' for date, price in sorted(date_dict.items())]
+
             try:
                 if len(student['student_attended']) > 0:
                     from datetime import datetime
-                    debt_dates_month = []
-                    debt_dates_year = []
-                    calculated_debt = []
-                    monthly_amount_debt = []
-                    price_change_months = []
-                    price_change_years = []
-                    total_debt = []
-                    last_debt = []
-                    agreed_price = int(student['agreed_price'])
-                    printer = ''
                     for check_date in student['student_attended']:
                         check_date_2 = check_date.split(' ')
                         given_date = check_date_2[-1]
@@ -2437,61 +2462,37 @@ class Ui_Dialog(object):
                             price_change_years.append(parsed_date.year)
                             price_change_months.append(parsed_date.month)
                             monthly_amount_debt.append(int(check_date_2[0]))
+                else:
+                    pass
+
+            except ValueError:
+                pass
+            debt2 = []
+            debt_index = []
+            for debt in last_debt:
+                debt_2 = debt.split('TL/')
+                debt2.append(debt_2[-1])
+            for debt3 in debt2:
+                for unpaid in student['unpaid_debt']:
+                    if debt3 in unpaid:
+                        debt_index.append(debt2.index(debt3))
+                    else:
+                        pass
+            for debt in last_debt:
+                if last_debt.index(debt) not in debt_index:
+                    student['unpaid_debt'].append(debt)
+            try:
+                if int(student['monthly_payment_date']) != 0:
+                    total_debt = calculate_debt(price_change_months, price_change_years, monthly_amount_debt,
+                                                debt_dates_month,
+                                                debt_dates_year, agreed_price)
+                    last_debt = accumulate_prices(total_debt)
+                else:
+                    last_debt = []
+                    pass
             except ValueError:
                 pass
 
-
-
-                def calculate_debt(price_change_months, price_change_years, new_prices, debt_months, debt_years,
-                                   agreed_price):
-                    prices = {}
-                    for i in range(len(price_change_months)):
-                        prices[datetime(year=price_change_years[i], month=price_change_months[i], day=1)] = new_prices[
-                            i]
-
-                    sorted_debts = sorted(zip(debt_years, debt_months))
-                    output = []
-                    for debt in sorted_debts:
-                        for date in sorted(prices.keys(), reverse=True):
-                            if date <= datetime(year=debt[0], month=debt[1], day=1):
-                                output.append(f"{prices[date]}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
-                                break
-                        else:
-                            output.append(f"{agreed_price}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
-
-                    return output
-
-                def accumulate_prices(prices):
-                    date_dict = defaultdict(int)
-                    for price in prices:
-                        price, date_str = price.split('TL/')
-                        date = datetime.strptime(date_str, '%d-%m-%Y').date()
-                        date_dict[date] += int(price)
-                    return [f'{price}TL/{date}' for date, price in sorted(date_dict.items())]
-                try:
-                    if int(student['monthly_payment_date']) != 0:
-                        total_debt = calculate_debt(price_change_months, price_change_years, monthly_amount_debt, debt_dates_month,
-                                                              debt_dates_year, agreed_price)
-                        last_debt = accumulate_prices(total_debt)
-                    else:
-                        last_debt = []
-                        pass
-                except ValueError:
-                    pass
-                debt2 = []
-                debt_index = []
-                for debt in last_debt:
-                    debt_2 = debt.split('TL/')
-                    debt2.append(debt_2[-1])
-                for debt3 in debt2:
-                    for unpaid in student['unpaid_debt']:
-                        if debt3 in unpaid:
-                            debt_index.append(debt2.index(debt3))
-                        else:
-                            pass
-                for debt in last_debt:
-                    if last_debt.index(debt) not in debt_index:
-                        student['unpaid_debt'].append(debt)
         for stdnt in data_objects.students:
             if stdnt['agreed_price'] != "":
                 check_debt(stdnt)

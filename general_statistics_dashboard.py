@@ -224,6 +224,8 @@ class Ui_Dialog(object):
             data_objects.students = json.load(f)
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
+        with open('temporary_student.txt', 'r', encoding="utf-8") as f:
+            data_objects.temporary_students = json.load(f)
 
         for student in data_objects.students:
             if student['module'] == 'Attentioner':
@@ -400,10 +402,20 @@ class Ui_Dialog(object):
         cancelled_by_student = []
         cancelled_by_teacher = []
         cancelled_by_company = []
+        trial_lesson = []
+        new_registration = []
+        trial_to_registration = []
+        registration_private = []
+        registration_report = []
+        registration_mixed = []
+
         month = self.comboBox_5.currentIndex()
         year = self.spinBox.text()
         months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         date_selected = year + '-' + months[month]
+        for temp in data_objects.temporary_students:
+            if (months[month] + '-' + year) in temp['lesson_date']:
+                trial_lesson.append(temp['name'] + ' ' + temp['surname'])
         for student in data_objects.students:
             for lesson in student['student_attended']:
                 if date_selected in lesson:
@@ -411,6 +423,20 @@ class Ui_Dialog(object):
             for lesson in student['student_skipped']:
                 if date_selected in lesson:
                     total_missed_student.append(student['name']+ ' '+student['surname'])
+            if (months[month] + '-' + year) in student['registration date']:
+                new_registration.append(student['name']+ ' '+student['surname'])
+            for temp in data_objects.temporary_students:
+                if student['name'] + ' ' + student['surname'] == temp['name'] + ' ' + temp['surname']:
+                    trial_to_registration.append(student['name']+ ' '+student['surname'])
+                else:
+                    pass
+            if (months[month] + '-' + year) in student['registration date'] and student['registeration_type'] == 'Ozel':
+                registration_private.append(student['name']+ ' '+student['surname'])
+            if (months[month] + '-' + year) in student['registration date'] and student['registeration_type'] == 'Raporlu':
+                registration_report.append(student['name']+ ' '+student['surname'])
+            if (months[month] + '-' + year) in student['registration date'] and student['registeration_type'] == 'Karma':
+                registration_mixed.append(student['name']+ ' '+student['surname'])
+
         for employee in data_objects.employees:
             for lesson in employee['teacher_attended']:
                 if date_selected in lesson:
@@ -433,6 +459,8 @@ class Ui_Dialog(object):
                         cancelled_by_company.append(employee['name'] + ' ' + employee['surname'])
         total_planned_lesson = len(total_completed_lesson) + len(total_cancelled_lesson)
 
+
+
         self.label.setText("Toplam Katilan Ogrenci: {}".format(len(total_attended_student)))
         self.label_2.setText("Toplam Katilan Ogretmen: {}".format(len(total_attended_teacher)))
         self.label_3.setText("Toplam Planlanan Ders: {}".format(total_planned_lesson))
@@ -445,12 +473,12 @@ class Ui_Dialog(object):
         self.label_11.setText("Iptal Edilen Ders (Ogrenci Tarafindan): {}".format(len(cancelled_by_student)))
         self.label_12.setText("Iptal Edilen Ders (Ogretmen Tarafindan): {}".format(len(cancelled_by_teacher)))
         self.label_13.setText("Iptal Edilen Ders (Kurum Tarafindan): {}".format(len(cancelled_by_company)))
-        self.label_14.setText("Yapilan Deneme Dersi: {}".format(len(cancelled_by_company)))
-        self.label_15.setText("Toplam Yeni Kayit: {}".format(len(cancelled_by_company)))
-        self.label_16.setText("Deneme Dersi -> Kayit: {}".format(len(cancelled_by_company)))
-        self.label_17.setText("Yeni Kayit (Ozel): {}".format(len(cancelled_by_company)))
-        self.label_18.setText("Yeni Kayit (Raporlu): {}".format(len(cancelled_by_company)))
-        self.label_19.setText("Yeni Kayit (Karma): {}".format(len(cancelled_by_company)))
+        self.label_14.setText("Yapilan Deneme Dersi: {}".format(len(trial_lesson)))
+        self.label_15.setText("Toplam Yeni Kayit: {}".format(len(new_registration)))
+        self.label_16.setText("Deneme Dersi -> Kayit: {}".format(len(trial_to_registration)))
+        self.label_17.setText("Yeni Kayit (Ozel): {}".format(len(registration_private)))
+        self.label_18.setText("Yeni Kayit (Raporlu): {}".format(len(registration_report)))
+        self.label_19.setText("Yeni Kayit (Karma): {}".format(len(registration_mixed)))
 
 
 
