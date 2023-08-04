@@ -135,6 +135,7 @@ class Ui_Dialog(object):
             for schedule in student['student_schedule']:
                 if attandence_class in schedule:
                     student_list.append(student['name'] + ' ' + student['surname'])
+        print(student_list)
         self.comboBox.addItems(student_list)
         self.comboBox.model().sort(0)
 
@@ -180,7 +181,7 @@ class Ui_Dialog(object):
 
                 for employee in data_objects.employees:
                     for schedule in employee['teacher_schedule']:
-                        if lesson_teacher in schedule:
+                        if lesson_teacher in schedule and (employee['name'] + ' ' + employee['surname']) == teacher:
                             employee['teacher_schedule'].remove(schedule)
                             employee['teacher_attended'].append(schedule)
 
@@ -199,7 +200,7 @@ class Ui_Dialog(object):
                                 student['student_skipped'].append(schedule)
                 for employee in data_objects.employees:
                     for schedule in employee['teacher_schedule']:
-                        if lesson_teacher in schedule:
+                        if lesson_teacher in schedule and (employee['name'] + ' ' + employee['surname']) == teacher:
                             employee['teacher_schedule'].remove(schedule)
                             employee['teacher_attended'].append(schedule)
         else:
@@ -214,12 +215,12 @@ class Ui_Dialog(object):
             f.writelines(json.dumps(data_objects.employees, default=str))
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
-        '''connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
+        connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
         connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
         connect_database.upload_files('student_data.txt')
         connect_database.upload_files('employee_data.txt')
         connect_database.upload_files('student_data.csv')
-        connect_database.upload_files('employee_data.csv')'''
+        connect_database.upload_files('employee_data.csv')
 
 
     def add_item(self):

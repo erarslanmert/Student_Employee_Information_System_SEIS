@@ -168,12 +168,12 @@ class Ui_Dialog(object):
                 f.writelines(json.dumps(data_objects.students, default=str))
             with open('student_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.students = json.load(f)
-            '''connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
+            connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
             connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
             connect_database.upload_files('student_data.txt')
             connect_database.upload_files('employee_data.txt')
             connect_database.upload_files('student_data.csv')
-            connect_database.upload_files('employee_data.csv')'''
+            connect_database.upload_files('employee_data.csv')
         else:
             pass
 

@@ -144,13 +144,10 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        '''connect_database.download_files('user_list.txt')
+        connect_database.download_files('user_list.txt')
         connect_database.download_files('student_data.txt')
         connect_database.download_files('employee_data.txt')
-        connect_database.download_files('temporary_student.txt')'''
-
-        self.lineEdit.setText('erarslan.mert')
-        self.lineEdit_2.setText('mert1993')
+        connect_database.download_files('temporary_student.txt')
 
         with open('student_data.txt', 'r', encoding="utf-8") as f:
             data_objects.students = json.load(f)

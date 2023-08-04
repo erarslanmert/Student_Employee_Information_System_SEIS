@@ -14,7 +14,7 @@ import main_page
 
 
 class_type = 0
-if_cancelled = 0
+if_cancelled = 1
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):

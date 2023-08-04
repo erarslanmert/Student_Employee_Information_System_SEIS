@@ -269,6 +269,34 @@ class Ui_Dialog(object):
         self.frame_3.setFrameShape(QtWidgets.QFrame.Box)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
+        self.frame_310 = QtWidgets.QFrame(self.frame_3)
+        self.frame_310.setGeometry(QtCore.QRect(320, 10, 361, 41))
+        self.frame_310.setFixedSize(361, 41)
+        self.frame_310.setStyleSheet("background-color: rgb(105, 100, 163);\n"
+                                     "background-color: rgb(37, 67, 98);")
+        self.frame_310.setObjectName("frame_310")
+        self.dateEdit_11 = QtWidgets.QDateEdit(self.frame_310)
+        self.dateEdit_11.setObjectName("dateEdit_11")
+        self.dateEdit_11.setGeometry(QtCore.QRect(40, 9, 120, 22))
+        self.dateEdit_11.setFixedSize(120, 22)
+        self.dateEdit_11.setAlignment(QtCore.Qt.AlignCenter)
+        self.dateEdit_11.setCurrentSection(QtWidgets.QDateTimeEdit.DaySection)
+        self.dateEdit_11.setDate(QtCore.QDate(2023, 1, 1))
+        self.dateEdit_11.setObjectName("dateEdit")
+        self.dateEdit_11.setStyleSheet("background-color: rgb(255, 254, 238);\n"
+                                    "color: rgb(0, 0, 0);")
+        self.dateEdit_12 = QtWidgets.QDateEdit(self.frame_310)
+        self.dateEdit_12.setObjectName("dateEdit_12")
+        self.dateEdit_12.setGeometry(QtCore.QRect(200, 9, 120, 22))
+        self.dateEdit_12.setFixedSize(120, 22)
+        self.dateEdit_12.setAlignment(QtCore.Qt.AlignCenter)
+        self.dateEdit_12.setCurrentSection(QtWidgets.QDateTimeEdit.DaySection)
+        self.dateEdit_12.setDate(QtCore.QDate.currentDate())
+        self.dateEdit_12.setObjectName("dateEdit")
+        self.dateEdit_12.setStyleSheet("background-color: rgb(255, 254, 238);\n"
+                                       "color: rgb(0, 0, 0);")
+        self.dateEdit_11.hide()
+        self.dateEdit_12.hide()
         self.frame_301 = QtWidgets.QFrame(self.frame_3)
         self.frame_301.setGeometry(QtCore.QRect(320, 10, 361, 41))
         self.frame_301.setFixedSize(361,41)
@@ -830,6 +858,34 @@ class Ui_Dialog(object):
         self.frame_7.setFrameShape(QtWidgets.QFrame.Box)
         self.frame_7.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_7.setObjectName("frame_7")
+        self.frame_410 = QtWidgets.QFrame(self.frame_7)
+        self.frame_410.setGeometry(QtCore.QRect(320, 10, 361, 41))
+        self.frame_410.setFixedSize(361, 41)
+        self.frame_410.setStyleSheet("background-color: rgb(105, 100, 163);\n"
+                                     "background-color: rgb(37, 67, 98);")
+        self.frame_410.setObjectName("frame_410")
+        self.dateEdit_21 = QtWidgets.QDateEdit(self.frame_410)
+        self.dateEdit_21.setObjectName("dateEdit_21")
+        self.dateEdit_21.setGeometry(QtCore.QRect(40, 9, 120, 22))
+        self.dateEdit_21.setFixedSize(120, 22)
+        self.dateEdit_21.setAlignment(QtCore.Qt.AlignCenter)
+        self.dateEdit_21.setCurrentSection(QtWidgets.QDateTimeEdit.DaySection)
+        self.dateEdit_21.setDate(QtCore.QDate(2023, 1, 1))
+        self.dateEdit_21.setObjectName("dateEdit")
+        self.dateEdit_21.setStyleSheet("background-color: rgb(255, 254, 238);\n"
+                                       "color: rgb(0, 0, 0);")
+        self.dateEdit_22 = QtWidgets.QDateEdit(self.frame_410)
+        self.dateEdit_22.setObjectName("dateEdit_22")
+        self.dateEdit_22.setGeometry(QtCore.QRect(200, 9, 120, 22))
+        self.dateEdit_22.setFixedSize(120, 22)
+        self.dateEdit_22.setAlignment(QtCore.Qt.AlignCenter)
+        self.dateEdit_22.setCurrentSection(QtWidgets.QDateTimeEdit.DaySection)
+        self.dateEdit_22.setDate(QtCore.QDate.currentDate())
+        self.dateEdit_22.setObjectName("dateEdit")
+        self.dateEdit_22.setStyleSheet("background-color: rgb(255, 254, 238);\n"
+                                       "color: rgb(0, 0, 0);")
+        self.dateEdit_21.hide()
+        self.dateEdit_22.hide()
         self.frame_401 = QtWidgets.QFrame(self.frame_7)
         self.frame_401.setGeometry(QtCore.QRect(320, 10, 361, 41))
         self.frame_401.setFixedSize(361, 41)
@@ -2109,7 +2165,12 @@ class Ui_Dialog(object):
         self.layout_8 = QVBoxLayout(self.frame_3)
         self.layout_10 = QHBoxLayout()
         self.layout_8.addLayout(self.layout_10)
+        self.layout_10.addItem(self.spacer)
+        self.layout_10.addItem(self.spacer)
+        self.layout_10.addItem(self.spacer)
         self.layout_10.addWidget(self.frame_301)
+        self.layout_10.addItem(self.spacer)
+        self.layout_10.addWidget(self.frame_310)
         self.layout_8.addWidget(self.frame_5,10)
         self.layout_8.addWidget(self.frame_4,10)
         self.layout_8.addWidget(self.frame_50,10)
@@ -2124,7 +2185,12 @@ class Ui_Dialog(object):
         self.layout_38 = QVBoxLayout(self.frame_7)
         self.layout_40 = QHBoxLayout()
         self.layout_38.addLayout(self.layout_40)
+        self.layout_40.addItem(self.spacer)
+        self.layout_40.addItem(self.spacer)
+        self.layout_40.addItem(self.spacer)
         self.layout_40.addWidget(self.frame_401)
+        self.layout_40.addItem(self.spacer)
+        self.layout_40.addWidget(self.frame_410)
         self.layout_38.addWidget(self.frame_8, 10)
         self.layout_38.addWidget(self.frame_9, 10)
         self.layout_38.addWidget(self.frame_70, 10)
@@ -2334,6 +2400,11 @@ class Ui_Dialog(object):
         self.layout_51.addWidget(self.tableWidget_3)
         self.layout_51.addWidget(self.label_200)
         self.layout_53 = QVBoxLayout(self.frame_70)
+
+        self.dateEdit_11.dateChanged.connect(self.set_student_statistics)
+        self.dateEdit_12.dateChanged.connect(self.set_student_statistics)
+        self.dateEdit_21.dateChanged.connect(self.set_employee_statistics)
+        self.dateEdit_22.dateChanged.connect(self.set_employee_statistics)
 
         widgets = self.frame_5.findChildren(QWidget)
         for widget in widgets:
@@ -3081,6 +3152,7 @@ class Ui_Dialog(object):
 
 
     def set_student_statistics(self):
+        from datetime import datetime
         group_planned = []
         academic_planned = []
         attentioner_planned = []
@@ -3098,41 +3170,69 @@ class Ui_Dialog(object):
         total_skipped = 0
         total_cancelled = 0
         total_changed = 0
+        date_start = self.dateEdit_11.date().toPyDate()
+        start_date = date_start.strftime("%Y-%m-%d")
+        date_end = self.dateEdit_12.date().toPyDate()
+        end_date = date_end.strftime("%Y-%m-%d")
+        start_date_check = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date_check = datetime.strptime(end_date, '%Y-%m-%d')
         for student in data_objects.students:
             if self.comboBox_2.currentText() == student['name'] + ' ' + student['surname']:
                 for schedule in student['student_schedule']:
-                    if 'Grup' in schedule:
-                        group_planned.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_planned.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_planned.append(schedule)
+                    temp_1 = schedule.split(' ')
+                    checker_1 = datetime.strptime(temp_1[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_1 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_planned.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_planned.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_planned.append(schedule)
+                    else:
+                        pass
                 for schedule in student['student_attended']:
-                    if 'Grup' in schedule:
-                        group_attended.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_attended.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_attended.append(schedule)
+                    temp_2 = schedule.split(' ')
+                    checker_2 = datetime.strptime(temp_2[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_2 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_attended.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_attended.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_attended.append(schedule)
+                    else:
+                        pass
                 for schedule in student['student_skipped']:
-                    if 'Grup' in schedule:
-                        group_skipped.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_skipped.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_skipped.append(schedule)
+                    temp_3 = schedule.split(' ')
+                    checker_3 = datetime.strptime(temp_3[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_3 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_skipped.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_skipped.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_skipped.append(schedule)
+                    else:
+                        pass
                 for schedule in student['schedule_cancelled']:
-                    if 'Grup' in schedule:
-                        group_cancelled.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_cancelled.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_cancelled.append(schedule)
+                    temp_4 = schedule.split(' ')
+                    checker_4 = datetime.strptime(temp_4[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_4 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_cancelled.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_cancelled.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_cancelled.append(schedule)
+                    else:
+                        pass
                 total_attended = len(group_attended) + len(attentioner_attended) + len(academic_attended)
                 total_skipped = len(group_skipped) + len(attentioner_skipped) + len(academic_skipped)
                 total_cancelled = len(group_cancelled) + len(attentioner_cancelled) + len(academic_cancelled)
                 total_changed = len(student['schedule_changed'])
-                total_planned = len(student['student_schedule'])
+                total_planned = len(group_planned) + len(attentioner_planned) + len(academic_planned)
+                print(total_planned)
+
 
         # Hide the y-axis labels
         # Set the x-axis label rotation angle and label position
@@ -3186,6 +3286,7 @@ class Ui_Dialog(object):
         self.canvas.show()
 
     def set_employee_statistics(self):
+        from datetime import datetime
         group_planned = []
         academic_planned = []
         attentioner_planned = []
@@ -3203,43 +3304,68 @@ class Ui_Dialog(object):
         total_skipped = 0
         total_cancelled = 0
         total_changed = 0
-
+        date_start = self.dateEdit_21.date().toPyDate()
+        start_date = date_start.strftime("%Y-%m-%d")
+        date_end = self.dateEdit_22.date().toPyDate()
+        end_date = date_end.strftime("%Y-%m-%d")
+        start_date_check = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date_check = datetime.strptime(end_date, '%Y-%m-%d')
         for employee in data_objects.employees:
             if self.comboBox_2.currentText() == employee['name'] + ' ' + employee['surname']:
                 for schedule in employee['teacher_schedule']:
-                    if 'Grup' in schedule:
-                        group_planned.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_planned.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_planned.append(schedule)
+                    temp_1 = schedule.split(' ')
+                    checker_1 = datetime.strptime(temp_1[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_1 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_planned.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_planned.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_planned.append(schedule)
+                    else:
+                        pass
                 for schedule in employee['teacher_attended']:
-                    if 'Grup' in schedule:
-                        group_attended.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_attended.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_attended.append(schedule)
+                    temp_2 = schedule.split(' ')
+                    checker_2 = datetime.strptime(temp_2[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_2 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_attended.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_attended.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_attended.append(schedule)
+                    else:
+                        pass
                 for student in data_objects.students:
                     for schedule in student['student_skipped']:
-                        if 'Grup' in schedule and (employee['name'] + ' ' + employee['surname']) in schedule:
-                            group_skipped.append(schedule)
-                        if 'Akademik' in schedule and (employee['name'] + ' ' + employee['surname']) in schedule:
-                            academic_skipped.append(schedule)
-                        if 'Attentioner' in schedule and (employee['name'] + ' ' + employee['surname']) in schedule:
-                            attentioner_skipped.append(schedule)
+                        temp_3 = schedule.split(' ')
+                        checker_3 = datetime.strptime(temp_3[-1], '%Y-%m-%d')
+                        if start_date_check <= checker_3 <= end_date_check:
+                            if 'Grup' in schedule and (employee['name'] + ' ' + employee['surname']) in schedule:
+                                group_skipped.append(schedule)
+                            if 'Akademik' in schedule and (employee['name'] + ' ' + employee['surname']) in schedule:
+                                academic_skipped.append(schedule)
+                            if 'Attentioner' in schedule and (employee['name'] + ' ' + employee['surname']) in schedule:
+                                attentioner_skipped.append(schedule)
+                        else:
+                            pass
                 for schedule in employee['schedule_cancelled']:
-                    if 'Grup' in schedule:
-                        group_cancelled.append(schedule)
-                    if 'Akademik' in schedule:
-                        academic_cancelled.append(schedule)
-                    if 'Attentioner' in schedule:
-                        attentioner_cancelled.append(schedule)
+                    temp_4 = schedule.split(' ')
+                    checker_4 = datetime.strptime(temp_4[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_4 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_cancelled.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_cancelled.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_cancelled.append(schedule)
+                    else:
+                        pass
                 total_attended = len(group_attended) + len(attentioner_attended) + len(academic_attended)
                 total_skipped = len(group_skipped) + len(attentioner_skipped) + len(academic_skipped)
                 total_cancelled = len(group_cancelled) + len(attentioner_cancelled) + len(academic_cancelled)
                 total_changed = len(employee['schedule_changed'])
-                total_planned = len(employee['teacher_schedule'])
+                total_planned = len(group_planned) + len(attentioner_planned) + len(academic_planned)
 
         # Hide the y-axis labels
         # Set the x-axis label rotation angle and label position
@@ -4076,8 +4202,8 @@ class Ui_Dialog(object):
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
 
-        '''connect_database.upload_files('employee_data.txt')
-        connect_database.upload_files('student_data.txt')'''
+        connect_database.upload_files('employee_data.txt')
+        connect_database.upload_files('student_data.txt')
 
         self.load_general_schedule()
 
@@ -4165,8 +4291,8 @@ class Ui_Dialog(object):
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
 
-        '''connect_database.upload_files('employee_data.txt')
-        connect_database.upload_files('student_data.txt')'''
+        connect_database.upload_files('employee_data.txt')
+        connect_database.upload_files('student_data.txt')
 
         self.load_general_schedule()
 
@@ -4381,6 +4507,8 @@ class Ui_Dialog(object):
             self.frame_50.hide()
             self.label_30.setText("           Ogrenci Cizelgesi")
             data_count_student = 1
+            self.dateEdit_11.hide()
+            self.dateEdit_12.hide()
             if data_objects.active_auth_level == 4:
                 self.frame_5.hide()
                 self.comboBox_5.hide()
@@ -4397,6 +4525,8 @@ class Ui_Dialog(object):
             self.frame_50.hide()
             self.label_30.setText("  Ogrenci Bilgileri Genel Ozet")
             data_count_student = 2
+            self.dateEdit_11.hide()
+            self.dateEdit_12.hide()
             if data_objects.active_auth_level == 4:
                 self.frame_5.hide()
                 self.comboBox_5.hide()
@@ -4413,6 +4543,8 @@ class Ui_Dialog(object):
             self.set_student_statistics()
             self.frame_50.show()
             self.label_30.setText("    Ogrenci Genel Istatistikleri")
+            self.dateEdit_11.show()
+            self.dateEdit_12.show()
             data_count_student = 0
 
     def shift_data_student_left(self):
@@ -4424,6 +4556,8 @@ class Ui_Dialog(object):
             self.frame_50.hide()
             self.label_30.setText("         Ogrenci Cizelgesi")
             data_count_student = 1
+            self.dateEdit_11.hide()
+            self.dateEdit_12.hide()
             if data_objects.active_auth_level == 4:
                 self.frame_5.hide()
                 self.comboBox_5.hide()
@@ -4440,6 +4574,8 @@ class Ui_Dialog(object):
             self.frame_50.hide()
             self.label_30.setText("  Ogrenci Bilgileri Genel Ozet")
             data_count_student = 2
+            self.dateEdit_11.hide()
+            self.dateEdit_12.hide()
             if data_objects.active_auth_level == 4:
                 self.frame_5.hide()
                 self.comboBox_5.hide()
@@ -4455,6 +4591,8 @@ class Ui_Dialog(object):
             self.frame_5.hide()
             self.set_student_statistics()
             self.frame_50.show()
+            self.dateEdit_11.show()
+            self.dateEdit_12.show()
             self.label_30.setText("    Ogrenci Genel Istatistikleri")
             data_count_student = 0
 
@@ -4468,6 +4606,8 @@ class Ui_Dialog(object):
             self.frame_70.hide()
             self.label_31.setText("    Ogretmen Cizelgesi")
             data_count_teacher = 1
+            self.dateEdit_21.hide()
+            self.dateEdit_22.hide()
         elif data_count_teacher == 0:
             self.frame_9.hide()
             self.frame_8.show()
@@ -4475,6 +4615,8 @@ class Ui_Dialog(object):
             self.frame_70.hide()
             self.label_31.setText(" Ogretmen Bilgileri Genel Ozet")
             data_count_teacher = 2
+            self.dateEdit_21.hide()
+            self.dateEdit_22.hide()
         else:
             self.frame_8.hide()
             self.frame_9.hide()
@@ -4482,6 +4624,8 @@ class Ui_Dialog(object):
             self.set_employee_statistics()
             self.frame_70.show()
             self.label_31.setText(" Ogretmen Genel Istatisitkleri")
+            self.dateEdit_21.show()
+            self.dateEdit_22.show()
             data_count_teacher = 0
 
     def shift_data_teacher_left(self):
@@ -4494,12 +4638,16 @@ class Ui_Dialog(object):
             self.frame_70.hide()
             self.label_31.setText("           Ogretmen Cizelgesi")
             data_count_teacher = 1
+            self.dateEdit_21.hide()
+            self.dateEdit_22.hide()
         elif data_count_teacher == 1:
             self.frame_9.hide()
             self.frame_8.show()
             self.label_118.show()
             self.frame_70.hide()
             self.label_31.setText(" Ogretmen Bilgileri Genel Ozet")
+            self.dateEdit_21.hide()
+            self.dateEdit_22.hide()
             data_count_teacher = 2
         else:
             self.frame_8.hide()
@@ -4508,6 +4656,8 @@ class Ui_Dialog(object):
             self.set_employee_statistics()
             self.frame_70.show()
             self.label_31.setText(" Ogretmen Genel Istatisitkleri")
+            self.dateEdit_21.show()
+            self.dateEdit_22.show()
             data_count_teacher = 0
 
     def show_data(self):
@@ -4677,7 +4827,7 @@ class Ui_Dialog(object):
         self.pushButton_2.setText(_translate("Dialog", " Genel Program"))
         self.pushButton_4.setText(_translate("Dialog", " Yeni Ekle"))
         self.pushButton.setText(_translate("Dialog", " Verileri Goruntule"))
-        self.pushButton_9.setText(_translate("Dialog", " Kaydet"))
+        self.pushButton_9.setText(_translate("Dialog", " Disa Aktar"))
         self.label_8.setText(_translate("Dialog", "Yonetici Ekrani"))
         self.label_30.setText(_translate("Dialog", "Ogrenci Bilgileri Genel Ozeti"))
         self.pushButton_6.setText(_translate("Dialog", ">"))

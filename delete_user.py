@@ -97,9 +97,9 @@ class Ui_Dialog(object):
                 data_objects.users.remove(selected_user)
                 with open("user_list.txt", "w", encoding="utf-8") as f:
                     f.writelines(json.dumps(data_objects.users, default=str))
-                '''connect_database.upload_files('user_list.txt')
+                connect_database.upload_files('user_list.txt')
                 connect_database.txt_to_csv('user_list.txt', 'user_list.csv')
-                connect_database.upload_files('user_list.csv')'''
+                connect_database.upload_files('user_list.csv')
             else:
                 pass
 

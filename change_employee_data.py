@@ -724,9 +724,9 @@ class Ui_Dialog(object):
                     with open('employee_data.txt', 'r', encoding="utf-8") as f:
                         data_objects.employees = json.load(f)
 
-                    '''connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
+                    connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
                     connect_database.upload_files('employee_data.txt')
-                    connect_database.upload_files('employee_data.csv')'''
+                    connect_database.upload_files('employee_data.csv')
                 else:
                     pass
 

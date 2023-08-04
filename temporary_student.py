@@ -254,7 +254,7 @@ class Ui_Dialog(object):
         with open("temporary_student.txt", "w", encoding="utf-8") as f:
             f.writelines(json.dumps(data_objects.temporary_students, default=str))
 
-        '''connect_database.upload_files('student_data.txt')'''
+        connect_database.upload_files('temporary_student.txt')
         data_objects.temporary_one_student = {}
 
 
