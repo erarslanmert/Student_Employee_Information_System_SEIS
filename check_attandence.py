@@ -6,6 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 import json
+import re
 
 from PyQt5.QtWidgets import QMessageBox
 
@@ -126,16 +127,25 @@ class Ui_Dialog(object):
         self.pushButton_4.setDisabled(True)
         self.comboBox.setDisabled(True)
 
+    def extract_list_from_string(self, input_string):
+        pattern = r"\[.*?\]"  # Regular expression to match everything between square brackets []
+        result = re.findall(pattern, input_string)
+        if result:
+            # Assuming there is only one list in the string, so we return the first occurrence
+            return eval(result[0])
+        else:
+            return None  # Return None if no list is found
+
     def add_students(self):
         self.comboBox.clear()
         self.pushButton.setEnabled(True)
         self.comboBox.setEnabled(True)
         student_list = []
-        for student in data_objects.students:
-            for schedule in student['student_schedule']:
-                if attandence_class in schedule:
-                    student_list.append(student['name'] + ' ' + student['surname'])
-        print(student_list)
+        for employee in data_objects.employees:
+            for schedule in employee['teacher_schedule']:
+                elements = attandence_class.split(' ')
+                if employee['name'] + ' ' + employee['surname'] in attandence_class and elements[2] in schedule and elements[3] in schedule and elements[-1] in schedule:
+                    student_list = self.extract_list_from_string(schedule)
         self.comboBox.addItems(student_list)
         self.comboBox.model().sort(0)
 
@@ -153,7 +163,7 @@ class Ui_Dialog(object):
         msgBox.setWindowTitle("Yoklama Sayfasi")
         msgBox.setIcon(QMessageBox.Question)
         msgBox.setText(
-            "Yoklama listesine herhangi bir ogrenci eklemediniz. Listeye eklenmeyen ogrenciler yoklamada devamsizlik yapmis sayilacaktir. Onayliyor musunuz?")
+            "Yoklama listesine ogrenci ekleyiniz Listeye eklenmeyen ogrenciler yoklamada devamsizlik yapmis sayilacaktir. Onayliyor musunuz?")
         msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         yesButton = msgBox.button(QMessageBox.Yes)
         yesButton.setText("Evet")
@@ -184,7 +194,13 @@ class Ui_Dialog(object):
                         if lesson_teacher in schedule and (employee['name'] + ' ' + employee['surname']) == teacher:
                             employee['teacher_schedule'].remove(schedule)
                             employee['teacher_attended'].append(schedule)
-
+            elif "DENEME" in check_group:
+                for employee in data_objects.employees:
+                    for schedule in employee['teacher_schedule']:
+                        checker = check_group.split(' -')
+                        if checker[0] in schedule:
+                            employee['teacher_schedule'].remove(schedule)
+                            employee['teacher_attended'].append(schedule)
             else:
                 for student in data_objects.students:
                     for schedule in student['student_schedule']:

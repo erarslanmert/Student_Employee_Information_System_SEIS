@@ -391,6 +391,7 @@ class Ui_Dialog(object):
 
     def update_labels(self):
         total_attended_student = []
+        total_attended_student_1 = []
         total_attended_teacher = []
         total_group_lesson = []
         total_planned_lesson = 0
@@ -413,13 +414,15 @@ class Ui_Dialog(object):
         year = self.spinBox.text()
         months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         date_selected = year + '-' + months[month]
-        for temp in data_objects.temporary_students:
-            if (months[month] + '-' + year) in temp['lesson_date']:
-                trial_lesson.append(temp['name'] + ' ' + temp['surname'])
+        for employee in data_objects.employees:
+            for schedule in employee['teacher_attended']:
+                if date_selected in schedule and 'Deneme Dersi' in schedule:
+                    trial_lesson.append(schedule)
         for student in data_objects.students:
             for lesson in student['student_attended']:
                 if date_selected in lesson:
-                    total_attended_student.append(student['name']+ ' '+student['surname'])
+                    total_attended_student_1.append(student['name']+ ' '+student['surname'])
+                    total_attended_student = set(total_attended_student_1)
             for lesson in student['student_skipped']:
                 if date_selected in lesson:
                     total_missed_student.append(student['name']+ ' '+student['surname'])
@@ -440,8 +443,8 @@ class Ui_Dialog(object):
         for employee in data_objects.employees:
             for lesson in employee['teacher_attended']:
                 if date_selected in lesson:
-                    total_attended_teacher.append(employee['name'] + ' ' + employee['surname'])
                     total_completed_lesson.append(employee['name'] + ' ' + employee['surname'])
+                    total_attended_teacher = set(total_completed_lesson)
                     if 'Grup' in lesson:
                         total_group_lesson.append(employee['name'] + ' ' + employee['surname'])
                     if 'Attentioner' in lesson:

@@ -10,6 +10,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import main_page
 import data_objects
 
+is_cancelled = 1
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -99,10 +101,14 @@ class Ui_Dialog(object):
             self.radioButton_3.setDisabled(True)
 
         def dialog_close_ok():
+            global is_cancelled
+            is_cancelled = 0
             self.select_save_type()
             Dialog.close()
 
         def dialog_close_cancel():
+            global is_cancelled
+            is_cancelled = 1
             main_page.saving_option = 0
             Dialog.close()
 

@@ -10,6 +10,7 @@ import os
 import shutil
 from collections import defaultdict
 import cancel_class
+import database_corrector
 import date_consistency
 import delete_lesson
 import numpy as np
@@ -36,6 +37,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+
+import temporary_student
 
 data_count_student = 0
 data_count_teacher = 0
@@ -72,6 +75,8 @@ deleted_class = []
 row_height = []
 row_extender = 0
 section_size = 0
+
+data_list = []
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -2472,7 +2477,6 @@ class Ui_Dialog(object):
             total_debt = []
             last_debt = []
             agreed_price = int(student['agreed_price'])
-            printer = ''
             def calculate_debt(price_change_months, price_change_years, new_prices, debt_months, debt_years,agreed_price):
                 prices = {}
                 for i in range(len(price_change_months)):
@@ -2488,6 +2492,7 @@ class Ui_Dialog(object):
                     else:
                         output.append(
                             f"{agreed_price}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
+                print(output)
                 return output
 
             def accumulate_prices(prices):
@@ -2925,6 +2930,13 @@ class Ui_Dialog(object):
                                 self.tableWidget_3.setCellWidget(row_no, column_no, label)
                                 label.setStyleSheet("background-color: #FFD9A8;")
                                 label.setWordWrap(True)
+                            elif 'Deneme Dersi' in day:
+                                column_no = days.index(day_of_week[-2])
+                                label = QtWidgets.QLabel(group_class_list[0] + ' - Deneme Dersi')
+                                label.setAlignment(Qt.AlignCenter)
+                                self.tableWidget_3.setCellWidget(row_no, column_no, label)
+                                label.setStyleSheet("background-color: #FFD9A8;")
+                                label.setWordWrap(True)
                             else:
                                 pass
                         except UnboundLocalError:
@@ -2967,6 +2979,13 @@ class Ui_Dialog(object):
                             elif 'Attentioner Ders' in day:
                                 column_no = days.index(day_of_week[-2])
                                 label = QtWidgets.QLabel(group_class_list[0] + ' - Attentioner Ders')
+                                label.setAlignment(Qt.AlignCenter)
+                                self.tableWidget_3.setCellWidget(row_no, column_no, label)
+                                label.setStyleSheet("background-color: #C5FFC5;")
+                                label.setWordWrap(True)
+                            elif 'Deneme Dersi' in day:
+                                column_no = days.index(day_of_week[-2])
+                                label = QtWidgets.QLabel(group_class_list[0] + ' - Deneme Dersi')
                                 label.setAlignment(Qt.AlignCenter)
                                 self.tableWidget_3.setCellWidget(row_no, column_no, label)
                                 label.setStyleSheet("background-color: #C5FFC5;")
@@ -3017,6 +3036,13 @@ class Ui_Dialog(object):
                                 self.tableWidget_3.setCellWidget(row_no, column_no, label)
                                 label.setStyleSheet("background-color: #FF9292;")
                                 label.setWordWrap(True)
+                            elif 'Deneme Dersi' in day:
+                                column_no = days.index(day_of_week[-2])
+                                label = QtWidgets.QLabel(group_class_list[0] + ' - Deneme Dersi')
+                                label.setAlignment(Qt.AlignCenter)
+                                self.tableWidget_3.setCellWidget(row_no, column_no, label)
+                                label.setStyleSheet("background-color: #FF9292;")
+                                label.setWordWrap(True)
                             else:
                                 pass
                         except UnboundLocalError:
@@ -3059,6 +3085,13 @@ class Ui_Dialog(object):
                             elif 'Attentioner Ders' in day:
                                 column_no = days.index(day_of_week[-2])
                                 label = QtWidgets.QLabel(group_class_list[0] + ' - Attentioner Ders')
+                                label.setAlignment(Qt.AlignCenter)
+                                self.tableWidget_3.setCellWidget(row_no, column_no, label)
+                                label.setStyleSheet("background-color: #DFB2FE;")
+                                label.setWordWrap(True)
+                            elif 'Deneme Dersi' in day:
+                                column_no = days.index(day_of_week[-2])
+                                label = QtWidgets.QLabel(group_class_list[0] + ' - Deneme Dersi')
                                 label.setAlignment(Qt.AlignCenter)
                                 self.tableWidget_3.setCellWidget(row_no, column_no, label)
                                 label.setStyleSheet("background-color: #DFB2FE;")
@@ -3212,6 +3245,7 @@ class Ui_Dialog(object):
                             academic_skipped.append(schedule)
                         if 'Attentioner' in schedule:
                             attentioner_skipped.append(schedule)
+
                     else:
                         pass
                 for schedule in student['schedule_cancelled']:
@@ -3231,7 +3265,7 @@ class Ui_Dialog(object):
                 total_cancelled = len(group_cancelled) + len(attentioner_cancelled) + len(academic_cancelled)
                 total_changed = len(student['schedule_changed'])
                 total_planned = len(group_planned) + len(attentioner_planned) + len(academic_planned)
-                print(total_planned)
+
 
 
         # Hide the y-axis labels
@@ -3361,6 +3395,18 @@ class Ui_Dialog(object):
                             attentioner_cancelled.append(schedule)
                     else:
                         pass
+                for schedule in employee['schedule_cancelled']:
+                    temp_4 = schedule.split(' ')
+                    checker_4 = datetime.strptime(temp_4[-1], '%Y-%m-%d')
+                    if start_date_check <= checker_4 <= end_date_check:
+                        if 'Grup' in schedule:
+                            group_cancelled.append(schedule)
+                        if 'Akademik' in schedule:
+                            academic_cancelled.append(schedule)
+                        if 'Attentioner' in schedule:
+                            attentioner_cancelled.append(schedule)
+                    else:
+                        pass
                 total_attended = len(group_attended) + len(attentioner_attended) + len(academic_attended)
                 total_skipped = len(group_skipped) + len(attentioner_skipped) + len(academic_skipped)
                 total_cancelled = len(group_cancelled) + len(attentioner_cancelled) + len(academic_cancelled)
@@ -3419,123 +3465,121 @@ class Ui_Dialog(object):
 
 
     def save_file_dialog(self):
-        global saving_option
+        global saving_option, data_list
         import tkinter as tk
         from tkinter import filedialog
+        import openpyxl
         save_options.open_save_options()
-        if saving_option == 1:
-            root = tk.Tk()
-            root.withdraw()  # hide the main window
-            # open the file dialog and allow the user to select a directory
-            file_path = filedialog.askdirectory(title="Select a directory to save the file")
-            existing_file_path = 'ogrenci_verileri.xlsx'
-            new_directory_path = file_path
-            new_file_path = new_directory_path + "/student_data.xlsx"
-            df = pd.read_csv("student_data.csv")
-            writer = pd.ExcelWriter('ogrenci_verileri.xlsx')
-            df.to_excel(writer, sheet_name='Sheet1', index=False)
-            writer.save()
-            filepath = os.path.join(new_directory_path, existing_file_path)
-            # read the contents of the existing file
-            new_file = os.path.join(new_directory_path, os.path.basename(existing_file_path))
-            # copy the file to the new location
-            shutil.copy2(existing_file_path, new_file)
-            # write the contents to a new file in the selected directory
-            # the selected directory will be stored in the `file_path` variable
-                # Convert CSV to XLS using pandas
-        if saving_option == 2:
-            root = tk.Tk()
-            root.withdraw()  # hide the main window
-            # open the file dialog and allow the user to select a directory
-            file_path = filedialog.askdirectory(title="Select a directory to save the file")
-            existing_file_path = 'calisan_verileri.xlsx'
-            new_directory_path = file_path
-            new_file_path = new_directory_path + "/calisan_verileri.xlsx"
-            df = pd.read_csv("employee_data.csv")
-            writer = pd.ExcelWriter('calisan_verileri.xlsx')
-            df.to_excel(writer, sheet_name='Sheet1', index=False)
-            writer.save()
-            filepath = os.path.join(new_directory_path, existing_file_path)
-            # read the contents of the existing file
-            new_file = os.path.join(new_directory_path, os.path.basename(existing_file_path))
-            # copy the file to the new location
-            shutil.copy2(existing_file_path, new_file)
-            # write the contents to a new file in the selected directory
-            # the selected directory will be stored in the `file_path` variable
-            # Convert CSV to XLS using pandas
-        else:
-            pass
+        if saving_option == 1 and save_options.is_cancelled == 0:
+            data_list = data_objects.students
+            if not data_list:
+                raise ValueError("Input list is empty")
 
-        if saving_option == 3:
-            import openpyxl
-            from openpyxl.utils.cell import get_column_letter
-            from openpyxl.styles import Alignment
+            # Extract column names (keys) from the first dictionary in the list
+            column_names = list(data_list[0].keys())
 
-            # Create a new Excel workbook
+            # Create a new workbook and select the active sheet
             workbook = openpyxl.Workbook()
             sheet = workbook.active
-            # Get the data from the QTableWidget
-            for row in range(self.tableWidget.rowCount()):
-                # Skip rows 0, 10, 20, ..., 60
-                if (row + 1) % 10 == 0:
-                    continue
 
-                # Write the row label
-                label = self.tableWidget.verticalHeaderItem(row).text()
-                cell = sheet.cell(row=row + 2, column=1)
-                cell.value = label
+            # Write column headers
+            for col_idx, col_name in enumerate(column_names, 1):
+                sheet.cell(row=1, column=col_idx, value=col_name)
 
-                # Write the vertical headers to the first column
-                if row == 0:
-                    for i in range(self.tableWidget.rowCount()):
-                        if (i + 1) % 11 == 0:
-                            continue
-                        label = self.tableWidget.verticalHeaderItem(i).text()
-                        cell = sheet.cell(row=i + 2, column=1)
-                        cell.value = label
+            # Write data rows
+            for row_idx, data_dict in enumerate(data_list, 2):
+                for col_idx, col_name in enumerate(column_names, 1):
+                    cell_value = data_dict.get(col_name, "")
+                    if isinstance(cell_value, list):
+                        cell_value = ', '.join(str(item) for item in cell_value)
+                    sheet.cell(row=row_idx, column=col_idx, value=cell_value)
 
-                for column in range(self.tableWidget.columnCount()):
-                    for row in range(self.tableWidget.rowCount()):
-                        # Get the widget in the cell
-                        item = self.tableWidget.cellWidget(row, column)
-
-                        # Initialize the text variable with a default value
-                        text = ""
-
-                        # Get the text of the widget
-                        if isinstance(item, QtWidgets.QLabel):
-                            text = item.text()
-                        elif isinstance(item, QtWidgets.QComboBox):
-                            # Get the list of items in the QComboBox
-                            items = [item.itemText(i) for i in range(item.count())]
-                            # Combine the items into a comma-separated string
-                            text = ", ".join(items)
-
-                        # Write the text to the Excel sheet
-                        cell = sheet.cell(row=row + 2, column=column + 2)
-                        cell.value = text
-
-                        # Write the column headers
-                        if row == 0:
-                            header = self.tableWidget.horizontalHeaderItem(column).text()
-                            sheet.cell(row=1, column=column + 2).value = header
-                        if row in range(0, 61, 10) and column == 0:
-                            sheet.cell(row=row + 2, column=1).value = self.tableWidget.item(row, column).text()
-
-
-            workbook.save('genel_cizelge.xlsx')
+            # Display a file dialog to save the Excel file
             root = tk.Tk()
-            root.withdraw()  # hide the main window
-            # open the file dialog and allow the user to select a directory
-            file_path = filedialog.askdirectory(title="Select a directory to save the file")
-            existing_file_path = 'genel_cizelge.xlsx'
-            new_directory_path = file_path
-            filepath = os.path.join(new_directory_path, existing_file_path)
-            # read the contents of the existing file
-            new_file = os.path.join(new_directory_path, os.path.basename(existing_file_path))
-            # copy the file to the new location
-            shutil.copy2(existing_file_path, new_file)
+            root.withdraw()  # Hide the main window
 
+            file_path = filedialog.asksaveasfilename(defaultextension=".xlsx",
+                                                     filetypes=[("Excel Files", "*.xlsx")])
+            if not file_path:
+                return  # User canceled the file dialog
+
+            # Save the workbook to the selected file path
+            workbook.save(file_path)
+
+        elif saving_option == 2 and save_options.is_cancelled == 0:
+            data_list = data_objects.employees
+            if not data_list:
+                raise ValueError("Input list is empty")
+
+            # Extract column names (keys) from the first dictionary in the list
+            column_names = list(data_list[0].keys())
+
+            # Create a new workbook and select the active sheet
+            workbook = openpyxl.Workbook()
+            sheet = workbook.active
+
+            # Write column headers
+            for col_idx, col_name in enumerate(column_names, 1):
+                sheet.cell(row=1, column=col_idx, value=col_name)
+
+            # Write data rows
+            for row_idx, data_dict in enumerate(data_list, 2):
+                for col_idx, col_name in enumerate(column_names, 1):
+                    cell_value = data_dict.get(col_name, "")
+                    if isinstance(cell_value, list):
+                        cell_value = ', '.join(str(item) for item in cell_value)
+                    sheet.cell(row=row_idx, column=col_idx, value=cell_value)
+
+            # Display a file dialog to save the Excel file
+            root = tk.Tk()
+            root.withdraw()  # Hide the main window
+
+            file_path = filedialog.asksaveasfilename(defaultextension=".xlsx",
+                                                     filetypes=[("Excel Files", "*.xlsx")])
+            if not file_path:
+                return  # User canceled the file dialog
+
+            # Save the workbook to the selected file path
+            workbook.save(file_path)
+
+
+        elif saving_option == 3 and save_options.is_cancelled == 0:
+            workbook = openpyxl.Workbook()
+            sheet = workbook.active
+            v_header = [' ', '9:30-10:10', '10:30-11:10', '11:30-12:10', '12:30-13:10', '13:10-14:00', '14:00-14:40', '15:00-15:40', '16:00-16:40', '17:00-17:40']
+            header_list = []
+            for employee in data_objects.employees:
+                if employee['title'] == 'Ogretmen' or employee['title'] == 'Dil Konusmaci' or employee['title'] == 'Psikolog':
+                    header_list.append((employee['name'] + ' ' + employee['surname']))
+                else:
+                    pass
+            # Populate headers (horizontal)
+
+            for col in range(len(header_list)):
+                header_item = header_list[col]
+                sheet.cell(row=1, column=col + 2, value=header_item)
+
+            # Populate headers (vertical)
+            for row in range(70):
+                header_value = v_header[row % 10]
+                sheet.cell(row=row + 2, column=1, value=header_value)
+            # Populate cell values
+            for row in range(self.tableWidget.rowCount()):
+                for col in range(self.tableWidget.columnCount()):
+                    cell_item = self.tableWidget.item(row, col)
+                    sheet.cell(row=row + 2, column=col + 2, value=cell_item.text() if cell_item else "")
+
+            # Display a file dialog to save the Excel file
+            root = tk.Tk()
+            root.withdraw()  # Hide the main window
+
+            file_path = filedialog.asksaveasfilename(defaultextension=".xlsx",
+                                                     filetypes=[("Excel Files", "*.xlsx")])
+            if not file_path:
+                return  # User canceled the file dialog
+
+            # Save the workbook to the selected file path
+            workbook.save(file_path)
 
 
     def load_txt(self):
@@ -3838,6 +3882,14 @@ class Ui_Dialog(object):
                         item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
                         item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
                         self.tableWidget.setItem(row_no, column_no, item)
+
+                    elif 'Deneme Dersi' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem(f"{group_class_list[0]} - DENEME DERSI")
+                        item.setData(Qt.BackgroundRole, QColor("#FFD9A8"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+
                     else:
                         pass
                 else:
@@ -3873,6 +3925,12 @@ class Ui_Dialog(object):
                     elif 'Attentioner Ders' in schedule:
                         column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
                         item = QTableWidgetItem(f"{group_class_list[0]} - ATTENTIONER DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#FF9292"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+                    elif 'Deneme Dersi' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem(f"{group_class_list[0]} - DENEME DERSI")
                         item.setData(Qt.BackgroundRole, QColor("#FF9292"))
                         item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
                         self.tableWidget.setItem(row_no, column_no, item)
@@ -3915,6 +3973,12 @@ class Ui_Dialog(object):
                         item.setData(Qt.BackgroundRole, QColor("#C5FFC5"))
                         item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
                         self.tableWidget.setItem(row_no, column_no, item)
+                    elif 'Deneme Dersi' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem(f"{group_class_list[0]} - DENEME DERSI")
+                        item.setData(Qt.BackgroundRole, QColor("#C5FFC5"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
 
                     else:
                         pass
@@ -3931,7 +3995,7 @@ class Ui_Dialog(object):
 
     def show_context_menu(self, pos):
         cell = self.tableWidget.itemAt(pos)
-        if cell is not None:
+        if cell is not None and cell.row()%10 != 0:
             menu = QMenu(self.tableWidget)
             menu.setStyleSheet("QMenu { background-color: #F0F0F0; color: #000000; }"
                                "QMenu::item { background-color: #F0F0F0; color: #000000; }"
@@ -3949,6 +4013,10 @@ class Ui_Dialog(object):
             action3 = QAction("Grup Dersi Ekle", self.tableWidget)
             action3.triggered.connect(lambda: self.handle_context_menu_action("Grup Dersi Ekle", cell))
             menu.addAction(action3)
+
+            action8 = QAction("Deneme Dersi Ekle", self.tableWidget)
+            action8.triggered.connect(lambda: self.handle_context_menu_action("Deneme Dersi Ekle", cell))
+            menu.addAction(action8)
 
             action4 = QAction("Dersi Iptal Et", self.tableWidget)
             action4.triggered.connect(lambda: self.handle_context_menu_action("Dersi Iptal Et", cell))
@@ -3972,16 +4040,19 @@ class Ui_Dialog(object):
                 action1.setDisabled(True)
                 action2.setDisabled(True)
                 action3.setDisabled(True)
+                action8.setDisabled(True)
             elif cell_color == "#c5ffc5":
                 action1.setDisabled(True)
                 action2.setDisabled(True)
                 action3.setDisabled(True)
+                action8.setDisabled(True)
                 action4.setDisabled(True)
                 action5.setDisabled(True)
             elif cell_color == "#ff9292":
                 action1.setDisabled(True)
                 action2.setDisabled(True)
                 action3.setDisabled(True)
+                action8.setDisabled(True)
                 action4.setDisabled(True)
                 action5.setDisabled(True)
                 action6.setDisabled(True)
@@ -3989,6 +4060,7 @@ class Ui_Dialog(object):
                 action1.setEnabled(True)
                 action2.setEnabled(True)
                 action3.setEnabled(True)
+                action8.setEnabled(True)
                 action4.setDisabled(True)
                 action5.setDisabled(True)
                 action6.setDisabled(True)
@@ -4065,6 +4137,14 @@ class Ui_Dialog(object):
                                                              self.tableWidget.verticalHeaderItem(cell.row()).text() + ' ' + item))
             else:
                 pass
+
+        elif option == "Deneme Dersi Ekle":
+            temporary_student.teacher = self.tableWidget.horizontalHeaderItem(cell.column()).text()
+            temporary_student.time = self.tableWidget.verticalHeaderItem(cell.row()).text()
+            date_temp = item.split(' ')
+            temporary_student.date = date_temp[-1]
+            temporary_student.open_temporary_student()
+
 
         elif option == "Dersi Iptal Et":
             self.check_student_attandence()
@@ -4165,6 +4245,12 @@ class Ui_Dialog(object):
                 teacher = self.tableWidget.horizontalHeaderItem(cell.column()).text()
                 for employee in data_objects.employees:
                     if teacher == employee['name'] + ' ' + employee['surname']:
+                        for student in data_objects.temporary_students:
+                            if student['teacher'] == employee['name'] + ' ' + employee['surname']:
+                                for schedule in employee['teacher_schedule']:
+                                    if student['lesson_date'] in schedule and student['name'] + ' ' + student['surname'] in schedule and student['lesson_time'] in schedule:
+                                        data_objects.temporary_students.remove(student)
+
                         for schedule in employee['teacher_schedule']:
                             if date in schedule and time in schedule:
                                 employee['teacher_schedule'].remove(schedule)
@@ -4177,6 +4263,9 @@ class Ui_Dialog(object):
                         for schedule in employee['schedule_cancelled']:
                             if date in schedule and time in schedule:
                                 employee['schedule_cancelled'].remove(schedule)
+
+
+
                 for student in data_objects.students:
                     for schedule in student['student_schedule']:
                         if teacher in schedule and date in schedule and time in schedule:
@@ -4201,11 +4290,18 @@ class Ui_Dialog(object):
             f.writelines(json.dumps(data_objects.employees, default=str))
         with open('employee_data.txt', 'r', encoding="utf-8") as f:
             data_objects.employees = json.load(f)
+        with open("temporary_student.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.temporary_students, default=str))
+        with open('temporary_student.txt', 'r', encoding="utf-8") as f:
+            data_objects.temporary_students = json.load(f)
 
+        database_corrector.check_lesson_empty()
         connect_database.upload_files('employee_data.txt')
         connect_database.upload_files('student_data.txt')
 
         self.load_general_schedule()
+        self.step_fwd_weekly()
+        self.step_back_weekly()
 
 
     def cellDoubleClicked(self, row, column):

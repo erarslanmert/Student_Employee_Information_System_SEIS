@@ -10,6 +10,7 @@ import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 import connect_database
 import data_objects
+import database_corrector
 import main_page
 
 

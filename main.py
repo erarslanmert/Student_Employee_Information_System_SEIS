@@ -12,6 +12,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QStyleFactory, QMessageBox
 import data_objects
+import database_corrector
 import date_consistency
 import main_page, new_user
 import connect_database
@@ -148,6 +149,11 @@ class Ui_MainWindow(object):
         connect_database.download_files('student_data.txt')
         connect_database.download_files('employee_data.txt')
         connect_database.download_files('temporary_student.txt')
+
+        database_corrector.check_table_versus_file()
+        database_corrector.check_lesson_empty()
+        connect_database.upload_files('employee_data.txt')
+        connect_database.upload_files('student_data.txt')
 
         with open('student_data.txt', 'r', encoding="utf-8") as f:
             data_objects.students = json.load(f)

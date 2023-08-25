@@ -11,12 +11,16 @@ from datetime import datetime
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import QMessageBox
 import connect_database
 import data_objects
 
 message = ' '
 is_empty = 0
+teacher = ' '
+time = ' '
+date = ' '
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -94,6 +98,7 @@ class Ui_Dialog(object):
         self.dateEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.dateEdit.setCalendarPopup(True)
         self.dateEdit.setObjectName("dateEdit")
+        self.dateEdit.setDate(QDate.currentDate())
         self.comboBox_3 = QtWidgets.QComboBox(self.frame)
         self.comboBox_3.setGeometry(QtCore.QRect(150, 160, 161, 21))
         self.comboBox_3.setAutoFillBackground(False)
@@ -123,11 +128,11 @@ class Ui_Dialog(object):
         self.label_14.setFont(font)
         self.label_14.setStyleSheet("color:  rgb(255, 230, 207);")
         self.label_14.setObjectName("label_14")
-        self.pushButton_3 = QtWidgets.QPushButton(Dialog, clicked = lambda : Dialog.close())
+        self.pushButton_3 = QtWidgets.QPushButton(Dialog, clicked = lambda : close_dialog_cancel())
         self.pushButton_3.setGeometry(QtCore.QRect(190, 320, 111, 31))
         self.pushButton_3.setStyleSheet("background-color: rgb(255, 246, 194);")
         self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_7 = QtWidgets.QPushButton(Dialog, clicked = lambda : close_doalig())
+        self.pushButton_7 = QtWidgets.QPushButton(Dialog, clicked = lambda : close_dialog())
         self.pushButton_7.setGeometry(QtCore.QRect(70, 320, 111, 31))
         self.pushButton_7.setStyleSheet("background-color: rgb(255, 246, 194);")
         self.pushButton_7.setObjectName("pushButton_7")
@@ -143,9 +148,16 @@ class Ui_Dialog(object):
 
         self.comboBox_5.currentTextChanged.connect(lambda : self.combo_changed())
 
-        def close_doalig():
-                self.save_data()
-                Dialog.close()
+        date_obj = QDate.fromString(date, 'yyyy-MM-dd')
+
+        # Set the date in the QDateEdit widget
+
+        def close_dialog():
+            self.save_data()
+            Dialog.close()
+        def close_dialog_cancel():
+            is_empty = 0
+            Dialog.close()
 
         with open('temporary_student.txt', 'r', encoding="utf-8") as f:
             data_objects.temporary_students = json.load(f)
@@ -166,6 +178,10 @@ class Ui_Dialog(object):
         else:
             pass
 
+        self.dateEdit.setDate(date_obj)
+        self.comboBox_2.setCurrentText(time)
+        self.comboBox_3.setCurrentText(teacher)
+
     def combo_changed(self):
         global message, is_empty
         if self.comboBox_5.currentText() == '-':
@@ -180,7 +196,7 @@ class Ui_Dialog(object):
             self.lineEdit_2.clear()
             self.lineEdit_4.clear()
             self.dateEdit.clear()
-            message = 'Deneme dersi sisteme kaydoalcaktir ve istatistiklere katilacaktir. Onayliyor musunuz?'
+            message = 'Deneme dersi sisteme kaydolacaktir ve istatistiklere katilacaktir. Onayliyor musunuz?'
             is_empty = 0
         else:
             for student in data_objects.temporary_students:
@@ -197,7 +213,7 @@ class Ui_Dialog(object):
                     self.comboBox_2.setCurrentText(student['lesson_time'])
                     self.comboBox_3.setCurrentText(student['teacher'])
                     self.lineEdit_4.setText(student['contact'])
-                    self.dateEdit.setDate(datetime.strptime(student['lesson_date'], '%d-%m-%Y').date())
+                    self.dateEdit.setDate(datetime.strptime(student['lesson_date'], '%Y-%m-%d').date())
                     message = 'Deneme dersi ve ogrenci bilgisi sistemden silinecektir. Onayliyor musunuz?'
                     is_empty = 1
                 else:
@@ -217,19 +233,32 @@ class Ui_Dialog(object):
         noButton.setText("Hayir")
         response = msgBox.exec_()
         # Perform an action based on the user's response
+        days = ['PAZARTESI', 'SALI', 'CARSAMBA', 'PERSEMBE', 'CUMA', 'CUMARTESI', 'PAZAR']
         if response == QMessageBox.Yes:
             if is_empty == 0:
                 date = self.dateEdit.date().toPyDate()
-                formatted_date = date.strftime("%d-%m-%Y")
+                formatted_date = date.strftime("%Y-%m-%d")
+                date_obj = datetime.strptime(formatted_date, "%Y-%m-%d")
+                day_of_week = date_obj.weekday()
                 data_objects.temporary_one_student = {
-                    'name': self.lineEdit.text(),
-                    'surname': self.lineEdit_2.text(),
+                    'name': self.lineEdit.text().title(),
+                    'surname': self.lineEdit_2.text().title(),
                     'lesson_date': formatted_date,
                     'lesson_time': self.comboBox_2.currentText(),
                     'teacher': self.comboBox_3.currentText(),
                     'contact': self.lineEdit_4.text()
                 }
                 data_objects.temporary_students.append(data_objects.temporary_one_student)
+                for employee in data_objects.employees:
+                    if (employee['name'] + ' ' + employee['surname']) == data_objects.temporary_one_student['teacher']:
+                        employee['teacher_schedule'].append(('Deneme Dersi' + " ['" +
+                                                             data_objects.temporary_one_student['name'] + ' ' +
+                                                             data_objects.temporary_one_student['surname']
+                                                             + "'] " + data_objects.temporary_one_student[
+                                                                 'lesson_time'] + ' ' + days[day_of_week] +' '+
+                                                             data_objects.temporary_one_student['lesson_date']))
+                    else:
+                        pass
                 for item in data_objects.temporary_students:
                     name = item.get('name')
                     if name and ' ' in name:
@@ -253,6 +282,8 @@ class Ui_Dialog(object):
         # Save the updated data back to the file
         with open("temporary_student.txt", "w", encoding="utf-8") as f:
             f.writelines(json.dumps(data_objects.temporary_students, default=str))
+        with open("employee_data.txt", "w", encoding="utf-8") as f:
+            f.writelines(json.dumps(data_objects.employees, default=str))
 
         connect_database.upload_files('temporary_student.txt')
         data_objects.temporary_one_student = {}

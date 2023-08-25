@@ -14,6 +14,7 @@ import connect_database
 import data_objects
 import json
 
+import database_corrector
 import date_consistency
 import main_page
 
@@ -649,6 +650,8 @@ class Ui_Dialog(object):
 
             with open('student_data.txt', 'r', encoding="utf-8") as f:
                 data_objects.students = json.load(f)
+
+            database_corrector.check_table_versus_file()
 
             connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
             connect_database.upload_files('student_data.txt')
