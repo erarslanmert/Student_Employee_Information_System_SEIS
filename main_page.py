@@ -2492,7 +2492,6 @@ class Ui_Dialog(object):
                     else:
                         output.append(
                             f"{agreed_price}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
-                print(output)
                 return output
 
             def accumulate_prices(prices):
@@ -3794,7 +3793,12 @@ class Ui_Dialog(object):
             self.label_187.setText(data_objects.employees[i]['address'])
             self.label_193.setText(data_objects.employees[i]['email'])
             self.comboBox_10.clear()
-            self.comboBox_10.addItem('                '+data_objects.employees[i]['agreed_salary'] + 'TL' + ' / ' + data_objects.employees[i]['registration_date'])
+            salary_change = data_objects.employees[i]['salary_change'][::-1]
+            for salary in salary_change:
+                self.comboBox_10.addItem(salary)
+            self.comboBox_10.addItem(
+                data_objects.employees[i]['agreed_salary'] + 'TL' + ' / ' + data_objects.employees[i][
+                    'registration_date'])
             self.label_184.setText(data_objects.employees[i]['type_employment'])
             self.label_191.setText(data_objects.employees[i]['graduation_date'])
             self.label_185.setText(data_objects.employees[i]['registration_date'])

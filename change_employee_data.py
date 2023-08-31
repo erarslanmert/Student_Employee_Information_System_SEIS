@@ -488,6 +488,7 @@ class Ui_Dialog(object):
         font.setItalic(False)
         self.pushButton_3.setFont(font)
 
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -538,6 +539,13 @@ class Ui_Dialog(object):
 
 
     def combo_changed(self):
+        self.checkBox.setChecked(False)
+        self.checkBox_2.setChecked(False)
+        self.checkBox_3.setChecked(False)
+        self.checkBox_4.setChecked(False)
+        self.checkBox_5.setChecked(False)
+        self.checkBox_6.setChecked(False)
+        self.checkBox_7.setChecked(False)
         self.listWidget.clear()
         for employee in data_objects.employees:
             if self.comboBox.currentText() == employee['name'] + ' ' + employee['surname']:
@@ -674,7 +682,6 @@ class Ui_Dialog(object):
             import datetime
             current_date = datetime.date.today()
             formatted_date = current_date.strftime("%d-%m-%Y")
-            salary_changed = []
             day_of_work = []
             days = [self.checkBox,self.checkBox_2,self.checkBox_3,self.checkBox_4, self.checkBox_5,self.checkBox_6,self.checkBox_7]
             for day in days:
@@ -684,6 +691,7 @@ class Ui_Dialog(object):
                     pass
             for employee in data_objects.employees:
                 if self.comboBox.currentText() == employee['name'] + ' ' + employee['surname']:
+                    salary_changed = employee['salary_change']
                     if len(self.lineEdit_28.text()) > 1:
                         salary_changed.append(self.lineEdit_28.text() + 'TL' + ' / ' + formatted_date)
                     else:
