@@ -2447,7 +2447,6 @@ class Ui_Dialog(object):
             else:
                 Dialog.showMaximized()
 
-
         def close_dialog():
             self.log_out()
             if self.ready_to_close == True:
@@ -2477,7 +2476,8 @@ class Ui_Dialog(object):
             total_debt = []
             last_debt = []
             agreed_price = int(student['agreed_price'])
-            def calculate_debt(price_change_months, price_change_years, new_prices, debt_months, debt_years,agreed_price):
+            def calculate_debt(price_change_months, price_change_years, new_prices, debt_months, debt_years,
+                               agreed_price):
                 prices = {}
                 for i in range(len(price_change_months)):
                     prices[datetime(year=price_change_years[i], month=price_change_months[i], day=1)] = new_prices[i]
@@ -2492,55 +2492,61 @@ class Ui_Dialog(object):
                     else:
                         output.append(
                             f"{agreed_price}TL/{debt[0]}-{debt[1]:02d}-{int(student['monthly_payment_date']):02d}")
-                return output
 
+                return output
             def accumulate_prices(prices):
                 date_dict = defaultdict(int)
                 for price in prices:
                     price, date_str = price.split('TL/')
-                    date = datetime.strptime(date_str, '%d-%m-%Y').date()
+                    date = datetime.strptime(date_str, '%Y-%m-%d').date()
                     date_dict[date] += int(price)
                 return [f'{price}TL/{date}' for date, price in sorted(date_dict.items())]
+            if len(student['student_attended']) > 0:
+                from datetime import datetime
+                for check_date in student['student_attended']:
+                    check_date_2 = check_date.split(' ')
+                    given_date = check_date_2[-1]
+                    # Parse the given date into a datetime object
+                    parsed_date = datetime.strptime(given_date, "%Y-%m-%d")
+                    # Get the current month and year as integers
+                    current_month = datetime.now().month
+                    current_year = datetime.now().year
+                    reg_date = student['registration date']
+                    parsed_date_2 = datetime.strptime(reg_date, "%d-%m-%Y")
+                    if len(student['unpaid_debt']) > 0:
+                        for check_added in student['unpaid_debt']:
+                            if (str(parsed_date.year) + '-' + f"{parsed_date.month:02d}") in check_added:
+                                continue
+                            else:
+                                if parsed_date.year < current_year or (
+                                        parsed_date.year == current_year and parsed_date.month < current_month):
+                                    if parsed_date_2.year < parsed_date.year or (
+                                            parsed_date_2.year == parsed_date.year and parsed_date_2.month < parsed_date.month):
+                                        debt_dates_year.append(parsed_date.year)
+                                        debt_dates_month.append(parsed_date.month)
 
-            try:
-                if len(student['student_attended']) > 0:
-                    from datetime import datetime
-                    for check_date in student['student_attended']:
-                        check_date_2 = check_date.split(' ')
+                    else:
+                        debt_dates_year.append(parsed_date.year)
+                        debt_dates_month.append(parsed_date.month)
+                if len(student['price_change']) > 0:
+                    for check_date in student['price_change']:
+                        check_date_2 = check_date.split('TL/')
                         given_date = check_date_2[-1]
                         # Parse the given date into a datetime object
                         parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
-                        # Get the current month and year as integers
-                        current_month = datetime.now().month
-                        current_year = datetime.now().year
-                        reg_date = student['registration date']
-                        parsed_date_2 = datetime.strptime(reg_date, "%d-%m-%Y")
-                        if len(student['unpaid_debt']) > 0:
-                            for check_added in student['unpaid_debt']:
-                                if (str(parsed_date.year) + '-' + f"{parsed_date.month:02d}") in check_added:
-                                    continue
-                                else:
-                                    if parsed_date.year < current_year or (parsed_date.year == current_year and parsed_date.month < current_month):
-                                        if parsed_date_2.year < parsed_date.year or (parsed_date_2.year == parsed_date.year and parsed_date_2.month < parsed_date.month):
-                                            debt_dates_year.append(parsed_date.year)
-                                            debt_dates_month.append(parsed_date.month)
+                        price_change_years.append(parsed_date.year)
+                        price_change_months.append(parsed_date.month)
+                        monthly_amount_debt.append(int(check_date_2[0]))
+            else:
+                pass
 
-                        else:
-                            debt_dates_year.append(parsed_date.year)
-                            debt_dates_month.append(parsed_date.month)
-                    if len(student['price_change']) > 0:
-                        for check_date in student['price_change']:
-                            check_date_2 = check_date.split('TL/')
-                            given_date = check_date_2[-1]
-                            # Parse the given date into a datetime object
-                            parsed_date = datetime.strptime(given_date, "%d-%m-%Y")
-                            price_change_years.append(parsed_date.year)
-                            price_change_months.append(parsed_date.month)
-                            monthly_amount_debt.append(int(check_date_2[0]))
-                else:
-                    pass
-
-            except ValueError:
+            if int(student['monthly_payment_date']) != 0:
+                total_debt = calculate_debt(price_change_months, price_change_years, monthly_amount_debt,
+                                            debt_dates_month,
+                                            debt_dates_year, agreed_price)
+                last_debt = accumulate_prices(total_debt)
+            else:
+                last_debt = []
                 pass
             debt2 = []
             debt_index = []
@@ -2555,21 +2561,14 @@ class Ui_Dialog(object):
                         pass
             for debt in last_debt:
                 if last_debt.index(debt) not in debt_index:
-                    student['unpaid_debt'].append(debt)
-            try:
-                if int(student['monthly_payment_date']) != 0:
-                    total_debt = calculate_debt(price_change_months, price_change_years, monthly_amount_debt,
-                                                debt_dates_month,
-                                                debt_dates_year, agreed_price)
-                    last_debt = accumulate_prices(total_debt)
-                else:
-                    last_debt = []
-                    pass
-            except ValueError:
-                pass
+                    if debt not in student['paid_debt']:
+                        student['unpaid_debt'].append(debt)
+                    else:
+                        pass
+
 
         for stdnt in data_objects.students:
-            if stdnt['agreed_price'] != "":
+            if stdnt['agreed_price'] != "" and stdnt['agreed_price'] != " ":
                 check_debt(stdnt)
             else:
                 pass
@@ -2674,10 +2673,13 @@ class Ui_Dialog(object):
             self.pushButton_3.setDisabled(True)
             self.frame_13.hide()
             self.frame_2.show()
+            self.comboBox.setDisabled(True)
             self.comboBox_2.setDisabled(True)
             self.comboBox_2.hide()
             self.comboBox_3.setEnabled(True)
             self.comboBox_3.show()
+            self.comboBox_3.setDisabled(True)
+            self.comboBox_3.hide()
             self.frame_5.hide()
             self.comboBox_5.hide()
             self.label_58.hide()
@@ -2700,7 +2702,7 @@ class Ui_Dialog(object):
                     pass
 
             self.comboBox.setCurrentIndex(1)
-            self.comboBox.setCurrentIndex(0)
+            self.comboBox.setCurrentIndex(1)
 
     def tab_change_student(self, index):
         if index == 0:
@@ -3688,7 +3690,7 @@ class Ui_Dialog(object):
             price_change = data_objects.students[i]['price_change'][::-1]
             for price in price_change:
                 self.comboBox_5.addItem(price)
-            self.comboBox_5.addItem('                '+data_objects.students[i]['agreed_price'] + 'TL' + ' / ' + data_objects.students[i]['registration date'])
+            self.comboBox_5.addItem('                '+data_objects.students[i]['agreed_price'] + 'TL' + '/' + data_objects.students[i]['registration date'])
             self.label_77.setText(data_objects.students[i]['registration date'])
             self.label_79.setText(data_objects.students[i]['notes_problems'])
             self.label_80.setText(data_objects.students[i]['address'])
@@ -3749,7 +3751,7 @@ class Ui_Dialog(object):
             salary_change = data_objects.employees[i]['salary_change'][::-1]
             for salary in salary_change:
                 self.comboBox_9.addItem(salary)
-            self.comboBox_9.addItem(data_objects.employees[i]['agreed_salary'] + 'TL' + ' / ' + data_objects.employees[i]['registration_date'])
+            self.comboBox_9.addItem(data_objects.employees[i]['agreed_salary'] + 'TL' + '/' + data_objects.employees[i]['registration_date'])
             self.label_112.setText(data_objects.employees[i]['type_employment'])
             self.label_120.setText(data_objects.employees[i]['graduation_date'])
             self.label_80.setText(data_objects.employees[i]['address'])
@@ -3797,7 +3799,7 @@ class Ui_Dialog(object):
             for salary in salary_change:
                 self.comboBox_10.addItem(salary)
             self.comboBox_10.addItem(
-                data_objects.employees[i]['agreed_salary'] + 'TL' + ' / ' + data_objects.employees[i][
+                data_objects.employees[i]['agreed_salary'] + 'TL' + '/' + data_objects.employees[i][
                     'registration_date'])
             self.label_184.setText(data_objects.employees[i]['type_employment'])
             self.label_191.setText(data_objects.employees[i]['graduation_date'])
@@ -3988,6 +3990,51 @@ class Ui_Dialog(object):
                         pass
                 else:
                     pass
+
+            for schedule in employee['teacher_skipped']:
+                if any(elem in schedule for elem in date_list):
+                    my_string = schedule
+                    list_start = my_string.index("[")
+                    list_end = my_string.index("]") + 1
+                    my_list_string = my_string[list_start:list_end]
+                    my_list = eval(my_list_string)
+                    group_class_list = my_list
+                    for day in days:
+                        if day in schedule:
+                            session = days.index(day)
+                    for time in v_header:
+                        if time in schedule:
+                            row_no = v_header.index(time) + session * 10
+
+                    if 'Grup Dersi' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem('GRUP DERSI: \n {}'.format('\n'.join(group_class_list)))
+                        item.setData(Qt.BackgroundRole, QColor("#FFC9FC"))
+                        item.setTextAlignment(Qt.AlignCenter)
+                        self.tableWidget.setItem(row_no, column_no, item)
+                    elif 'Akademik Ders' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem(f"{group_class_list[0]} - AKADEMIK DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#FFC9FC"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+                    elif 'Attentioner Ders' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem(f"{group_class_list[0]} - ATTENTIONER DERS")
+                        item.setData(Qt.BackgroundRole, QColor("#FFC9FC"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+                    elif 'Deneme Dersi' in schedule:
+                        column_no = header_list.index((employee['name'] + ' ' + employee['surname']))
+                        item = QTableWidgetItem(f"{group_class_list[0]} - DENEME DERSI")
+                        item.setData(Qt.BackgroundRole, QColor("#FFC9FC"))
+                        item.setTextAlignment(Qt.AlignCenter)  # AlignCenter
+                        self.tableWidget.setItem(row_no, column_no, item)
+
+                    else:
+                        pass
+                else:
+                    pass
         self.tableWidget.customContextMenuRequested.connect(self.show_context_menu)
 
     def populate_table(self):
@@ -4046,6 +4093,13 @@ class Ui_Dialog(object):
                 action3.setDisabled(True)
                 action8.setDisabled(True)
             elif cell_color == "#c5ffc5":
+                action1.setDisabled(True)
+                action2.setDisabled(True)
+                action3.setDisabled(True)
+                action8.setDisabled(True)
+                action4.setDisabled(True)
+                action5.setDisabled(True)
+            elif cell_color == "#ffc9fc":
                 action1.setDisabled(True)
                 action2.setDisabled(True)
                 action3.setDisabled(True)

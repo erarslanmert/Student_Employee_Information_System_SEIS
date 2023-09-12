@@ -693,7 +693,7 @@ class Ui_Dialog(object):
                 if self.comboBox.currentText() == employee['name'] + ' ' + employee['surname']:
                     salary_changed = employee['salary_change']
                     if len(self.lineEdit_28.text()) > 1:
-                        salary_changed.append(self.lineEdit_28.text() + 'TL' + ' / ' + formatted_date)
+                        salary_changed.append(self.lineEdit_28.text() + 'TL' + '/' + formatted_date)
                     else:
                         salary_changed = employee['salary_change']
                     data_objects.employees[data_objects.employees.index(employee)] = {

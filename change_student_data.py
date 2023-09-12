@@ -752,11 +752,14 @@ class Ui_Dialog(object):
                 self.comboBox_5.setCurrentIndex(0)
 
     def combo_changed(self):
+            global salary_paid, salary_unpaid
             self.listWidget.clear()
             self.comboBox_7.clear()
             self.comboBox_6.clear()
             for student in data_objects.students:
                     if self.comboBox_5.currentText() == student['name'] + ' ' + student['surname']:
+                            salary_paid = list(student['paid_debt'])
+                            salary_unpaid = list(student['unpaid_debt'])
                             if 'Aktif' in student['status']:
                                     self.pushButton_7.setText('Deaktive Et')
                             else:
@@ -782,7 +785,12 @@ class Ui_Dialog(object):
                                     self.comboBox_7.addItems(student['unpaid_debt'])
                                     self.comboBox_8.setCurrentText(student['monthly_payment_date'])
                                     self.comboBox_4.setCurrentText(student['transportation_service'])
-                                    self.lineEdit_20.setText(student['agreed_price'])
+                                    if len(student['price_change']) > 0:
+                                        price = student['price_change'][-1].split('TL/')
+                                        price_2 = price[0]
+                                        self.lineEdit_20.setText(price_2)
+                                    else:
+                                        self.lineEdit_20.setText(student['agreed_price'])
                                     self.lineEdit_22.setText(student['notes_problems'])
                                     self.lineEdit_5.setText(student['mother_name'])
                                     self.lineEdit_3.setText(student['mother_surname'])
@@ -865,19 +873,25 @@ class Ui_Dialog(object):
                 pass
 
     def paid_to_unpaid(self):
+            global salary_unpaid, salary_paid
             item = self.comboBox_6.currentText()
             self.comboBox_6.removeItem(self.comboBox_6.currentIndex())
             self.comboBox_7.addItem(item)
             salary_unpaid.append(item)
+            salary_paid.remove(item)
+
 
     def unpaid_to_paid(self):
+            global salary_unpaid, salary_paid
             item = self.comboBox_7.currentText()
             self.comboBox_7.removeItem(self.comboBox_7.currentIndex())
             self.comboBox_6.addItem(item)
             salary_paid.append(item)
+            salary_unpaid.remove(item)
+
 
     def data_save(self):
-
+            global salary_paid, salary_unpaid
             msgBox = QMessageBox()
             msgBox.setWindowTitle("Ogrenci Verisi Duzenle")
             msgBox.setIcon(QMessageBox.Question)
@@ -895,19 +909,12 @@ class Ui_Dialog(object):
                     import datetime
                     current_date = datetime.date.today()
                     formatted_date = current_date.strftime("%d-%m-%Y")
-                    salary_changed = []
                     for student in data_objects.students:
-                            if self.comboBox.currentText() == student['name'] + ' ' + student['surname']:
-                                    if self.lineEdit_21.text() != '' and self.lineEdit_21.text() != ' ' and self.lineEdit_21.text() != '  ':
-                                            salary_changed.append(
-                                                    self.lineEdit_21.text() + 'TL' + ' / ' + formatted_date)
-                                    else:
-                                            salary_changed = student['price_change']
-                                    if len(self.lineEdit_28.text()) > 1:
-                                            salary_changed.append(
-                                                    self.lineEdit_28.text() + 'TL' + ' / ' + formatted_date)
-                                    else:
-                                            salary_changed = student['price_change']
+                            salary_changed = student['price_change']
+                            if self.lineEdit_21.text() != '' and self.lineEdit_21.text() != ' ' and self.lineEdit_21.text() != '  ':
+                                    salary_changed.append(self.lineEdit_21.text() + 'TL' + '/' + formatted_date)
+                            else:
+                                pass
                             if self.comboBox_5.currentText() == student['name'] + ' ' + student['surname']:
                                     data_objects.students[data_objects.students.index(student)] = {
                                                 "name": self.lineEdit.text().title(),
@@ -956,7 +963,6 @@ class Ui_Dialog(object):
                                     connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
                                     connect_database.upload_files('student_data.txt')
                                     connect_database.upload_files('student_data.csv')
-
                             else:
                                     pass
 

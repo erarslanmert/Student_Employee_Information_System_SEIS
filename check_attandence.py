@@ -211,14 +211,24 @@ class Ui_Dialog(object):
                                 teacher_list = attandence_class.split()
                                 teacher = teacher_list[0] + ' ' + teacher_list[1]
                                 lesson_teacher = attandence_class.replace(teacher, '')
+                                for employee in data_objects.employees:
+                                    for schedule in employee['teacher_schedule']:
+                                        if lesson_teacher in schedule and (
+                                                employee['name'] + ' ' + employee['surname']) == teacher:
+                                            employee['teacher_schedule'].remove(schedule)
+                                            employee['teacher_attended'].append(schedule)
                             else:
                                 student['student_schedule'].remove(schedule)
                                 student['student_skipped'].append(schedule)
-                for employee in data_objects.employees:
-                    for schedule in employee['teacher_schedule']:
-                        if lesson_teacher in schedule and (employee['name'] + ' ' + employee['surname']) == teacher:
-                            employee['teacher_schedule'].remove(schedule)
-                            employee['teacher_attended'].append(schedule)
+                                teacher_list = attandence_class.split()
+                                teacher = teacher_list[0] + ' ' + teacher_list[1]
+                                lesson_teacher = attandence_class.replace(teacher, '')
+                                for employee in data_objects.employees:
+                                    for schedule in employee['teacher_schedule']:
+                                        if lesson_teacher in schedule and (
+                                                employee['name'] + ' ' + employee['surname']) == teacher:
+                                            employee['teacher_schedule'].remove(schedule)
+                                            employee['teacher_skipped'].append(schedule)
         else:
             pass
 
