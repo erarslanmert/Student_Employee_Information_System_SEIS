@@ -4573,8 +4573,11 @@ class Ui_Dialog(object):
         column_names = []
         for employee in data_objects.employees:
             if employee['title'] == 'Ogretmen' or  employee['title'] == 'Dil Konusmaci' or  employee['title'] == 'Psikolog':
-                column_names.append((employee['name'] + ' ' + employee['surname']))
-                column_count = column_count + 1
+                if "Aktif" in employee['status']:
+                    column_names.append((employee['name'] + ' ' + employee['surname']))
+                    column_count = column_count + 1
+                else:
+                    pass
             else:
                 pass
         self.tableWidget.setColumnCount(column_count)

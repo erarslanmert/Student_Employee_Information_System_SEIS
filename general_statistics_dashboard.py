@@ -207,7 +207,7 @@ class Ui_Dialog(object):
 
 
         # Add the bars to the subplot
-        x = ['Aktif Ogrenci', 'Pasif Ogrenci', 'Ayrilan Ogrenci', 'Dersleri Bitiren Ogrenci', 'Toplam Ogrenci',
+        x = ['Aktif Ogrenci', 'Donduran Ogrenci', 'Ayrilan Ogrenci', 'Dersleri Bitiren Ogrenci', 'Toplam Ogrenci',
                 'Attentioner Ogrenci', 'Akademik Ogrenci', 'Ozel Ogrenci', 'Raporlu Ogrenci', 'Karma Ogrenci']
         total_student = len(data_objects.students)
         attentioner_student = []
@@ -232,19 +232,19 @@ class Ui_Dialog(object):
                 attentioner_student.append(student['name']+' '+student['surname'])
             if student['module'] == 'Akademik':
                 academic_student.append(student['name']+' '+student['surname'])
-            if student['registeration_type'] == 'Ozel':
+            if student['registeration_type'] == 'Ozel' and 'Aktif' in student['status']:
                 paid_student.append(student['name']+' '+student['surname'])
-            if student['registeration_type'] == 'Raporlu':
+            if student['registeration_type'] == 'Raporlu' and 'Aktif' in student['status']:
                 unpaid_student.append(student['name']+' '+student['surname'])
-            if student['registeration_type'] == 'Karma':
+            if student['registeration_type'] == 'Karma' and 'Aktif' in student['status']:
                 mixed_paid_student.append(student['name']+' '+student['surname'])
             if 'Aktif' in student['status']:
                 active_students.append(student['name']+' '+student['surname'])
-            if 'Pasif' in student['status']:
+            if student['student_left'] == 'Dondurdu':
                 passive_students.append(student['name'] + ' ' + student['surname'])
-            if student['student_left'] == 'Ogrenci kendi istegi ile ayrilmistir':
+            if student['student_left'] == 'Kurumdan Ayrildi':
                 student_left_self.append(student['name']+' '+student['surname'])
-            if student['student_left'] == 'Ogrenci dersleri bitirdigi icin ayrilmistir':
+            if student['student_left'] == 'Dersleri Tamamladi':
                 student_left_finished.append(student['name']+' '+student['surname'])
 
         x_1 = ['Ogretmen', 'Ust Yonetici', 'Mudur', 'Mudur Yardimcisi', 'Sekreter', 

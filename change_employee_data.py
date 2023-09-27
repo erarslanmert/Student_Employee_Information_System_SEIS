@@ -726,6 +726,37 @@ class Ui_Dialog(object):
 
                     date_consistency.convert_dates_in_list(data_objects.employees)
 
+                    employee_fullname = self.comboBox.currentText()
+                    employee_names = employee_fullname.split(" ")
+                    employee_name = employee_names[0]
+                    employee_surname = employee_names[-1]
+                    for student in data_objects.students:
+                        for schedule in student['student_schedule']:
+                            if employee_name in schedule and employee_surname in schedule:
+                                index = student['student_schedule'].index(schedule)
+                                student['student_schedule'][index] = schedule.replace(employee_name, self.lineEdit.text().title())
+                                student['student_schedule'][index] = schedule.replace(employee_surname, self.lineEdit_2.text().title())
+                        for schedule in student['student_attended']:
+                            if employee_name in schedule and employee_surname in schedule:
+                                index = student['student_attended'].index(schedule)
+                                student['student_attended'][index] = schedule.replace(employee_name, self.lineEdit.text().title())
+                                student['student_attended'][index] = schedule.replace(employee_surname, self.lineEdit_2.text().title())
+                        for schedule in student['student_skipped']:
+                            if employee_name in schedule and employee_surname in schedule:
+                                index = student['student_skipped'].index(schedule)
+                                student['student_skipped'][index] = schedule.replace(employee_name, self.lineEdit.text().title())
+                                student['student_skipped'][index] = schedule.replace(employee_surname, self.lineEdit_2.text().title())
+                        for schedule in student['schedule_changed']:
+                            if employee_name in schedule and employee_surname in schedule:
+                                index = student['schedule_changed'].index(schedule)
+                                student['schedule_changed'][index] = schedule.replace(employee_name, self.lineEdit.text().title())
+                                student['schedule_changed'][index] = schedule.replace(employee_surname, self.lineEdit_2.text().title())
+                        for schedule in student['schedule_cancelled']:
+                            if employee_name in schedule and employee_surname in schedule:
+                                index = student['schedule_cancelled'].index(schedule)
+                                student['schedule_cancelled'][index] = schedule.replace(employee_name, self.lineEdit.text().title())
+                                student['schedule_cancelled'][index] = schedule.replace(employee_surname, self.lineEdit_2.text().title())
+
                     # write data to file
                     with open("employee_data.txt", "w", encoding="utf-8") as f:
                         f.writelines(json.dumps(data_objects.employees, default=str))
@@ -735,6 +766,15 @@ class Ui_Dialog(object):
                     connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
                     connect_database.upload_files('employee_data.txt')
                     connect_database.upload_files('employee_data.csv')
+
+                    with open("student_data.txt", "w", encoding="utf-8") as f:
+                            f.writelines(json.dumps(data_objects.students, default=str))
+                    with open('student_data.txt', 'r', encoding="utf-8") as f:
+                            data_objects.students = json.load(f)
+
+                    connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
+                    connect_database.upload_files('student_data.txt')
+                    connect_database.upload_files('student_data.csv')
                 else:
                     pass
 

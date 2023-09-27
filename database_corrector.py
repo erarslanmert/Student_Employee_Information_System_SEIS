@@ -19,6 +19,11 @@ def check_table_versus_file():
             student['status'] = "Aktif           13-05-2023"
         else:
             pass
+    for student in data_objects.students:
+        if 'Aktif' in student['status']:
+            student['student_left'] = "-"
+        else:
+            pass
 
     with open("student_data.txt", "w", encoding="utf-8") as f:
         f.writelines(json.dumps(data_objects.students, default=str))
@@ -39,3 +44,6 @@ def check_lesson_empty():
 
     with open("employee_data.txt", "w", encoding="utf-8") as f:
         f.writelines(json.dumps(data_objects.employees, default=str))
+
+#def check_lesson_matching():
+

@@ -79,10 +79,6 @@ class Ui_Dialog(object):
         self.comboBox.setFont(font)
         self.pushButton.setDisabled(True)
 
-        for student in data_objects.students:
-            self.comboBox.addItem((student['name']) + ' ' + (student['surname']))
-
-
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -95,8 +91,11 @@ class Ui_Dialog(object):
             Dialog.close()
 
         for student in data_objects.students:
-            self.comboBox.addItem((student['name']) + ' ' + (student['surname']))
-
+            if "Aktif" in student['status']:
+                self.comboBox.addItem((student['name']) + ' ' + (student['surname']))
+            else:
+                pass
+        self.comboBox.model().sort(0)
 
     def press_okay(self):
         global if_cancelled

@@ -839,6 +839,7 @@ class Ui_Dialog(object):
                                     formatted_date = current_date.strftime("%d-%m-%Y")
                                     new_state = 'Aktif' + '           ' + formatted_date
                                     student['status'] = new_state
+                                    student['student_left'] = "-"
                                     self.pushButton_7.setText('Deaktive Et')
                                     self.pushButton_7.setDisabled(True)
                             else:
@@ -954,7 +955,50 @@ class Ui_Dialog(object):
                                         }
 
                                     date_consistency.convert_dates_in_list(data_objects.students)
-                                    # write data to file
+
+                                    student_fullname = self.comboBox_5.currentText()
+                                    student_names = student_fullname.split(" ")
+                                    student_name = student_names[0]
+                                    student_surname = student_names[-1]
+                                    for employee in data_objects.employees:
+                                            for schedule in employee['teacher_schedule']:
+                                                    if student_name in schedule and student_surname in schedule:
+                                                            index = employee['teacher_schedule'].index(schedule)
+                                                            employee['teacher_schedule'][index] = schedule.replace(
+                                                                    student_name, self.lineEdit.text().title())
+                                                            employee['teacher_schedule'][index] = schedule.replace(
+                                                                    student_surname, self.lineEdit_2.text().title())
+                                            for schedule in employee['teacher_attended']:
+                                                    if student_name in schedule and student_surname in schedule:
+                                                            index = employee['teacher_attended'].index(schedule)
+                                                            employee['teacher_attended'][index] = schedule.replace(
+                                                                    student_name, self.lineEdit.text().title())
+                                                            employee['teacher_attended'][index] = schedule.replace(
+                                                                    student_surname, self.lineEdit_2.text().title())
+                                                            print(employee['teacher_attended'][index])
+                                            for schedule in employee['teacher_skipped']:
+                                                    if student_name in schedule and student_surname in schedule:
+                                                            index = employee['teacher_skipped'].index(schedule)
+                                                            employee['teacher_skipped'][index] = schedule.replace(
+                                                                    student_name, self.lineEdit.text().title())
+                                                            employee['teacher_skipped'][index] = schedule.replace(
+                                                                    student_surname, self.lineEdit_2.text().title())
+                                            for schedule in employee['schedule_changed']:
+                                                    if student_name in schedule and student_surname in schedule:
+                                                            index = employee['schedule_changed'].index(schedule)
+                                                            employee['schedule_changed'][index] = schedule.replace(
+                                                                    student_name, self.lineEdit.text().title())
+                                                            employee['schedule_changed'][index] = schedule.replace(
+                                                                    student_surname, self.lineEdit_2.text().title())
+                                            for schedule in employee['schedule_cancelled']:
+                                                    if student_name in schedule and student_surname in schedule:
+                                                            index = employee['schedule_cancelled'].index(schedule)
+                                                            employee['schedule_cancelled'][index] = schedule.replace(
+                                                                    student_name, self.lineEdit.text().title())
+                                                            employee['schedule_cancelled'][index] = schedule.replace(
+                                                                    student_surname, self.lineEdit_2.text().title())
+
+                                    
                                     with open("student_data.txt", "w", encoding="utf-8") as f:
                                             f.writelines(json.dumps(data_objects.students, default=str))
                                     with open('student_data.txt', 'r', encoding="utf-8") as f:
@@ -963,6 +1007,16 @@ class Ui_Dialog(object):
                                     connect_database.txt_to_csv('student_data.txt', 'student_data.csv')
                                     connect_database.upload_files('student_data.txt')
                                     connect_database.upload_files('student_data.csv')
+
+                                    with open("employee_data.txt", "w", encoding="utf-8") as f:
+                                            f.writelines(json.dumps(data_objects.employees, default=str))
+                                    with open('employee_data.txt', 'r', encoding="utf-8") as f:
+                                            data_objects.employees = json.load(f)
+
+                                    connect_database.txt_to_csv('employee_data.txt', 'employee_data.csv')
+                                    connect_database.upload_files('employee_data.txt')
+                                    connect_database.upload_files('employee_data.csv')
+
                             else:
                                     pass
 

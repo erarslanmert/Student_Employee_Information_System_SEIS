@@ -186,6 +186,17 @@ class Ui_MainWindow(object):
                 for key, value in item.items():
                     if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
                         item[key] = value.replace('\n','')
+            for item in data_objects.students:
+                name = item.get('surname')
+                if name and ' ' in name:
+                    item['surname'] = name.replace(' ', '-')
+                if name.endswith('-'):
+                    item['surname'] = name.replace('-', '')   # Remove the trailing '-' if it is not followed by a word character
+
+                for key, value in item.items():
+                    if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
+                        item[key] = value.replace('\n','')
+
 
 
             # Save the updated data back to the file
@@ -205,6 +216,13 @@ class Ui_MainWindow(object):
                     item['name'] = name.replace(' ', '-')
                 if name.endswith('-'):
                     item['name'] = name.replace('-', '')   # Remove the trailing '-' if it is not followed by a word character
+
+            for item in data_objects.employees:
+                name = item.get('surname')
+                if name and ' ' in name:
+                    item['surname'] = name.replace(' ', '-')
+                if name.endswith('-'):
+                    item['surname'] = name.replace('-', '')  # Remove the trailing '-' if it is not followed by a word character
 
                 for key, value in item.items():
                     if isinstance(value, str) and value.endswith('\n') or ('\n') in value:
