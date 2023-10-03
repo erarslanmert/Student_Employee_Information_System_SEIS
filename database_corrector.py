@@ -45,5 +45,4 @@ def check_lesson_empty():
     with open("employee_data.txt", "w", encoding="utf-8") as f:
         f.writelines(json.dumps(data_objects.employees, default=str))
 
-#def check_lesson_matching():
 

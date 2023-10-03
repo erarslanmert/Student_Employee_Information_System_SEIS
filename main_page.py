@@ -93,7 +93,7 @@ class Ui_Dialog(object):
         self.frame_400.setFixedWidth(321)
         self.frame_400.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_400.setObjectName("frame_400")
-        self.pushButton_7 = QtWidgets.QPushButton(self.frame_400, clicked=lambda: change_data_options.open_change_options())
+        self.pushButton_7 = QtWidgets.QPushButton(self.frame_400, clicked=lambda: self.refresh_table_after_change())
         self.pushButton_7.setGeometry(QtCore.QRect(50, 440, 231, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
@@ -2882,6 +2882,15 @@ class Ui_Dialog(object):
             self.tableWidget_3.show()
             self.spinBox_3.show()
             self.spinBox_4.show()
+
+    def refresh_table_after_change(self):
+        change_data_options.open_change_options()
+        with open('student_data.txt', 'r', encoding="utf-8") as f:
+            data_objects.students = json.load(f)
+        with open('employee_data.txt', 'r', encoding="utf-8") as f:
+            data_objects.employees = json.load(f)
+        self.show_student_info()
+        self.load_general_schedule()
 
     def weekly_table_employee(self):
         self.tableWidget_3.clear()
