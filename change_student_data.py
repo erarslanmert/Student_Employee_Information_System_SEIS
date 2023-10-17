@@ -951,37 +951,6 @@ class Ui_Dialog(object):
 
                     date_consistency.convert_dates_in_list(data_objects.students)
 
-                    student_fullname = self.comboBox_5.currentText()
-                    student_names = student_fullname.split(" ")
-                    student_name = student_names[0]
-                    student_surname = student_names[-1]
-                    for employee in data_objects.employees:
-                        for schedule in employee['teacher_schedule']:
-                            if student_name in schedule and student_surname in schedule:
-                                index = employee['teacher_schedule'].index(schedule)
-                                employee['teacher_schedule'][index] = schedule.replace(student_name, self.lineEdit.text().title())
-                                employee['teacher_schedule'][index] = schedule.replace(student_surname, self.lineEdit_2.text().title())
-                        for schedule in employee['teacher_attended']:
-                            if student_name in schedule and student_surname in schedule:
-                                index = employee['teacher_attended'].index(schedule)
-                                employee['teacher_attended'][index] = schedule.replace(student_name, self.lineEdit.text().title())
-                                employee['teacher_attended'][index] = schedule.replace(student_surname, self.lineEdit_2.text().title())
-                        for schedule in employee['teacher_skipped']:
-                            if student_name in schedule and student_surname in schedule:
-                                index = employee['teacher_skipped'].index(schedule)
-                                employee['teacher_skipped'][index] = schedule.replace(student_name, self.lineEdit.text().title())
-                                employee['teacher_skipped'][index] = schedule.replace(student_surname, self.lineE dit_2.text().title())
-                        for schedule in employee['schedule_changed']:
-                            if student_name in schedule and student_surname in schedule:
-                                index = employee['schedule_changed'].index(schedule)
-                                employee['schedule_changed'][index] = schedule.replace(student_name, self.lineEdit.text().title())
-                                employee['schedule_changed'][index] = schedule.replace(student_surname, self.lineEdit_2.text().title())
-                        for schedule in employee['schedule_cancelled']:
-                            if student_name in schedule and student_surname in schedule:
-                                index = employee['schedule_cancelled'].index(schedule)
-                                employee['schedule_cancelled'][index] = schedule.replace(student_name, self.lineEdit.text().title())
-                                employee['schedule_cancelled'][index] = schedule.replace(student_surname, self.lineEdit_2.text().title())
-
                     with open("student_data.txt", "w", encoding="utf-8") as f:
                         f.writelines(json.dumps(data_objects.students, default=str))
                     with open('student_data.txt', 'r', encoding="utf-8") as f:
